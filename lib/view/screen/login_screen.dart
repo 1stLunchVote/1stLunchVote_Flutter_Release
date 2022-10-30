@@ -29,19 +29,20 @@ class LoginScreen extends StatelessWidget {
             ),
             Expanded(
                 child: Align(
-              alignment: FractionalOffset.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 100.0),
-                child: MaterialButton(
-                  onPressed: () async {
-                    await _loginController.login();
-                  },
-                  child: Image.asset(
-                    'assets/images/bg_kakao_login.png',
-                    fit: BoxFit.fill,
+                  alignment: FractionalOffset.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 100.0),
+                    child: MaterialButton(
+                      onPressed: () async {
+                        var res = await _loginController.loginToken();
+                        print(res);
+                      },
+                      child: Image.asset(
+                        'assets/images/bg_kakao_login.png',
+                        fit: BoxFit.fill,
+                      ),
+                    ),
                   ),
-                ),
-              ),
             ))
           ],
         ),
