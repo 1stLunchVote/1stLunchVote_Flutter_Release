@@ -61,7 +61,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/imgages/
+    - assets/images/
   fonts:
     - family: NanumSquareNeo
       fonts:
