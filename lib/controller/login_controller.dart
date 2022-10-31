@@ -4,7 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:lunch_vote/repository/lunch_vote_service.dart';
 
 class LoginController{
-  final LunchVoteService _lunchVoteService = LunchVoteService(Dio());
+
+  final LunchVoteService _lunchVoteService = LunchVoteService(Dio(BaseOptions(contentType: "application/json")));
 
   Future<bool> login() async{
     if (await isKakaoTalkInstalled()) {
@@ -124,7 +125,7 @@ class LoginController{
   }
 
   Future<String?> postUserToken(String accessToken) async{
-    var token = _lunchVoteService.postUserToken(accessToken);
-    return token.then((value) => value.accessToken);
+    final result = await _lunchVoteService.postUserToken(accessToken);
+    return result.data.accessToken;
   }
 }

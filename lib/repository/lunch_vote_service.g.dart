@@ -13,7 +13,7 @@ class _LunchVoteService implements LunchVoteService {
     this._dio, {
     this.baseUrl,
   }) {
-    baseUrl ??= 'http://54.173.224.149:8080/';
+    baseUrl ??= 'http://54.173.224.149:8000';
   }
 
   final Dio _dio;
@@ -21,13 +21,13 @@ class _LunchVoteService implements LunchVoteService {
   String? baseUrl;
 
   @override
-  Future<UserInfo> postUserToken(token) async {
+  Future<UserInfoResponse> postUserToken(token) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'accessToken': token};
+    final queryParameters = <String, dynamic>{r'socialToken': token};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final _result =
-        await _dio.fetch<Map<String, dynamic>>(_setStreamType<UserInfo>(Options(
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<UserInfoResponse>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -39,7 +39,7 @@ class _LunchVoteService implements LunchVoteService {
               data: _data,
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = UserInfo.fromJson(_result.data!);
+    final value = UserInfoResponse.fromJson(_result.data!);
     return value;
   }
 
