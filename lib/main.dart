@@ -1,3 +1,4 @@
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:lunch_vote/styles.dart';
 import 'package:lunch_vote/view/screen/login_screen.dart';
@@ -21,14 +22,23 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "1st Lunch Vote",
-      theme: ThemeData(
-        fontFamily: 'NanumSquareNeo',
-        primaryColor: mainColor,
-      ),
-      home: LoginScreen(),
+    return DynamicColorBuilder(
+      builder: (ColorScheme ? lightColorScheme, ColorScheme ? darkColorScheme)  {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: "1st Lunch Vote",
+          theme: ThemeData(
+            fontFamily: 'NanumSquareNeo',
+            colorScheme: lightColorScheme,
+            primaryColor: mainColor
+          ),
+          darkTheme: ThemeData(
+            fontFamily: 'NanumSquareNeo',
+              colorScheme: darkColorScheme
+          ),
+          home: LoginScreen(),
+      );
+    }
     );
   }
 }
