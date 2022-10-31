@@ -1,8 +1,11 @@
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
-import 'package:lunch_vote/model/user.dart';
+import 'package:dio/dio.dart';
+import 'package:lunch_vote/repository/lunch_vote_service.dart';
 
 class LoginController{
+  final LunchVoteService _lunchVoteService = LunchVoteService(Dio());
+
   Future<bool> login() async{
     if (await isKakaoTalkInstalled()) {
       try {
@@ -39,16 +42,6 @@ class LoginController{
       return true;
     }catch (error){
       return false;
-    }
-  }
-
-  Future<UserInfo?> getUserInfo() async{
-    try{
-      User user = await UserApi.instance.me();
-      return UserInfo(
-          userID: user.id.toString(), userNickName: user.kakaoAccount?.profile?.nickname, userProfileImagePath: user.kakaoAccount?.profile?.profileImageUrl);
-    }catch (error){
-      return null;
     }
   }
 
@@ -130,4 +123,8 @@ class LoginController{
     }
   }
 
+  Future<String?> postUserToken(String accessToken) async{
+    var token = _lunchVoteService.postUserToken(accessToken);
+    return token.then((value) => value.accessToken);
+  }
 }
