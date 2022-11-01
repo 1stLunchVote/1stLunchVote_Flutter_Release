@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:lunch_vote/model/user_info.dart';
 
@@ -9,5 +10,5 @@ abstract class LunchVoteService{
   factory LunchVoteService(Dio dio) = _LunchVoteService;
 
   @POST('/auth/login/KAKAO')
-  Future<UserInfoResponse> postUserToken(@Query('socialToken') String token);
+  Future<UserInfoResponse> postUserToken(@Body() SocialToken socialToken);
 }

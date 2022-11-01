@@ -21,11 +21,12 @@ class _LunchVoteService implements LunchVoteService {
   String? baseUrl;
 
   @override
-  Future<UserInfoResponse> postUserToken(token) async {
+  Future<UserInfoResponse> postUserToken(socialToken) async {
     const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{r'socialToken': token};
+    final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
+    _data.addAll(socialToken.toJson());
     final _result = await _dio
         .fetch<Map<String, dynamic>>(_setStreamType<UserInfoResponse>(Options(
       method: 'POST',

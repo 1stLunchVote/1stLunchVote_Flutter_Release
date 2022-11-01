@@ -11,7 +11,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool _isLoginVisible = true;
+  bool _isLoginVisible = false;
   final LoginController _loginController = LoginController();
 
   @override
@@ -23,9 +23,10 @@ class _LoginScreenState extends State<LoginScreen> {
   void setLoginVisibility() async{
     var token = await getUserToken();
     if (token == null){
-      _isLoginVisible = true;
+      setState(() {
+        _isLoginVisible = true;
+      });
     } else{
-      _isLoginVisible = false;
       print('User Token : $token');
       navigateToHome();
     }

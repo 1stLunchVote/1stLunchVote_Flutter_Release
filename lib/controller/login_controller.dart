@@ -1,11 +1,10 @@
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:dio/dio.dart';
+import 'package:lunch_vote/model/user_info.dart';
 import 'package:lunch_vote/repository/lunch_vote_service.dart';
 
 class LoginController{
-
-  final LunchVoteService _lunchVoteService = LunchVoteService(Dio(BaseOptions(contentType: "application/json")));
 
   Future<bool> login() async{
     if (await isKakaoTalkInstalled()) {
@@ -125,7 +124,12 @@ class LoginController{
   }
 
   Future<String?> postUserToken(String accessToken) async{
-    final result = await _lunchVoteService.postUserToken(accessToken);
+    final dio = Dio();
+    dio.options.headers["Content-Type"] = "application/json";
+    dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
+    final lunchVoteService = LunchVoteService(dio);
+
+    final result = await lunchVoteService.postUserToken(SocialToken(socialToken: accessToken));
     return result.data.accessToken;
   }
 }

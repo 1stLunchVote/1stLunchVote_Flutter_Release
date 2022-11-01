@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
 part 'user_info.g.dart';
 
@@ -18,7 +19,6 @@ class UserInfo{
       _$UserInfoFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserInfoToJson(this);
-
 }
 
 @JsonSerializable()
@@ -34,4 +34,16 @@ class UserInfoResponse{
       _$UserInfoResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserInfoResponseToJson(this);
+}
+
+@JsonSerializable()
+class SocialToken{
+  String? socialToken;
+
+  SocialToken({
+    required this.socialToken
+  });
+
+  factory SocialToken.fromJson(Map<String, dynamic> json) => _$SocialTokenFromJson(json);
+  Map<String, dynamic> toJson() => _$SocialTokenToJson(this);
 }
