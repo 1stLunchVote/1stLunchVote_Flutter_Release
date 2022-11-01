@@ -5,6 +5,15 @@ import 'package:lunch_vote/model/user_info.dart';
 import 'package:lunch_vote/repository/lunch_vote_service.dart';
 
 class LoginController{
+  late LunchVoteService lunchVoteService;
+
+  LoginController(){
+    final dio = Dio();
+    dio.options.headers["Content-Type"] = "application/json";
+    dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
+    lunchVoteService = LunchVoteService(dio);
+  }
+
 
   Future<bool> login() async{
     if (await isKakaoTalkInstalled()) {
@@ -124,11 +133,6 @@ class LoginController{
   }
 
   Future<String?> postUserToken(String accessToken) async{
-    final dio = Dio();
-    dio.options.headers["Content-Type"] = "application/json";
-    dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
-    final lunchVoteService = LunchVoteService(dio);
-
     final result = await lunchVoteService.postUserToken(SocialToken(socialToken: accessToken));
     return result.data.accessToken;
   }
