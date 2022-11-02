@@ -12,6 +12,7 @@ class ProfileScreen extends StatelessWidget {
         appbarTitle: "마이페이지",
         isTitleCenter: true,
         context: context,
+        trailingList: null,
       )
     );
   }

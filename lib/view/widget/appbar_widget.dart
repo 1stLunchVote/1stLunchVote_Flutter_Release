@@ -8,12 +8,14 @@ class BasicAppbar extends AppBar {
   final String appbarTitle;
   final bool isTitleCenter;
   final BuildContext context;
+  final List<Widget>? trailingList;
 
   BasicAppbar({super.key,
     required this.backVisible,
     required this.appbarTitle,
     required this.isTitleCenter,
-    required this.context
+    required this.context,
+    required this.trailingList
   });
 
   @override
@@ -33,14 +35,18 @@ class BasicAppbar extends AppBar {
   Widget? get leading => Visibility(
     visible: backVisible,
     child: IconButton(
-      icon: SvgPicture.asset(
-          'assets/images/ic_arrow_back.svg',
+      icon: Icon(
+        Icons.arrow_back,
+        color: Theme.of(context).colorScheme.onSurface,
       ),
       onPressed: (){
         Navigator.of(context).pop();
       },
     ),
   );
+
+  @override
+  List<Widget>? get actions => trailingList;
 
   @override
   SystemUiOverlayStyle? get systemOverlayStyle => const SystemUiOverlayStyle(
