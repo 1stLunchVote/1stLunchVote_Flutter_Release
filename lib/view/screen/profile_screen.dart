@@ -109,8 +109,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           child: TextFormField(
-                            decoration: const InputDecoration(
-                              labelText: '변경할 닉네임을 입력하세요.'
+                            decoration: InputDecoration(
+                              labelText: '변경할 닉네임을 입력하세요.',
+                              suffixIcon: IconButton(
+                                  onPressed: (){
+                                    setState(() {
+                                      _nicknameChange = false;
+                                    });
+                                  },
+                                  icon: Icon(Icons.close,
+                                    color: Theme.of(context).colorScheme.primary,))
                             ),
                             validator: (value){
                               if (value == null || value.isEmpty){
