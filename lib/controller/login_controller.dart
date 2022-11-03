@@ -1,17 +1,17 @@
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:dio/dio.dart';
-import 'package:lunch_vote/model/user_info.dart';
+import 'package:lunch_vote/model/login/user_info.dart';
 import 'package:lunch_vote/repository/lunch_vote_service.dart';
 
 class LoginController{
-  late LunchVoteService lunchVoteService;
+  late LunchVoteService _lunchVoteService;
 
   LoginController(){
     final dio = Dio();
     dio.options.headers["Content-Type"] = "application/json";
     dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
-    lunchVoteService = LunchVoteService(dio);
+    _lunchVoteService = LunchVoteService(dio);
   }
 
 
@@ -133,7 +133,7 @@ class LoginController{
   }
 
   Future<String?> postUserToken(String accessToken) async{
-    final result = await lunchVoteService.postUserToken(SocialToken(socialToken: accessToken));
+    final result = await _lunchVoteService.postUserToken(SocialToken(socialToken: accessToken));
     return result.data.accessToken;
   }
 }

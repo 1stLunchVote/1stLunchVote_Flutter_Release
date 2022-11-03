@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: "1st Lunch Vote",
       theme: ThemeData(
+          useMaterial3: true,
           fontFamily: 'NanumSquareNeo',
           colorScheme: ColorScheme.fromSeed(
               seedColor: mainColor,
@@ -33,6 +34,7 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: mainBackgroundColor
       ),
         darkTheme: ThemeData(
+          useMaterial3: true,
           fontFamily: 'NanumSquareNeo',
           colorScheme: ColorScheme.fromSeed(
               seedColor: mainColor,
