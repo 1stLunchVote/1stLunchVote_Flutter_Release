@@ -30,7 +30,8 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(
               seedColor: mainColor,
               brightness: Brightness.light),
-          primaryColor: mainColor),
+          scaffoldBackgroundColor: mainBackgroundColor
+      ),
         darkTheme: ThemeData(
           fontFamily: 'NanumSquareNeo',
           colorScheme: ColorScheme.fromSeed(
