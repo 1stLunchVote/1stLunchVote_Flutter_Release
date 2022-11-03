@@ -1,7 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:lunch_vote/model/profile/profile_info.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:lunch_vote/model/user_info.dart';
+import 'package:lunch_vote/model/login/user_info.dart';
 
 part 'lunch_vote_service.g.dart';
 
@@ -9,6 +10,11 @@ part 'lunch_vote_service.g.dart';
 abstract class LunchVoteService{
   factory LunchVoteService(Dio dio) = _LunchVoteService;
 
+  // 카카오 로그인 및 토큰 생성
   @POST('/auth/login/KAKAO')
   Future<UserInfoResponse> postUserToken(@Body() SocialToken socialToken);
+
+  // 유저 닉네임 변경
+  @PATCH('/user/nickname')
+  Future<NicknameResponse> patchNickname(@Body() Nickname nickname);
 }

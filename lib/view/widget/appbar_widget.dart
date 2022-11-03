@@ -31,6 +31,7 @@ class BasicAppbar extends AppBar {
   @override
   bool? get centerTitle => isTitleCenter;
 
+
   @override
   Widget? get leading => Visibility(
     visible: backVisible,
@@ -45,6 +46,7 @@ class BasicAppbar extends AppBar {
     ),
   );
 
+
   @override
   List<Widget>? get actions => trailingList;
 
@@ -54,5 +56,5 @@ class BasicAppbar extends AppBar {
     statusBarIconBrightness: Brightness.dark
   );
 
-  @override Color? get backgroundColor => Colors.white;
+  @override Color? get backgroundColor => mainBackgroundColor;
 }
