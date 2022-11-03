@@ -50,7 +50,7 @@ class BasicAppbar extends AppBar {
 
   @override
   SystemUiOverlayStyle? get systemOverlayStyle => const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
+    statusBarColor: mainBackgroundColor,
     statusBarIconBrightness: Brightness.dark
   );
 
