@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           fontFamily: 'NanumSquareNeo',
           colorScheme: ColorScheme.fromSeed(
               seedColor: mainColor,
-              brightness: Brightness.light),
+              brightness: Brightness.light,),
           primaryColor: mainColor),
         darkTheme: ThemeData(
           fontFamily: 'NanumSquareNeo',

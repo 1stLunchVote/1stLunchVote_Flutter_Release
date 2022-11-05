@@ -3,7 +3,7 @@
     
     <uses-permission android:name="android.permssion.INTERNET"/>
    <application
-        android:label="lunch_vote"
+        android:label="제1회점심메뉴총선거"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 
