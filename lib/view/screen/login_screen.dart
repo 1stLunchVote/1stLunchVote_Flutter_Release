@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lunch_vote/view/screen/home_screen.dart';
 import 'package:lunch_vote/controller/login_controller.dart';
+import 'package:lunch_vote/view/widget/utils/shared_pref_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -13,6 +14,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool _isLoginVisible = false;
   final LoginController _loginController = LoginController();
+  SharedPrefManager spfManager = SharedPrefManager();
+
 
   @override
   void initState() {
@@ -21,7 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void setLoginVisibility() async{
-    var token = await getUserToken();
+    var token = await spfManager.getUserToken();
     if (token == null){
       setState(() {
         _isLoginVisible = true;
@@ -66,7 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           print('Access Token : $accessToken');
                           String? userToken = await _loginController.postUserToken(accessToken!);
                           print('User Token : $userToken');
-                          setUserToken(userToken!);
+                          spfManager.setUserToken(userToken!);
                           navigateToHome();
                         },
                         child: Image.asset(
@@ -83,24 +86,11 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void setUserToken(String token) async{
-    final spf = await SharedPreferences.getInstance();
-    spf.setString('userToken', token);
-  }
-
-  Future<String?> getUserToken() async{
-    final spf = await SharedPreferences.getInstance();
-    try{
-      return spf.getString('userToken');
-    } catch (e){ }
-    return null;
-  }
-
   void navigateToHome(){
     Navigator.of(context).pop();
     Navigator.of(context).push(
         MaterialPageRoute(
-            builder: (context) => HomeScreen())
+            builder: (context) => const HomeScreen())
     );
   }
 }

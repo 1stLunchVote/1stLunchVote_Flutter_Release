@@ -26,12 +26,15 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: "1st Lunch Vote",
       theme: ThemeData(
+          useMaterial3: true,
           fontFamily: 'NanumSquareNeo',
           colorScheme: ColorScheme.fromSeed(
               seedColor: mainColor,
-              brightness: Brightness.light,),
-          primaryColor: mainColor),
+              brightness: Brightness.light),
+          scaffoldBackgroundColor: mainBackgroundColor
+      ),
         darkTheme: ThemeData(
+          useMaterial3: true,
           fontFamily: 'NanumSquareNeo',
           colorScheme: ColorScheme.fromSeed(
               seedColor: mainColor,
