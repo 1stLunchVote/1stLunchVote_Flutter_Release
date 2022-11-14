@@ -15,6 +15,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final ProfileController _profileController = ProfileController();
   bool _hasProfileImage = false;
   bool _nicknameChange = false;
+
+  final TextEditingController _nickNameController = TextEditingController();
   String _nickname = "이동건";
 
   final _formKey = GlobalKey<FormState>();
@@ -49,33 +51,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     const SizedBox(
                       height: 100,
                     ),
-                    Stack(
-                        children: [
-                          const Center(
-                            child: CircleAvatar(
+                    SizedBox(
+                      height: 200,
+                      width: 200,
+                      child: Stack(
+                          children: [
+                            const CircleAvatar(
                               backgroundColor: Colors.transparent,
                               backgroundImage: AssetImage(
                                 'assets/images/profile_default.png',
                               ),
                               radius: 100,
                             ),
-                          ),
-                          Center(
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(156, 156, 4, 4),
-                              child: CircleAvatar(
-                                radius: 20,
-                                backgroundColor: Theme.of(context).colorScheme.primary,
-                                child: IconButton(
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: CircleAvatar(
+                                  radius: 20,
+                                  backgroundColor: Theme.of(context).colorScheme.primary,
+                                  child: IconButton(
                                     onPressed: (){},
                                     icon: const Icon(Icons.mode_edit,
                                       color: Colors.white,
                                     ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          )
-                      ]
+                            )
+                        ]
+                      ),
                     ),
                     const SizedBox(
                       height: 20,
@@ -109,12 +114,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           child: TextFormField(
+                            controller: _nickNameController,
                             decoration: InputDecoration(
                               labelText: '변경할 닉네임을 입력하세요.',
                               suffixIcon: IconButton(
                                   onPressed: (){
                                     setState(() {
-                                      _nicknameChange = false;
+                                      if (_nickNameController.text.isEmpty){
+                                        _nicknameChange = false;
+                                      } else {
+                                        _nickNameController.text = '';
+                                      }
                                     });
                                   },
                                   icon: Icon(Icons.close,
