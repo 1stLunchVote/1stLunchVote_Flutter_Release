@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lunch_vote/controller/profile_controller.dart';
 import 'package:lunch_vote/styles.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
-import 'package:lunch_vote/view/widget/utils/custom_clip_path.dart';
+import 'package:lunch_vote/view/widget/custom_clip_path.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -15,6 +16,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final ProfileController _profileController = ProfileController();
   bool _hasProfileImage = false;
   bool _nicknameChange = false;
+
+  final TextEditingController _nickNameController = TextEditingController();
   String _nickname = "이동건";
 
   final _formKey = GlobalKey<FormState>();
@@ -38,8 +41,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ClipPath(
                 clipper: CustomClipPath(),
                 child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
+                  alignment: Alignment.bottomCenter,
+                  width: double.infinity,
+                  height: double.infinity,
                   color: Theme.of(context).colorScheme.surfaceVariant,
                 ),
               ),
@@ -49,43 +53,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     const SizedBox(
                       height: 100,
                     ),
-                    Stack(
-                        children: [
-                          const Center(
-                            child: CircleAvatar(
+                    SizedBox(
+                      height: 200,
+                      width: 200,
+                      child: Stack(
+                          children: [
+                            const CircleAvatar(
                               backgroundColor: Colors.transparent,
                               backgroundImage: AssetImage(
                                 'assets/images/profile_default.png',
                               ),
                               radius: 100,
                             ),
-                          ),
-                          Center(
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(156, 156, 4, 4),
-                              child: CircleAvatar(
-                                radius: 20,
-                                backgroundColor: Theme.of(context).colorScheme.primary,
-                                child: IconButton(
+                            Align(
+                              alignment: Alignment.bottomRight,
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: CircleAvatar(
+                                  radius: 20,
+                                  backgroundColor: Theme.of(context).colorScheme.primary,
+                                  child: IconButton(
                                     onPressed: (){},
                                     icon: const Icon(Icons.mode_edit,
                                       color: Colors.white,
                                     ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          )
-                      ]
+                            )
+                        ]
+                      ),
                     ),
                     const SizedBox(
                       height: 20,
                     ),
-                    Text(_nickname,
+                    Text(
+                      _nickname,
                       style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onSurfaceVariant,
-                        ),
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                     ),
                     Visibility(
                       visible: !_nicknameChange,
@@ -95,13 +103,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               _nicknameChange = !_nicknameChange;
                             });
                           },
-                          child: const Text('닉네임 수정',
+                          child: const Text(
+                            '닉네임 수정',
                             style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: textHintColor,
-                              decoration: TextDecoration.underline
-                            ),
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: textHintColor,
+                                decoration: TextDecoration.underline),
                           )),
                     ),
                     Visibility(
@@ -109,33 +117,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 20.0),
                           child: TextFormField(
+                            controller: _nickNameController,
                             decoration: InputDecoration(
-                              labelText: '변경할 닉네임을 입력하세요.',
-                              suffixIcon: IconButton(
+                            labelText: '변경할 닉네임을 입력하세요.',
+                            suffixIcon: IconButton(
                                   onPressed: (){
                                     setState(() {
-                                      _nicknameChange = false;
+                                      if (_nickNameController.text.isEmpty){
+                                        _nicknameChange = false;
+                                      } else {
+                                        _nickNameController.text = '';
+                                      }
                                     });
                                   },
                                   icon: Icon(Icons.close,
                                     color: Theme.of(context).colorScheme.primary,))
                             ),
-                            validator: (value){
-                              if (value == null || value.isEmpty){
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
                                 return '닉네임을 입력해주세요.';
-                              } else if (value.length < 2 || value.length > 8){
+                              } else if (value.length < 2 || value.length > 8) {
                                 return '닉네임 길이를 2~8로 해주세요.';
                               }
                               return null;
                             },
-                            onSaved: (value){
+                            onSaved: (value) {
                               setState(() {
                                 _nickname = value!;
                               });
                             },
                           ),
-                        )
-                    )
+                        ))
                   ],
                 ),
               ),
@@ -146,31 +158,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 90),
                     child: ElevatedButton(
-                      onPressed: (){
-                        if (_formKey.currentState!.validate()){
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
-                          _profileController.changeNickname(_nickname).then((value) {
+                          _profileController
+                              .changeNickname(_nickname)
+                              .then((value) {
                             String complete = value != null ? '성공' : '실패';
-                            ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('닉네임 변경에 $complete 하였습니다.'))
-                            );
-                          }
-                          );
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text('닉네임 변경에 $complete 하였습니다.')));
+                          });
                           setState(() {
                             _nicknameChange = false;
                           });
                         }
-
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
-                        padding: const EdgeInsets.fromLTRB(24, 10, 24, 10)
-                      ),
-                      child: Text('설정 완료',
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
+                          padding: const EdgeInsets.fromLTRB(24, 10, 24, 10)),
+                      child: Text(
+                        '설정 완료',
                         style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.onPrimary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onPrimary,
                         ),
                       ),
                     ),
