@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lunch_vote/styles.dart';
 import 'package:lunch_vote/view/screen/home_screen.dart';
 import 'package:lunch_vote/controller/login_controller.dart';
@@ -26,6 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void setLoginVisibility() async {
     var token = await spfManager.getUserToken();
+    FlutterNativeSplash.remove();
     if (token == null) {
       setState(() {
         _isLoginVisible = true;
@@ -38,6 +42,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Android만 적용됨
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: mainBackgroundColor,
+      statusBarIconBrightness: Brightness.dark// status bar color
+    ));
     ScreenUtil.init(context, designSize: const Size(360, 800));
     return Scaffold(
       backgroundColor: mainBackgroundColor,
@@ -48,14 +57,13 @@ class _LoginScreenState extends State<LoginScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Spacer(),
-            const Padding(
-              padding: EdgeInsets.only(bottom: 60.0),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 60.0),
               child: Align(
                 alignment: Alignment.center,
-                child: Text(
-                  '안녕하세요 로그인 테스트',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                ),
+                child: SvgPicture.asset(
+                  'assets/images/ic_launcher.svg'
+                )
               ),
             ),
             Expanded(

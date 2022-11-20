@@ -1,5 +1,6 @@
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:lunch_vote/styles.dart';
 import 'package:lunch_vote/view/screen/home_screen.dart';
 import 'package:lunch_vote/view/screen/login_screen.dart';
@@ -10,7 +11,9 @@ import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
 
 void main() async {
   // 웹 환경에서 카카오 로그인을 정상적으로 완료하려면 runApp() 호출 전 아래 메서드 호출 필요
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -42,6 +45,6 @@ class MyApp extends StatelessWidget {
             fontFamily: 'NanumSquareNeo',
             colorScheme: ColorScheme.fromSeed(
                 seedColor: mainColor, brightness: Brightness.dark)),
-        home: LoginScreen());
+        home: const LoginScreen());
   }
 }

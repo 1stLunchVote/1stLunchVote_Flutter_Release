@@ -44,6 +44,8 @@ dependencies:
   flutter_svg: ^1.0.1
   firebase_core: ^2.2.0
   flutter_screenutil: ^5.6.0
+  drop_shadow: ^0.0.2+1
+  cached_network_image: ^3.2.2
 
 dev_dependencies:
   flutter_test:
@@ -58,6 +60,7 @@ dev_dependencies:
   retrofit_generator:
   build_runner:
   json_serializable:
+  flutter_native_splash: ^2.2.14
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -108,3 +111,7 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+flutter_native_splash:
+  color: "#FFFBFF"
+  image: assets/images/ic_launcher.png
+  fullscreen: true

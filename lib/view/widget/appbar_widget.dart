@@ -22,6 +22,9 @@ class BasicAppbar extends AppBar {
   double? get elevation => 0;
 
   @override
+  Color? get surfaceTintColor => mainBackgroundColor;
+
+  @override
   Widget? get title => Text(appbarTitle,
       style: const TextStyle(
         fontSize: 22,
