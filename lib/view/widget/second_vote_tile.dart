@@ -76,7 +76,7 @@ class _SecondVoteTileState extends State<SecondVoteTile> {
                       padding: const EdgeInsets.all(5.0),
                       child: Visibility(
                         visible: isVoted,
-                        child: Image.asset("assets/images/ic_lunch_vote.png"),
+                        child: Image.asset("assets/images/ic_launcher.png"),
                       ),
                     )
                 ),

@@ -17,28 +17,28 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  bool _isLoginVisible = false;
   final LoginController _loginController = LoginController();
   SharedPrefManager spfManager = SharedPrefManager();
 
-  @override
-  void initState() {
-    setLoginVisibility();
-    super.initState();
-  }
-
-  void setLoginVisibility() async {
-    var token = await spfManager.getUserToken();
-    FlutterNativeSplash.remove();
-    if (token == null) {
-      setState(() {
-        _isLoginVisible = true;
-      });
-    } else {
-      print('User Token : $token');
-      navigateToHome();
-    }
-  }
+  // @override
+  // void initState() {
+  //   setLoginVisibility();
+  //   super.initState();
+  // }
+  //
+  // void setLoginVisibility() async {
+  //   var token = await spfManager.getUserToken();
+  //   if (token == null) {
+  //     setState(() {
+  //       _isLoginVisible = true;
+  //       FlutterNativeSplash.remove();
+  //     });
+  //   } else {
+  //     print('User Token : $token');
+  //     navigateToHome();
+  //     FlutterNativeSplash.remove();
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -61,8 +61,10 @@ class _LoginScreenState extends State<LoginScreen> {
               padding: const EdgeInsets.only(bottom: 60.0),
               child: Align(
                 alignment: Alignment.center,
-                child: SvgPicture.asset(
-                  'assets/images/ic_launcher.svg'
+                child: Image.asset(
+                  "assets/images/ic_launcher.png",
+                  width: 100,
+                  height: 100,
                 )
               ),
             ),
@@ -71,22 +73,19 @@ class _LoginScreenState extends State<LoginScreen> {
               alignment: FractionalOffset.bottomCenter,
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 100.0),
-                child: Visibility(
-                  visible: _isLoginVisible,
-                  child: MaterialButton(
-                    onPressed: () async {
-                      String? accessToken = await _loginController.loginToken();
-                      print('Access Token : $accessToken');
-                      String? userToken =
-                          await _loginController.postUserToken(accessToken!);
-                      print('User Token : $userToken');
-                      spfManager.setUserToken(userToken!);
-                      navigateToHome();
-                    },
-                    child: Image.asset(
-                      'assets/images/bg_kakao_login.png',
-                      fit: BoxFit.fill,
-                    ),
+                child: MaterialButton(
+                  onPressed: () async {
+                    String? accessToken = await _loginController.loginToken();
+                    print('Access Token : $accessToken');
+                    String? userToken =
+                        await _loginController.postUserToken(accessToken!);
+                    print('User Token : $userToken');
+                    spfManager.setUserToken(userToken!);
+                    navigateToHome();
+                  },
+                  child: Image.asset(
+                    'assets/images/bg_kakao_login.png',
+                    fit: BoxFit.fill,
                   ),
                 ),
               ),

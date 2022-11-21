@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -6,6 +8,7 @@ import 'package:lunch_vote/view/screen/home_screen.dart';
 import 'package:lunch_vote/view/screen/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lunch_vote/view/widget/utils/shared_pref_manager.dart';
 import 'firebase_options.dart';
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
 
@@ -26,8 +29,37 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _autoLogin = false;
+  SharedPrefManager spfManager = SharedPrefManager();
+
+  @override
+  void initState() {
+    setAutoLogin();
+    super.initState();
+  }
+
+  void setAutoLogin() async {
+    var token = await spfManager.getUserToken();
+    if (token == null) {
+      setState(() {
+        FlutterNativeSplash.remove();
+      });
+    } else {
+      print('User Token : $token');
+      setState(() {
+        _autoLogin = true;
+        FlutterNativeSplash.remove();
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +77,7 @@ class MyApp extends StatelessWidget {
             fontFamily: 'NanumSquareNeo',
             colorScheme: ColorScheme.fromSeed(
                 seedColor: mainColor, brightness: Brightness.dark)),
-        home: const LoginScreen());
+        home: _autoLogin == true ? const HomeScreen() : const LoginScreen()
+    );
   }
 }
