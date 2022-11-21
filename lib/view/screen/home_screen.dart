@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lunch_vote/view/screen/profile_screen.dart';
+import 'package:lunch_vote/view/screen/vote/second_vote_screen.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
 import 'package:lunch_vote/view/widget/custom_clip_path.dart';
 
@@ -46,8 +47,10 @@ class HomeScreen extends StatelessWidget {
                 ),
                 Center(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      const SizedBox(
+                        height: 100,
+                      ),
                       Container(
                         height: 200.h,
                         width: 320.w,
@@ -83,7 +86,12 @@ class HomeScreen extends StatelessWidget {
                               color: Colors.transparent,
                               child: InkWell(
                                 borderRadius: BorderRadius.circular(16),
-                                onTap: () {},
+                                onTap: () {
+                                  // Todo : 임시로 최종 투표 화면으로 가게 함 (테스트 용)
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => const SecondVoteScreen())
+                                  );
+                                },
                               ),
                             ))
                           ],
