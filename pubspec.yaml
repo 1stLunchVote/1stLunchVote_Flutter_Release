@@ -46,6 +46,7 @@ dependencies:
   flutter_screenutil: ^5.6.0
   drop_shadow: ^0.0.2+1
   cached_network_image: ^3.2.2
+  provider: ^6.0.4
 
 dev_dependencies:
   flutter_test:
