@@ -17,4 +17,8 @@ abstract class LunchVoteService{
   // 유저 닉네임 변경
   @PATCH('/user/nickname')
   Future<NicknameResponse> patchNickname(@Body() Nickname nickname);
+
+  // 유저 프로필 조회
+  @GET('/user')
+  Future<ProfileInfoResponse> getProfileInfo();
 }

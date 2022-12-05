@@ -8,9 +8,9 @@ import 'package:lunch_vote/view/widget/custom_clip_path.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context, designSize: const Size(360, 800));
     return Scaffold(
         appBar: BasicAppbar(
           backVisible: false,

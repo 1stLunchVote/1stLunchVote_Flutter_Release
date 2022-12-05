@@ -3,8 +3,10 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:dio/dio.dart';
 import 'package:lunch_vote/model/login/user_info.dart';
 import 'package:lunch_vote/repository/lunch_vote_service.dart';
+import 'package:lunch_vote/view/widget/utils/shared_pref_manager.dart';
 
 class LoginController{
+  final SharedPrefManager _spfManager = SharedPrefManager();
   late LunchVoteService _lunchVoteService;
 
   LoginController(){
@@ -133,7 +135,8 @@ class LoginController{
   }
 
   Future<String?> postUserToken(String accessToken) async{
-    final result = await _lunchVoteService.postUserToken(SocialToken(socialToken: accessToken));
+    String? fcmToken = await _spfManager.getFCMToken();
+    final result = await _lunchVoteService.postUserToken(SocialToken(socialToken: accessToken, fcmToken: fcmToken));
     return result.data.accessToken;
   }
 }
