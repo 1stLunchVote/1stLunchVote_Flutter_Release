@@ -2,6 +2,7 @@ import 'package:drop_shadow/drop_shadow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lunch_vote/model/vote/vote_item_notifier.dart';
+import 'package:lunch_vote/view/screen/vote/result_screen.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
 import 'package:lunch_vote/view/widget/custom_clip_path.dart';
 import 'package:lunch_vote/view/widget/second_vote_tile.dart';
@@ -126,7 +127,16 @@ class _SecondVoteScreenState extends State<SecondVoteScreen> {
                                           );
                                         });
                                   }
-                                })
+                                }),
+                            // Todo : 임시 버튼
+                            ElevatedButton(
+                                onPressed: (){
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(builder: (context) => const ResultScreen())
+                                  );
+                                },
+                                child: const Text("결과화면으로 넘어가기")
+                            )
                           ],
                         )
                       ],
