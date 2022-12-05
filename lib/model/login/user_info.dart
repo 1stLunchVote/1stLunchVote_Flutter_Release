@@ -39,9 +39,11 @@ class UserInfoResponse{
 @JsonSerializable()
 class SocialToken{
   String? socialToken;
+  String? fcmToken;
 
   SocialToken({
-    required this.socialToken
+    required this.socialToken,
+    required this.fcmToken
   });
 
   factory SocialToken.fromJson(Map<String, dynamic> json) => _$SocialTokenFromJson(json);

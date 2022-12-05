@@ -99,6 +99,6 @@ class _LoginScreenState extends State<LoginScreen> {
   void navigateToHome() {
     Navigator.of(context).pop();
     Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => const HomeScreen()));
+        .push(MaterialPageRoute(builder: (context) => HomeScreen()));
   }
 }

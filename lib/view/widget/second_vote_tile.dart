@@ -1,13 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:lunch_vote/model/vote/vote_item_notifier.dart';
+import 'package:provider/provider.dart';
 
 class SecondVoteTile extends StatefulWidget {
   String foodName = '';
   String? imgUrl;
+  int index;
 
   SecondVoteTile({super.key,
     required this.foodName,
-    required this.imgUrl
+    required this.imgUrl,
+    required this.index,
   });
 
   @override
@@ -29,6 +33,11 @@ class _SecondVoteTileState extends State<SecondVoteTile> {
           child: InkWell(
             onTap: (){
               setState(() {
+                if (!isVoted) {
+                  context.read<VoteItemNotifier>().setIndex(widget.index);
+                } else {
+                  context.read<VoteItemNotifier>().clearIndex();
+                }
                 isVoted = !isVoted;
               });
             },
@@ -75,7 +84,7 @@ class _SecondVoteTileState extends State<SecondVoteTile> {
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),
                       child: Visibility(
-                        visible: isVoted,
+                        visible: context.watch<VoteItemNotifier>().index == widget.index,
                         child: Image.asset("assets/images/ic_launcher.png"),
                       ),
                     )
