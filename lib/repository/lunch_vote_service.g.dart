@@ -69,6 +69,55 @@ class _LunchVoteService implements LunchVoteService {
   }
 
   @override
+  Future<GroupCreateResponse> createGroup() async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<GroupCreateResponse>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/group',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = GroupCreateResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<UserSearchResponse> searchUser(
+    groupId,
+    email,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = email;
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<UserSearchResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/group/${groupId}/invite',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = UserSearchResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
   Future<ProfileInfoResponse> getProfileInfo() async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -92,25 +141,24 @@ class _LunchVoteService implements LunchVoteService {
   }
 
   @override
-  Future<MenuInfoResponse> getMenuInfo() async {
+  Future<dynamic> getMenuInfo() async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final _result = await _dio
-        .fetch<Map<String, dynamic>>(_setStreamType<MenuInfoResponse>(Options(
+    final _result = await _dio.fetch(_setStreamType<dynamic>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
     )
-            .compose(
-              _dio.options,
-              '/menu',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
-    final value = MenuInfoResponse.fromJson(_result.data!);
+        .compose(
+          _dio.options,
+          '/menu',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = _result.data;
     return value;
   }
 
@@ -134,6 +182,79 @@ class _LunchVoteService implements LunchVoteService {
             )
             .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     final value = FirstVoteResultResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<SecondVoteResponse> secondVoteItem(
+    groupId,
+    voteItem,
+  ) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(voteItem.toJson());
+    final _result = await _dio
+        .fetch<Map<String, dynamic>>(_setStreamType<SecondVoteResponse>(Options(
+      method: 'PATCH',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/group/${groupId}/vote/second',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = SecondVoteResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<SecondVoteStateResponse> getSecondVoteState(groupId) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<SecondVoteStateResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/group/${groupId}/vote/second/status',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = SecondVoteStateResponse.fromJson(_result.data!);
+    return value;
+  }
+
+  @override
+  Future<FinalResultResponse> getFinalResult(groupId) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.fetch<Map<String, dynamic>>(
+        _setStreamType<FinalResultResponse>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+            .compose(
+              _dio.options,
+              '/group/${groupId}/vote/second/result',
+              queryParameters: queryParameters,
+              data: _data,
+            )
+            .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
+    final value = FinalResultResponse.fromJson(_result.data!);
     return value;
   }
 

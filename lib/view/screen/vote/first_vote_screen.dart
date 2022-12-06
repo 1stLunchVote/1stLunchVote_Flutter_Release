@@ -4,7 +4,7 @@ import 'package:lunch_vote/view/widget/appbar_widget.dart';
 import 'package:lunch_vote/view/widget/custom_clip_path.dart';
 import 'package:lunch_vote/view/widget/first_vote_tile.dart';
 import 'package:lunch_vote/controller/menu_controller.dart';
-import 'package:lunch_vote/model/menu/menu_info.dart';
+
 
 class FirstVoteScreen extends StatefulWidget {
   FirstVoteScreen({Key? key}) : super(key: key);
@@ -102,7 +102,7 @@ class _FirstVoteScreenState extends State<FirstVoteScreen> {
                           }
                           else {
                             searchMenu = _textController.text.toString();
-                            
+
                           }
                         });
                       },
