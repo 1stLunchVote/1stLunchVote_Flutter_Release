@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:lunch_vote/model/profile/profile_info.dart';
+import 'package:lunch_vote/model/vote/second_vote.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:lunch_vote/model/login/user_info.dart';
 
+import '../model/vote/final_result.dart';
 import '../model/vote/first_vote_result.dart';
 
 part 'lunch_vote_service.g.dart';
@@ -27,4 +29,16 @@ abstract class LunchVoteService{
   // 1차 투표 결과 조회
   @GET('/group/{groupId}/vote/first/result')
   Future<FirstVoteResultResponse> getFirstVoteResult(@Path() String groupId);
+
+  // 2차 투표
+  @PATCH('/group/{groupId}/vote/second')
+  Future<SecondVoteResponse> secondVoteItem(@Path() String groupId, @Body() SecondVoteItem voteItem);
+
+  // 2차 투표 상태 조회
+  @GET('/group/{groupId}/vote/second/status')
+  Future<SecondVoteStateResponse> getSecondVoteState(@Path() String groupId);
+
+  // 최종 결과 조회
+  @GET('/group/{groupId}/vote/second/result')
+  Future<FinalResultResponse> getFinalResult(@Path() String groupId);
 }
