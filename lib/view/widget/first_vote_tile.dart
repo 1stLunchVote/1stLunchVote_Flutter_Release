@@ -2,15 +2,19 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:lunch_vote/model/vote/vote_item_notifier.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class FirstVoteTile extends StatefulWidget {
   String menuName = '';
-  String? imgUrl;
-  int index;
+  String menuId = '';
+  String image = '';
+  int index = 0;
 
-  FirstVoteTile({super.key,
+  FirstVoteTile({
+    super.key,
     required this.menuName,
-    required this.imgUrl,
+    required this.menuId,
+    required this.image,
     required this.index,
   });
 
@@ -20,90 +24,80 @@ class FirstVoteTile extends StatefulWidget {
 
 class _FirstVoteTileState extends State<FirstVoteTile> {
   bool isVoted = false;
+  int check = 0;
+  Color border_color = Colors.black;
+  double border_width = 1.0;
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Divider(
-          height: 1,
-          thickness: 1,
-          color: Theme.of(context).colorScheme.outline,
-        ),
-        IntrinsicHeight(
-          child: InkWell(
-            onTap: (){
-              setState(() {
-                if (!isVoted) {
+    return IntrinsicHeight(
+      child: ChangeNotifierProvider(
+        create: (context) {
+          return VoteItemNotifier();
+        },
+        child: InkWell(
+          onTap: () {
+            setState(() {
+              if (check % 3 == 0) {
+                border_color = Colors.black;
+                border_width = 1.0;
+                check %= 3;
+                check++;
 
-                } else {
-
-                }
-                isVoted = !isVoted;
-              });
-            },
-            child: Row(
-              children: [
-                VerticalDivider(
-                  thickness: 1,
-                  width: 1,
-                  color: Theme.of(context).colorScheme.outline,
-                ),
-                Expanded(
-                    flex: 8,
-                    child: widget.imgUrl != null ? CachedNetworkImage(
-                      imageUrl: widget.imgUrl!,
-                      placeholder: (context, url) => Image.asset("assets/images/default_food.png"),
-                    ) : Image.asset("assets/images/default_food.png")
-                ),
-                VerticalDivider(
-                  thickness: 1,
-                  width: 1,
-                  color: Theme.of(context).colorScheme.outline,
-                ),
-                Expanded(
-                  flex: 17,
+              }
+              else if (check % 3 == 1) {
+                border_color = Colors.green;
+                border_width = 3.0;
+                check %= 3;
+                check++;
+              }
+              else if (check % 3 == 2) {
+                border_color = Colors.red;
+                border_width = 3.0;
+                check %= 3;
+                check++;
+              }
+            });
+          },
+          child: Column(
+            children: [
+              Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Text(
-                      widget.menuName,
-                      style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.onSurface
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            color: border_color,
+                            width: border_width,
+                          ),
                       ),
+                      child: widget.image != null ? CachedNetworkImage(
+                        width: 120.w,
+                        height: 120.h,
+                        fit: BoxFit.cover,
+                        imageUrl: widget.image!,
+                        placeholder: (context, url) =>
+                            Image.asset("assets/images/default_food.png"),
+                      ) : Image.asset("assets/images/default_food.png"),
                     ),
                   ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(4),
+                  child: Text(
+                    widget.menuName,
+                    style: TextStyle(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.onSurface),
+                  ),
                 ),
-                VerticalDivider(
-                  thickness: 1,
-                  width: 1,
-                  color: Theme.of(context).colorScheme.outline,
-                ),
-                Expanded(
-                    flex: 8,
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: Visibility(
-                        visible: context.watch<VoteItemNotifier>().index == widget.index,
-                        child: Image.asset("assets/images/ic_launcher.png"),
-                      ),
-                    )
-                ),
-                VerticalDivider(
-                  thickness: 1,
-                  width: 1,
-                  color: Theme.of(context).colorScheme.outline,
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
-        Divider(
-          height: 1,
-          thickness: 1,
-          color: Theme.of(context).colorScheme.outline,
-        ),
-      ],
+      ),
     );
   }
 }

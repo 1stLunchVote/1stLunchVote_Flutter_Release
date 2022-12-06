@@ -6,6 +6,8 @@ import 'package:lunch_vote/view/widget/custom_clip_path.dart';
 import 'package:lunch_vote/view/widget/first_vote_tile.dart';
 import 'package:lunch_vote/controller/menu_controller.dart';
 
+import '../../../model/menu/menu_info.dart';
+
 
 
 class FirstVoteScreen extends StatefulWidget {
@@ -16,8 +18,18 @@ class FirstVoteScreen extends StatefulWidget {
 }
 
 class _FirstVoteScreenState extends State<FirstVoteScreen> {
-  String searchMenu = '';
+  final _controller = MenuController();
   TextEditingController _textController = TextEditingController();
+  String searchedMenu = '';
+  late Future future;
+  late Future afterSearch;
+  List<MenuInfo> menuList = [];
+
+  @override
+  void initState(){
+    super.initState();
+    future = _controller.getMenuInfo();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,10 +101,12 @@ class _FirstVoteScreenState extends State<FirstVoteScreen> {
                       onSubmitted: (text){
                         setState((){
                           if(text == ''){
-                            searchMenu = '';
+                            searchedMenu = '';
+
                           }
                           else {
-                            searchMenu = _textController.text.toString();
+                            searchedMenu = _textController.text.toString();
+
 
                           }
                         });
@@ -100,33 +114,7 @@ class _FirstVoteScreenState extends State<FirstVoteScreen> {
                     ),
                   ),
                   SizedBox(
-                    height: 16.h,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-
-                    },
-                    child: Container(
-                        width: 320.w,
-                        height: 56.h,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4.0),
-                          border: Border.all(color: Colors.black, width: 1),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              Icon(Icons.search),
-                              SizedBox(width: 16.w,),
-                              Text('메뉴를 검색해주세요.'),
-                            ],
-                          ),
-                        )
-                    ),
-                  ),
-                  SizedBox(
-                    height: 16.h,
+                    height: 12.h,
                   ),
                   GestureDetector(
                     onTap: () {
@@ -158,63 +146,52 @@ class _FirstVoteScreenState extends State<FirstVoteScreen> {
                     ),
                   ),
                   SizedBox(height: 16.h,),
-
-                  FutureBuilder(
-                    future: null,
+                  Expanded(
+                    child: FutureBuilder(
+                      future: future,
                       builder: (context, snapshot){
-                      if(snapshot.hasData == false) {
-                        return GridView.builder(
-                          itemCount: 50,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            childAspectRatio: 1 / 2,
-                            mainAxisSpacing: 10.sp,
-                            crossAxisSpacing: 10.sp,
-                          ),
-                          itemBuilder: (BuildContext context, int index){
-                            return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: FirstVoteTile(
-                                  menuName: "음식 ${index + 1}",
-                                  imgUrl: null,
-                                  index: index,
-                                ),
-                            );
-                          });
-                      }
-                      //error가 발생하게 될 경우 반환하게 되는 부분
-                      else if (snapshot.hasError) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            'Error: ${snapshot.error}',
-                            style: TextStyle(fontSize: 15.sp),
-                          ),
-                        );
-                      }
-                      // 데이터를 정상적으로 받아오게 되면 다음 부분을 실행하게 되는 것이다.
-                      else {
-                        // Todo : 아이템 만들기
-                        return GridView.builder(
-                            itemCount: 50,
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              childAspectRatio: 1 / 2,
-                              mainAxisSpacing: 10.sp,
-                              crossAxisSpacing: 10.sp,
+                        if(snapshot.hasData == false) {
+                          return const Center(child: CircularProgressIndicator());
+                        }
+                        //error가 발생하게 될 경우 반환하게 되는 부분
+                        else if (snapshot.hasError) {
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Error: ${snapshot.error}',
+                              style: TextStyle(fontSize: 15.sp),
                             ),
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding:
-                                const EdgeInsets.only(bottom: 20),
-                                child: GridTile(
-                                  child: Text("$index"),
-                                ),
-                              );
-                            },
-                        );
-                      }
-                    },
+                          );
+                        }
+                        // 데이터를 정상적으로 받아오게 되면 다음 부분을 실행하게 되는 것이다.
+                        else {
+                          for(int i=0; i<snapshot.data.length;i++){
+                            if(snapshot.data[i].menuName.contains(searchedMenu)){
+                              menuList.add(snapshot.data[i]);
+                            }
+                          }
+                          return GridView.builder(
+                            shrinkWrap: true,
+                              itemCount: snapshot.data.length,
+                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                childAspectRatio: 1 / 1,
+                                mainAxisSpacing: 4,
+                                crossAxisSpacing: 4,
+                              ),
+                              itemBuilder: (BuildContext context, int index){
+                                return Container(
+                                  child: FirstVoteTile(
+                                    menuName: menuList[index].menuName,
+                                    menuId: menuList[index].menuId,
+                                    image: menuList[index].image,
+                                    index: index
+                                  ),
+                                );
+                              });
+                        }
+                      },
+                    ),
                   ),
                 ],
               ),

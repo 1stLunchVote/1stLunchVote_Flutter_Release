@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:lunch_vote/controller/group_controller.dart';
 
 import '../../../model/group/group_info.dart';
+import '../vote/first_vote_screen.dart';
 
 class GroupScreen extends StatelessWidget {
   const GroupScreen({Key? key, required this.isLeader}) : super(key: key);
@@ -185,7 +186,11 @@ class _GroupScreenState extends State<_GroupScreen> {
                           ),
                         ),
                         ElevatedButton(
-                          onPressed: (){},
+                          onPressed: (){
+                            Navigator.of(context).push(
+                                MaterialPageRoute(builder: (context) => FirstVoteScreen())
+                            );
+                          },
                           child: const Text("투표 시작!"),
                         ),
                         const Expanded(flex: 1, child: SizedBox()),

@@ -11,7 +11,9 @@ MenuInfoResponse _$MenuInfoResponseFromJson(Map<String, dynamic> json) =>
       status: json['status'] as int,
       success: json['success'] as bool,
       message: json['message'] as String,
-      data: MenuInfo.fromJson(json['data'] as Map<String, dynamic>),
+      data: (json['data'] as List<dynamic>)
+          .map((e) => MenuInfo.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$MenuInfoResponseToJson(MenuInfoResponse instance) =>
