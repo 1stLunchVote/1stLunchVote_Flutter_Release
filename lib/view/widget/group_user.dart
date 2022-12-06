@@ -3,13 +3,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lunch_vote/model/group/group_notifier.dart';
 import 'package:provider/provider.dart';
 
+import '../../controller/group_controller.dart';
+import '../../model/group/group_info.dart';
+
 class GroupUser extends StatefulWidget {
   final int userIdx;
   final bool isLeader;
+  final GroupController groupController;
 
   const GroupUser({super.key,
     required this.userIdx,
     required this.isLeader,
+    required this.groupController,
   });
 
   @override
@@ -17,8 +22,13 @@ class GroupUser extends StatefulWidget {
 }
 
 class _GroupUserState extends State<GroupUser> {
+  final _formKey = GlobalKey<FormState>();
+  String email = '';
+  String _groupId = '';
+
   @override
   Widget build(BuildContext context) {
+    _groupId = context.watch<GroupNotifier>().groupId;
     if (context.watch<GroupNotifier>().length < widget.userIdx + 1) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -38,7 +48,51 @@ class _GroupUserState extends State<GroupUser> {
                   child: InkWell(
                     borderRadius: BorderRadius.circular(40),
                     onTap: () {
-                      // TODO: 유저 추방 기능
+                      // TODO: 유저 초대 기능
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            title: const Text("이메일로 초대"),
+                            content: Form(
+                              key: _formKey,
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: 'Email',
+                                  helperText: '',
+                                ),
+                                onSaved: (value) {
+                                  email = value!;
+                                },
+                                validator: (value) {
+                                  if (value == null) {
+                                    return "Please enter an email.";
+                                  } else if (value.isEmpty) {
+                                    return "Please enter an email";
+                                  }
+                                  return null;
+                                },
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                child: const Text("확인"),
+                                onPressed: () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    _formKey.currentState!.save();
+                                     await widget.groupController.inviteUser(_groupId, email);
+                                     Navigator.pop(context);
+                                  }
+                                },
+                              ),
+                            ],
+                          );
+                        }
+                      );
                     },
                   ),
                 ),
@@ -49,10 +103,7 @@ class _GroupUserState extends State<GroupUser> {
             padding: const EdgeInsets.symmetric(vertical: 4.0),
             child: Text(
               context.watch<GroupNotifier>().getMemberNickname(widget.userIdx),
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .labelLarge,
+              style: Theme.of(context).textTheme.labelLarge,
             ),
           ),
         ],
@@ -87,10 +138,7 @@ class _GroupUserState extends State<GroupUser> {
             padding: const EdgeInsets.symmetric(vertical: 4.0),
             child: Text(
               context.watch<GroupNotifier>().getMemberNickname(widget.userIdx),
-              style: Theme
-                  .of(context)
-                  .textTheme
-                  .labelLarge,
+              style: Theme.of(context).textTheme.labelLarge,
             ),
           ),
         ],

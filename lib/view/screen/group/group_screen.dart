@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:lunch_vote/model/group/group_notifier.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
@@ -11,21 +13,25 @@ import '../../../model/group/group_info.dart';
 import '../vote/first_vote_screen.dart';
 
 class GroupScreen extends StatelessWidget {
-  const GroupScreen({Key? key, required this.isLeader}) : super(key: key);
+  GroupScreen({Key? key, required this.isLeader, required this.groupId}) : super(key: key);
   final bool isLeader;
+  String groupId;
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => GroupNotifier(),
-      child: _GroupScreen(isLeader: isLeader,),
+      builder: (context, child) {
+        return _GroupScreen(isLeader: isLeader, groupId: groupId,);
+      }
     );
   }
 }
 
 class _GroupScreen extends StatefulWidget {
-  const _GroupScreen({Key? key, required this.isLeader}) : super(key: key);
+  _GroupScreen({Key? key, required this.isLeader, required this.groupId}) : super(key: key);
   final bool isLeader;
+  String groupId;
 
   @override
   State<_GroupScreen> createState() => _GroupScreenState();
@@ -36,6 +42,9 @@ class _GroupScreenState extends State<_GroupScreen> {
 
   bool isGroupCreated = false;
 
+  // 3초 타이머
+  Timer? _timer;
+
   @override
   void initState() {
     super.initState();
@@ -45,6 +54,7 @@ class _GroupScreenState extends State<_GroupScreen> {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text('방 생성에 오류가 발생했습니다.')));
         } else {
+          widget.groupId = value;
           context.read<GroupNotifier>().setGroupId(value);
           _groupController.getMyProfile().then((value) {
             if (value != null) {
@@ -60,7 +70,36 @@ class _GroupScreenState extends State<_GroupScreen> {
           });
         }
       });
+    } else {
+      _groupController.getGroupInfo(widget.groupId).then((value){
+        if (value != null) {
+          for (int i = 0; i < value.members.length; i++) {
+            context.read<GroupNotifier>().add(MemberInfo(
+              email: value.members[i].email,
+              nickname: value.members[i].nickname,
+              profileImage: value.members[i].profileImage,
+            ));
+          }
+        }
+        setState(() {
+          isGroupCreated = true;
+        });
+      });
     }
+
+    _timer = Timer.periodic(const Duration(milliseconds: 3000), (timer) async {
+      _groupController.getGroupInfo(widget.groupId).then((value){
+        if (value != null) {
+          context.read<GroupNotifier>().set(value.members);
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
+    _timer?.cancel();
   }
 
   @override
@@ -116,72 +155,78 @@ class _GroupScreenState extends State<_GroupScreen> {
                         Expanded(
                           flex: 2,
                           child: Row(
-                            children: const [
-                              Expanded(flex: 1, child: SizedBox()),
+                            children: [
+                              const Expanded(flex: 1, child: SizedBox()),
                               Expanded(
                                 flex: 1,
                                 child: GroupUser(
                                   userIdx: 0,
                                   isLeader: true,
+                                  groupController: _groupController,
                                 ),
                               ),
-                              Expanded(flex: 1, child: SizedBox()),
+                              const Expanded(flex: 1, child: SizedBox()),
                               Expanded(
                                 flex: 1,
                                 child: GroupUser(
                                   userIdx: 1,
                                   isLeader: false,
+                                  groupController: _groupController,
                                 ),
                               ),
-                              Expanded(flex: 1, child: SizedBox()),
+                              const Expanded(flex: 1, child: SizedBox()),
                             ],
                           ),
                         ),
                         Expanded(
                           flex: 2,
                           child: Row(
-                            children: const [
-                              Expanded(flex: 1, child: SizedBox()),
+                            children: [
+                              const Expanded(flex: 1, child: SizedBox()),
                               Expanded(
                                 flex: 1,
                                 child: GroupUser(
                                   userIdx: 2,
                                   isLeader: false,
+                                  groupController: _groupController,
                                 ),
                               ),
-                              Expanded(flex: 1, child: SizedBox()),
+                              const Expanded(flex: 1, child: SizedBox()),
                               Expanded(
                                 flex: 1,
                                 child: GroupUser(
                                   userIdx: 3,
                                   isLeader: false,
+                                  groupController: _groupController,
                                 ),
                               ),
-                              Expanded(flex: 1, child: SizedBox()),
+                              const Expanded(flex: 1, child: SizedBox()),
                             ],
                           ),
                         ),
                         Expanded(
                           flex: 2,
                           child: Row(
-                            children: const [
-                              Expanded(flex: 1, child: SizedBox()),
+                            children: [
+                              const Expanded(flex: 1, child: SizedBox()),
                               Expanded(
                                 flex: 1,
                                 child: GroupUser(
                                   userIdx: 4,
                                   isLeader: false,
+                                  groupController: _groupController,
                                 ),
                               ),
-                              Expanded(flex: 1, child: SizedBox()),
+                              const Expanded(flex: 1, child: SizedBox()),
                               Expanded(
                                 flex: 1,
                                 child: GroupUser(
                                   userIdx: 6,
                                   isLeader: false,
+                                  groupController: _groupController,
                                 ),
                               ),
-                              Expanded(flex: 1, child: SizedBox()),
+                              const Expanded(flex: 1, child: SizedBox()),
                             ],
                           ),
                         ),
