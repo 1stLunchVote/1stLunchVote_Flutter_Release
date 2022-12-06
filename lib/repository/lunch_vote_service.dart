@@ -4,9 +4,9 @@ import 'package:lunch_vote/model/profile/profile_info.dart';
 import 'package:lunch_vote/model/vote/second_vote.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:lunch_vote/model/login/user_info.dart';
-import 'package:lunch_vote/model/group/group_create.dart';
-import 'package:lunch_vote/model/group/user_search.dart';
 
+import '../model/group/group_info.dart';
+import '../model/group/user_invite.dart';
 import '../model/vote/final_result.dart';
 import '../model/vote/first_vote_result.dart';
 
@@ -26,11 +26,15 @@ abstract class LunchVoteService{
 
   // 그룹 생성
   @POST('/group')
-  Future<GroupCreateResponse> createGroup();
+  Future<GroupInfoResponse> createGroup();
+
+  // 그룹 정보 조회
+  @GET('/group/{groupId}')
+  Future<GroupInfoResponse> getGroupInfo(@Path() String groupId);
 
   // 유저 초대
-  @GET('/group/{groupId}/invite')
-  Future<UserSearchResponse> inviteUser(@Path() String groupId, @Body() String email);
+  @PATCH('/group/{groupId}/invite')
+  Future<UserInviteResponse> inviteUser(@Path() String groupId, @Body() UserEmail email);
 
   // 유저 프로필 조회
   @GET('/user')

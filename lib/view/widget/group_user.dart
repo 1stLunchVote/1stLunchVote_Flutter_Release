@@ -4,6 +4,7 @@ import 'package:lunch_vote/model/group/group_notifier.dart';
 import 'package:provider/provider.dart';
 
 import '../../controller/group_controller.dart';
+import '../../model/group/group_info.dart';
 
 class GroupUser extends StatefulWidget {
   final int userIdx;
@@ -23,9 +24,11 @@ class GroupUser extends StatefulWidget {
 class _GroupUserState extends State<GroupUser> {
   final _formKey = GlobalKey<FormState>();
   String email = '';
+  String _groupId = '';
 
   @override
   Widget build(BuildContext context) {
+    _groupId = context.watch<GroupNotifier>().groupId;
     if (context.watch<GroupNotifier>().length < widget.userIdx + 1) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -81,15 +84,24 @@ class _GroupUserState extends State<GroupUser> {
                                 onPressed: () {
                                   if (_formKey.currentState!.validate()) {
                                     _formKey.currentState!.save();
+                                    widget.groupController.inviteUser(_groupId, email).then((value) {
+                                      if (value != null) {
+                                        // context.read<GroupNotifier>().add(
+                                        //   MemberInfo(
+                                        //     email: value.email,
+                                        //     nickname: value.nickname,
+                                        //     profileImage: value.profileImage,
+                                        //   )
+                                        // );
+                                      }
+                                    });
                                   }
-                                  Navigator.pop(context);
                                 },
                               ),
                             ],
                           );
                         }
                       );
-                      widget.groupController.inviteUser(context.watch<GroupNotifier>().groupId, email);
                     },
                   ),
                 ),

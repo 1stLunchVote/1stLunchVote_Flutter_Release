@@ -10,21 +10,25 @@ import 'package:lunch_vote/controller/group_controller.dart';
 import '../../../model/group/group_info.dart';
 
 class GroupScreen extends StatelessWidget {
-  const GroupScreen({Key? key, required this.isLeader}) : super(key: key);
+  GroupScreen({Key? key, required this.isLeader, required this.groupId}) : super(key: key);
   final bool isLeader;
+  String groupId;
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => GroupNotifier(),
-      child: _GroupScreen(isLeader: isLeader,),
+      builder: (context, child) {
+        return _GroupScreen(isLeader: isLeader, groupId: groupId,);
+      }
     );
   }
 }
 
 class _GroupScreen extends StatefulWidget {
-  const _GroupScreen({Key? key, required this.isLeader}) : super(key: key);
+  _GroupScreen({Key? key, required this.isLeader, required this.groupId}) : super(key: key);
   final bool isLeader;
+  String groupId;
 
   @override
   State<_GroupScreen> createState() => _GroupScreenState();
@@ -44,6 +48,7 @@ class _GroupScreenState extends State<_GroupScreen> {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text('방 생성에 오류가 발생했습니다.')));
         } else {
+          widget.groupId = value;
           context.read<GroupNotifier>().setGroupId(value);
           _groupController.getMyProfile().then((value) {
             if (value != null) {
@@ -57,6 +62,18 @@ class _GroupScreenState extends State<_GroupScreen> {
               isGroupCreated = true;
             });
           });
+        }
+      });
+    } else {
+      _groupController.getGroupInfo(widget.groupId).then((value){
+        if (value != null) {
+          for (int i = 0; i < value.members.length; i++) {
+            context.read<GroupNotifier>().add(MemberInfo(
+              email: value.members[i].email,
+              nickname: value.members[i].nickname,
+              profileImage: value.members[i].profileImage,
+            ));
+          }
         }
       });
     }
