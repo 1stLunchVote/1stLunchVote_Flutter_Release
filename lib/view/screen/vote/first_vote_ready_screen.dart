@@ -6,8 +6,7 @@ import '../../widget/custom_clip_path.dart';
 import 'first_vote_screen.dart';
 
 class FirstVoteReadyScreen extends StatelessWidget {
-  FirstVoteReadyScreen({Key? key}) : super(key: key);
-  String menu_name ='';
+  const FirstVoteReadyScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +104,7 @@ class FirstVoteReadyScreen extends StatelessWidget {
                   ElevatedButton(
                     onPressed: (){
                       Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => FirstVoteScreen())
+                          MaterialPageRoute(builder: (context) => const FirstVoteScreen())
                       );
                     },
                     child: Text(

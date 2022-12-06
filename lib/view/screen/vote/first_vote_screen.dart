@@ -1,38 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
 import 'package:lunch_vote/view/widget/custom_clip_path.dart';
 import 'package:lunch_vote/view/widget/first_vote_tile.dart';
 import 'package:lunch_vote/controller/menu_controller.dart';
 
 
+
 class FirstVoteScreen extends StatefulWidget {
-  FirstVoteScreen({Key? key}) : super(key: key);
+  const FirstVoteScreen({Key? key}) : super(key: key);
 
   @override
   State<FirstVoteScreen> createState() => _FirstVoteScreenState();
 }
 
 class _FirstVoteScreenState extends State<FirstVoteScreen> {
-  final _controller = MenuController();
-  final _textController = TextEditingController();
   String searchMenu = '';
-  late Future future;
-
-  List<MenuInfo> menuList = [];
-
-  @override
-  void initState() {
-    super.initState();
-    future = _controller.getMenuInfo();
-  }
-
-  @override
-  void dispose() {
-    // 텍스트에디팅컨트롤러를 제거하고, 등록된 리스너도 제거된다.
-    _textController.dispose();
-    super.dispose();
-  }
+  TextEditingController _textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +28,12 @@ class _FirstVoteScreenState extends State<FirstVoteScreen> {
         isTitleCenter: false,
         context: context,
         trailingList: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.more_vert)),
+          IconButton(
+              onPressed: (){
+
+              },
+              icon: const Icon(Icons.more_vert)
+          ),
         ],
       ),
       body: SafeArea(
@@ -66,6 +56,7 @@ class _FirstVoteScreenState extends State<FirstVoteScreen> {
             ),
             Center(
               child: Column(
+                //mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(
                     height: 16.h,
@@ -113,7 +104,7 @@ class _FirstVoteScreenState extends State<FirstVoteScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // TODO 템플릿 선택하는 함수 넣어야 함.
+
                     },
                     child: Container(
                         width: 320.w,
@@ -126,77 +117,104 @@ class _FirstVoteScreenState extends State<FirstVoteScreen> {
                           padding: EdgeInsets.all(8.0),
                           child: Row(
                             children: [
-                              SizedBox(
-                                width: 16.w,
-                              ),
+                              Icon(Icons.search),
+                              SizedBox(width: 16.w,),
+                              Text('메뉴를 검색해주세요.'),
+                            ],
+                          ),
+                        )
+                    ),
+                  ),
+                  SizedBox(
+                    height: 16.h,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+
+                    },
+                    child: Container(
+                        width: 320.w,
+                        height: 56.h,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4.0),
+                          border: Border.all(color: Colors.black, width: 1),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              SizedBox(width: 16.w,),
                               Text('템플릿을 선택해주세요.'),
-                              SizedBox(
-                                width: 120.w,
-                              ),
+                              SizedBox(width: 120.w,),
                               IconButton(
                                 icon: Icon(Icons.unfold_more),
-                                onPressed: () {
+                                onPressed: (){
                                   // TODO 템플릿 선택하는 함수 넣어야 함.
                                 },
                               ),
                             ],
                           ),
-                        )),
-                  ),
-                  SizedBox(
-                    height: 16.h,
-                  ),
-                  Expanded(
-                    child: FutureBuilder(
-                      future: future,
-                      builder: (context, snapshot) {
-                        if (snapshot.data == null) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        }
-                        //error가 발생하게 될 경우 반환하게 되는 부분
-                        else if (snapshot.hasError) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              'Error: ${snapshot.error}',
-                              style: TextStyle(fontSize: 15.sp),
-                            ),
-                          );
-                        }
-                        // 데이터를 정상적으로 받아오게 되면 다음 부분을 실행하게 되는 것이다.
-                        else {
-                          for(int i=0; i<snapshot.data.length;i++){
-                            if(snapshot.data[i].menuName.contains(searchMenu)){
-                              menuList.add(snapshot.data[i]);
-                              print(menuList[i].menuName);
-                            }
-                          }
-                          return GridView.builder(
-                              padding: EdgeInsets.all(8.0),
-                              shrinkWrap: true,
-                              itemCount: menuList.length,
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 3,
-                                childAspectRatio: 1 / 1,
-                                mainAxisSpacing: 4.sp,
-                                crossAxisSpacing: 4.sp,
-                              ),
-                              itemBuilder: (BuildContext context, int index) {
-                                return Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: FirstVoteTile(
-                                      menuName: menuList[index].menuName,
-                                      menuId: menuList[index].menuId,
-                                      imgUrl: menuList[index].image,
-                                      index: index
-                                  ),
-                                );
-                              });
-                        }
-                      },
+                        )
                     ),
+                  ),
+                  SizedBox(height: 16.h,),
+
+                  FutureBuilder(
+                    future: null,
+                      builder: (context, snapshot){
+                      if(snapshot.hasData == false) {
+                        return GridView.builder(
+                          itemCount: 50,
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            childAspectRatio: 1 / 2,
+                            mainAxisSpacing: 10.sp,
+                            crossAxisSpacing: 10.sp,
+                          ),
+                          itemBuilder: (BuildContext context, int index){
+                            return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: FirstVoteTile(
+                                  menuName: "음식 ${index + 1}",
+                                  imgUrl: null,
+                                  index: index,
+                                ),
+                            );
+                          });
+                      }
+                      //error가 발생하게 될 경우 반환하게 되는 부분
+                      else if (snapshot.hasError) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            'Error: ${snapshot.error}',
+                            style: TextStyle(fontSize: 15.sp),
+                          ),
+                        );
+                      }
+                      // 데이터를 정상적으로 받아오게 되면 다음 부분을 실행하게 되는 것이다.
+                      else {
+                        // Todo : 아이템 만들기
+                        return GridView.builder(
+                            itemCount: 50,
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              childAspectRatio: 1 / 2,
+                              mainAxisSpacing: 10.sp,
+                              crossAxisSpacing: 10.sp,
+                            ),
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding:
+                                const EdgeInsets.only(bottom: 20),
+                                child: GridTile(
+                                  child: Text("$index"),
+                                ),
+                              );
+                            },
+                        );
+                      }
+                    },
                   ),
                 ],
               ),

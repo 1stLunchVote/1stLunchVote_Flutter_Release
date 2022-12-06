@@ -14,13 +14,14 @@ class MenuController{
     dio.options.headers["Content-Type"] = "application/json";
   }
 
-  Future<List<MenuInfo>?> getMenuInfo() async{
+  Future<MenuInfo?> getMenuInfo() async{
     dio.options.headers["Authorization"] = await _spfManager.getUserToken();
     dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
     _lunchVoteService = LunchVoteService(dio);
 
     var res = await _lunchVoteService.getMenuInfo();
     if (res.success){
+      print(res.data.menuName);
       return res.data;
     }
     return null;

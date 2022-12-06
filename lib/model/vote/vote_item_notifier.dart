@@ -7,9 +7,6 @@ class VoteItemNotifier extends ChangeNotifier{
   String _menuId = '';
   String get menuId => _menuId;
 
-  int _touchNum = 0;
-  int get touchNum => _touchNum;
-
   void setIndex(int idx, String menuId){
     _index = idx;
     _menuId = menuId;
@@ -21,7 +18,4 @@ class VoteItemNotifier extends ChangeNotifier{
     _menuId = '';
     notifyListeners();
   }
-
-
-
 }
