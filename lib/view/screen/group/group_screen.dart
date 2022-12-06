@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:lunch_vote/model/group/group_notifier.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
@@ -38,6 +40,9 @@ class _GroupScreenState extends State<_GroupScreen> {
   final GroupController _groupController = GroupController();
 
   bool isGroupCreated = false;
+
+  // 3초 타이머
+  Timer? _timer;
 
   @override
   void initState() {
@@ -80,6 +85,20 @@ class _GroupScreenState extends State<_GroupScreen> {
         });
       });
     }
+
+    _timer = Timer.periodic(const Duration(milliseconds: 3000), (timer) async {
+      _groupController.getGroupInfo(widget.groupId).then((value){
+        if (value != null) {
+          context.read<GroupNotifier>().set(value.members);
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
+    _timer?.cancel();
   }
 
   @override

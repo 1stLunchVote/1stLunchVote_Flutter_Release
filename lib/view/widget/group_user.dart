@@ -81,20 +81,11 @@ class _GroupUserState extends State<GroupUser> {
                             actions: [
                               TextButton(
                                 child: const Text("확인"),
-                                onPressed: () {
+                                onPressed: () async {
                                   if (_formKey.currentState!.validate()) {
                                     _formKey.currentState!.save();
-                                    widget.groupController.inviteUser(_groupId, email).then((value) {
-                                      if (value != null) {
-                                        // context.read<GroupNotifier>().add(
-                                        //   MemberInfo(
-                                        //     email: value.email,
-                                        //     nickname: value.nickname,
-                                        //     profileImage: value.profileImage,
-                                        //   )
-                                        // );
-                                      }
-                                    });
+                                     await widget.groupController.inviteUser(_groupId, email);
+                                     Navigator.pop(context);
                                   }
                                 },
                               ),
