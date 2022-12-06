@@ -150,7 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   }
                                   return null;
                                 },
-                                onSaved: (value) {
+                                onSaved: (value){
                                   setState(() {
                                     _nickname = value!;
                                   });
@@ -178,9 +178,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     SnackBar(
                                         content: Text(
                                             '닉네임 변경에 $complete 하였습니다.')));
-                              });
-                              setState(() {
-                                _nicknameChange = false;
+                                setState(() {
+                                  _nicknameChange = false;
+                                  // future 재선언 하여 프로필 정보 리로드
+                                  future = _profileController.getProfileInfo();
+                                });
                               });
                             }
                           },
