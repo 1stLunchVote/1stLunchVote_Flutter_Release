@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lunch_vote/view/screen/group/group_screen.dart';
 import 'package:lunch_vote/view/screen/profile_screen.dart';
 import 'package:lunch_vote/view/screen/vote/second_vote_screen.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
@@ -83,14 +84,12 @@ class HomeScreen extends StatelessWidget {
                             ),
                             Positioned.fill(
                                 child: Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(16),
-                                onTap: () {
-                                  // Todo : 임시로 최종 투표 화면으로 가게 함 (테스트 용)
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => const SecondVoteScreen())
-                                  );
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(16),
+                                    onTap: () {
+                                      Navigator.of(context).push(MaterialPageRoute(
+                                          builder: (context) => const GroupScreen()));
                                 },
                               ),
                             ))
@@ -118,12 +117,17 @@ class HomeScreen extends StatelessWidget {
                           ),
                           Positioned.fill(
                               child: Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              borderRadius: BorderRadius.circular(16),
-                              onTap: () {},
-                            ),
-                          ))
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(16),
+                                  onTap: () {
+                                    // Todo : 임시로 최종 투표 화면으로 가게 함 (테스트 용)
+                                    Navigator.of(context).push(MaterialPageRoute(
+                                        builder: (context) => const SecondVoteScreen()));
+                                  },
+                                ),
+                              )
+                          )
                         ]),
                       ),
                     ],
@@ -132,6 +136,7 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
           ),
-        ));
+        )
+    );
   }
 }
