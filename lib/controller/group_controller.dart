@@ -3,6 +3,7 @@ import 'package:lunch_vote/repository/lunch_vote_service.dart';
 import 'package:lunch_vote/view/widget/utils/shared_pref_manager.dart';
 
 import '../model/group/group_info.dart';
+import '../model/group/user_invite.dart';
 
 class GroupController{
   final dio = Dio();
@@ -25,10 +26,22 @@ class GroupController{
     return null;
   }
 
-  Future<String?> searchUser(String groupId, String email) async{
-    var res = await _lunchVoteService.searchUser(groupId, email);
+  Future<GroupInfo?> getGroupInfo(String groupId) async{
+    dio.options.headers["Authorization"] = await _spfManager.getUserToken();
+    dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
+    _lunchVoteService = LunchVoteService(dio);
+
+    var res = await _lunchVoteService.getGroupInfo(groupId);
     if (res.success){
-      return res.data.nickname;
+      return res.data;
+    }
+    return null;
+  }
+
+  Future<MemberInfo?> inviteUser(String groupId, String email) async{
+    var res = await _lunchVoteService.inviteUser(groupId, UserEmail(email: email));
+    if (res.success){
+      return MemberInfo(email: res.data.email, nickname: res.data.nickname, profileImage: res.data.profileImage,);
     }
     return null;
   }

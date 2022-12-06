@@ -193,9 +193,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     onTap: () {
                                       Navigator.of(context).push(
                                           MaterialPageRoute(
-                                              builder: (
-                                                  context) => const SecondVoteScreen())
-                                      );
+                                              builder: (context) =>
+                                                  GroupScreen(
+                                                    isLeader: true, groupId: "",)));
                                     },
                                   ),
                                 ))
@@ -238,9 +238,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   onTap: () {
                                     Navigator.of(context).push(
                                         MaterialPageRoute(
-                                            builder: (context) =>
-                                            const GroupScreen(
-                                              isLeader: true,)));
+                                            builder: (
+                                                context) => const SecondVoteScreen())
+                                    );
                                   },
                                 ),
                               ))
@@ -269,7 +269,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     context.read<GroupIdNotifier>().clearIndex();
                     if (res == true){
                       Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => const GroupScreen(isLeader: false))
+                          MaterialPageRoute(builder: (context) => GroupScreen(isLeader: false, groupId: groupId,))
                       );
                     }
                   },
