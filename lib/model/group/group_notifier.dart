@@ -36,6 +36,14 @@ class GroupNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  void set(List<MemberInfo> members) {
+    _members.clear();
+    for (int i = 0; i < members.length; i++) {
+      _members.add(members[i]);
+    }
+    notifyListeners();
+  }
+
   void remove(int memberIdx) {
     _members.removeAt(memberIdx);
     notifyListeners();
