@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:lunch_vote/model/group_id_notifier.dart';
 import 'package:lunch_vote/styles.dart';
 import 'package:lunch_vote/view/screen/home_screen.dart';
 import 'package:lunch_vote/view/screen/login_screen.dart';
@@ -12,76 +13,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lunch_vote/view/screen/vote/second_vote_screen.dart';
 import 'package:lunch_vote/view/widget/utils/shared_pref_manager.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'firebase_options.dart';
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
-
-late AndroidNotificationChannel channel;
-
-bool isFlutterLocalNotificationsInitialized = false;
-
-late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-
-@pragma('vm:entry-point')
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await setupFlutterNotifications();
-  showFlutterNotification(message);
-  print('Handling a background message ${message.messageId}');
-}
-
-Future<void> setupFlutterNotifications() async {
-  if (isFlutterLocalNotificationsInitialized) {
-    return;
-  }
-  channel = const AndroidNotificationChannel(
-    'high_importance_channel', // id
-    'High Importance Notifications', // title
-    description:
-    'This channel is used for important notifications.', // description
-    importance: Importance.high,
-  );
-
-
-
-  flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-      AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
-
-  /// Update the iOS foreground notification presentation options to allow
-  /// heads up notifications.
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-    alert: true,
-    badge: true,
-    sound: true,
-  );
-  isFlutterLocalNotificationsInitialized = true;
-}
-
-void showFlutterNotification(RemoteMessage message) {
-  RemoteNotification? notification = message.notification;
-  AndroidNotification? android = message.notification?.android;
-  if (notification != null && android != null) {
-    flutterLocalNotificationsPlugin.show(
-      notification.hashCode,
-      notification.title,
-      notification.body,
-      NotificationDetails(
-        android: AndroidNotificationDetails(
-          channel.id,
-          channel.name,
-          channelDescription: channel.description,
-          // TODO add a proper drawable resource to android, for now using
-          //      one that already exists in example app.
-          icon: '@mipmap/ic_launcher',
-        ),
-      ),
-    );
-  }
-}
 
 Future<void> main() async {
   final SharedPrefManager _spfManager = SharedPrefManager();
@@ -93,10 +28,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  await setupFlutterNotifications();
-
+  await FirebaseMessaging.instance.getInitialMessage();
 
   // runApp() 호출 전 Flutter SDK 초기화
   KakaoSdk.init(
@@ -107,7 +39,11 @@ Future<void> main() async {
   _spfManager.setFCMToken(token);
   print("FCM Token : $token");
 
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => GroupIdNotifier(),
+      child: const MyApp(),
+    ));
 }
 
 class MyApp extends StatefulWidget {
@@ -119,33 +55,12 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool _autoLogin = false;
-  String? initialMessage;
-  bool _resolved = false;
   SharedPrefManager spfManager = SharedPrefManager();
+
 
   @override
   void initState() {
     super.initState();
-    FirebaseMessaging.instance.getInitialMessage().then((value) => setState(
-        () {
-          if (value != null){
-            _resolved = true;
-            initialMessage = value?.data.toString();
-            Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const SecondVoteScreen())
-            );
-          }
-        }
-    ));
-    FirebaseMessaging.onMessage.listen(showFlutterNotification);
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print("onMessageOpenedApp : $message");
-      Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const SecondVoteScreen())
-      );
-    });
     setAutoLogin();
   }
 
@@ -166,21 +81,24 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: "1st Lunch Vote",
-        theme: ThemeData(
-            useMaterial3: true,
-            fontFamily: 'NanumSquareNeo',
-            colorScheme: ColorScheme.fromSeed(
-                seedColor: mainColor, brightness: Brightness.light),
-            scaffoldBackgroundColor: mainBackgroundColor),
-        darkTheme: ThemeData(
-            useMaterial3: true,
-            fontFamily: 'NanumSquareNeo',
-            colorScheme: ColorScheme.fromSeed(
-                seedColor: mainColor, brightness: Brightness.dark)),
-        home: _autoLogin == true ? const HomeScreen() : const LoginScreen()
+    return ChangeNotifierProvider(
+      create: (context) => GroupIdNotifier(),
+      child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: "1st Lunch Vote",
+          theme: ThemeData(
+              useMaterial3: true,
+              fontFamily: 'NanumSquareNeo',
+              colorScheme: ColorScheme.fromSeed(
+                  seedColor: mainColor, brightness: Brightness.light),
+              scaffoldBackgroundColor: mainBackgroundColor),
+          darkTheme: ThemeData(
+              useMaterial3: true,
+              fontFamily: 'NanumSquareNeo',
+              colorScheme: ColorScheme.fromSeed(
+                  seedColor: mainColor, brightness: Brightness.dark)),
+          home: _autoLogin == true ? const HomeScreen() : const LoginScreen()
+      ),
     );
   }
 }

@@ -75,6 +75,9 @@ class _GroupScreenState extends State<_GroupScreen> {
             ));
           }
         }
+        setState(() {
+          isGroupCreated = true;
+        });
       });
     }
   }
