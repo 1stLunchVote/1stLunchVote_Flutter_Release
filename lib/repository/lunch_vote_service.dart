@@ -28,9 +28,9 @@ abstract class LunchVoteService{
   @POST('/group')
   Future<GroupCreateResponse> createGroup();
 
-  // 유저 검색
+  // 유저 초대
   @GET('/group/{groupId}/invite')
-  Future<UserSearchResponse> searchUser(@Path() String groupId, @Body() String email);
+  Future<UserSearchResponse> inviteUser(@Path() String groupId, @Body() String email);
 
   // 유저 프로필 조회
   @GET('/user')

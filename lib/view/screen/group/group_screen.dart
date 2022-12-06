@@ -115,72 +115,78 @@ class _GroupScreenState extends State<_GroupScreen> {
                         Expanded(
                           flex: 2,
                           child: Row(
-                            children: const [
-                              Expanded(flex: 1, child: SizedBox()),
+                            children: [
+                              const Expanded(flex: 1, child: SizedBox()),
                               Expanded(
                                 flex: 1,
                                 child: GroupUser(
                                   userIdx: 0,
                                   isLeader: true,
+                                  groupController: _groupController,
                                 ),
                               ),
-                              Expanded(flex: 1, child: SizedBox()),
+                              const Expanded(flex: 1, child: SizedBox()),
                               Expanded(
                                 flex: 1,
                                 child: GroupUser(
                                   userIdx: 1,
                                   isLeader: false,
+                                  groupController: _groupController,
                                 ),
                               ),
-                              Expanded(flex: 1, child: SizedBox()),
+                              const Expanded(flex: 1, child: SizedBox()),
                             ],
                           ),
                         ),
                         Expanded(
                           flex: 2,
                           child: Row(
-                            children: const [
-                              Expanded(flex: 1, child: SizedBox()),
+                            children: [
+                              const Expanded(flex: 1, child: SizedBox()),
                               Expanded(
                                 flex: 1,
                                 child: GroupUser(
                                   userIdx: 2,
                                   isLeader: false,
+                                  groupController: _groupController,
                                 ),
                               ),
-                              Expanded(flex: 1, child: SizedBox()),
+                              const Expanded(flex: 1, child: SizedBox()),
                               Expanded(
                                 flex: 1,
                                 child: GroupUser(
                                   userIdx: 3,
                                   isLeader: false,
+                                  groupController: _groupController,
                                 ),
                               ),
-                              Expanded(flex: 1, child: SizedBox()),
+                              const Expanded(flex: 1, child: SizedBox()),
                             ],
                           ),
                         ),
                         Expanded(
                           flex: 2,
                           child: Row(
-                            children: const [
-                              Expanded(flex: 1, child: SizedBox()),
+                            children: [
+                              const Expanded(flex: 1, child: SizedBox()),
                               Expanded(
                                 flex: 1,
                                 child: GroupUser(
                                   userIdx: 4,
                                   isLeader: false,
+                                  groupController: _groupController,
                                 ),
                               ),
-                              Expanded(flex: 1, child: SizedBox()),
+                              const Expanded(flex: 1, child: SizedBox()),
                               Expanded(
                                 flex: 1,
                                 child: GroupUser(
                                   userIdx: 6,
                                   isLeader: false,
+                                  groupController: _groupController,
                                 ),
                               ),
-                              Expanded(flex: 1, child: SizedBox()),
+                              const Expanded(flex: 1, child: SizedBox()),
                             ],
                           ),
                         ),

@@ -25,8 +25,8 @@ class GroupController{
     return null;
   }
 
-  Future<String?> searchUser(String groupId, String email) async{
-    var res = await _lunchVoteService.searchUser(groupId, email);
+  Future<String?> inviteUser(String groupId, String email) async{
+    var res = await _lunchVoteService.inviteUser(groupId, email);
     if (res.success){
       return res.data.nickname;
     }
