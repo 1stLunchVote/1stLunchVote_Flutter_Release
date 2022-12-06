@@ -90,7 +90,7 @@ class HomeScreen extends StatelessWidget {
                                 onTap: () {
                                   // Todo : 임시로 최종 투표 화면으로 가게 함 (테스트 용)
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => const FirstVoteReadyScreen())
+                                      builder: (context) => FirstVoteReadyScreen())
                                   );
                                 },
                               ),
