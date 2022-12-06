@@ -1,25 +1,52 @@
 import 'package:drop_shadow/drop_shadow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lunch_vote/controller/second_vote_controller.dart';
 import 'package:lunch_vote/model/vote/vote_item_notifier.dart';
+import 'package:lunch_vote/styles.dart';
 import 'package:lunch_vote/view/screen/vote/result_screen.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
 import 'package:lunch_vote/view/widget/custom_clip_path.dart';
 import 'package:lunch_vote/view/widget/second_vote_tile.dart';
 import 'package:provider/provider.dart';
 
-class SecondVoteScreen extends StatefulWidget {
+class SecondVoteScreen extends StatelessWidget {
   const SecondVoteScreen({Key? key}) : super(key: key);
 
   @override
-  State<SecondVoteScreen> createState() => _SecondVoteScreenState();
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+        create: (context) => VoteItemNotifier(),
+        child: const SecondVotePage(),
+    );
+  }
 }
 
-class _SecondVoteScreenState extends State<SecondVoteScreen> {
+class SecondVotePage extends StatefulWidget {
+  const SecondVotePage({Key? key}) : super(key: key);
+
+  @override
+  State<SecondVotePage> createState() => _SecondVotePageState();
+}
+
+class _SecondVotePageState extends State<SecondVotePage> {
+  final _controller = SecondVoteController();
+  late Future future;
+
+  // Todo : 임시 그룹 ID
+  String groupId = "638de27375404f13e7cbf430";
+
   String _name = '사용자';
+  @override
+  void initState() {
+    super.initState();
+    future = _controller.getMenuInfo(groupId);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: mainBackgroundColor,
       appBar: BasicAppbar(
         backVisible: false,
         appbarTitle: "투표 2단계 - 최종 투표",
@@ -31,10 +58,9 @@ class _SecondVoteScreenState extends State<SecondVoteScreen> {
               icon: const Icon(Icons.more_vert))
         ],
       ),
-      body: ChangeNotifierProvider(
-        create: (BuildContext context) => VoteItemNotifier(),
-        child: SafeArea(
-          child: Stack(
+      body: Consumer<VoteItemNotifier>(
+        builder: (BuildContext newContext, notifier, _){
+          return Stack(
             children: [
               ClipPath(
                 clipper: CustomClipPath(),
@@ -81,26 +107,11 @@ class _SecondVoteScreenState extends State<SecondVoteScreen> {
                               height: 30,
                             ),
                             FutureBuilder(
-                              // Todo : future 추가
-                                future: null,
+                                future: future,
                                 builder: (context, snapshot) {
                                   //해당 부분은 data를 아직 받아 오지 못했을때 실행되는 부분을 의미한다.
-                                  if (snapshot.hasData == false) {
-                                    return ListView.builder(
-                                        itemCount: 20,
-                                        shrinkWrap: true,
-                                        physics: const ClampingScrollPhysics(),
-                                        itemBuilder: (context, index) {
-                                          return Padding(
-                                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                                              child: SecondVoteTile(
-                                                  foodName: "음식 ${index + 1}",
-                                                  imgUrl: null,
-                                                  index: index,
-                                              )
-                                          );
-                                        });
-                                    // return const CircularProgressIndicator();
+                                  if (snapshot.data == null) {
+                                    return const Center(child: CircularProgressIndicator());
                                   }
                                   //error가 발생하게 될 경우 반환하게 되는 부분
                                   else if (snapshot.hasError) {
@@ -114,28 +125,33 @@ class _SecondVoteScreenState extends State<SecondVoteScreen> {
                                   }
                                   // 데이터를 정상적으로 받아오게 되면 다음 부분을 실행하게 되는 것이다.
                                   else {
-                                    // Todo : 아이템 만들기
                                     return ListView.builder(
-                                        itemCount: 20,
+                                        itemCount: snapshot.data!.length,
+                                        shrinkWrap: true,
+                                        physics: const ClampingScrollPhysics(),
                                         itemBuilder: (context, index) {
                                           return Padding(
-                                            padding:
-                                            const EdgeInsets.only(bottom: 20),
-                                            child: ListTile(
-                                              title: Text("$index"),
-                                            ),
+                                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+                                              child: SecondVoteTile(
+                                                foodName: snapshot.data![index].menuName,
+                                                imgUrl: snapshot.data![index].image,
+                                                index: index,
+                                                menuId: snapshot.data![index].menuId,
+                                              )
                                           );
                                         });
                                   }
                                 }),
-                            // Todo : 임시 버튼
-                            ElevatedButton(
-                                onPressed: (){
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(builder: (context) => const ResultScreen())
-                                  );
-                                },
-                                child: const Text("결과화면으로 넘어가기")
+                            Visibility(
+                              visible: context.watch<VoteItemNotifier>().menuId.isNotEmpty,
+                              child: ElevatedButton(
+                                  onPressed: (){
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(builder: (context) => const ResultScreen())
+                                    );
+                                  },
+                                  child: const Text("결과화면으로 넘어가기")
+                              ),
                             )
                           ],
                         )
@@ -145,10 +161,9 @@ class _SecondVoteScreenState extends State<SecondVoteScreen> {
                 ),
               )
             ],
-          ),
-        ),
-      )
-
+          );
+        },
+      ),
     );
   }
 }

@@ -7,11 +7,13 @@ class SecondVoteTile extends StatefulWidget {
   String foodName = '';
   String? imgUrl;
   int index;
+  String menuId;
 
   SecondVoteTile({super.key,
     required this.foodName,
     required this.imgUrl,
     required this.index,
+    required this.menuId
   });
 
   @override
@@ -34,7 +36,7 @@ class _SecondVoteTileState extends State<SecondVoteTile> {
             onTap: (){
               setState(() {
                 if (!isVoted) {
-                  context.read<VoteItemNotifier>().setIndex(widget.index);
+                  context.read<VoteItemNotifier>().setIndex(widget.index, widget.menuId);
                 } else {
                   context.read<VoteItemNotifier>().clearIndex();
                 }
@@ -53,7 +55,7 @@ class _SecondVoteTileState extends State<SecondVoteTile> {
                   child: widget.imgUrl != null ? CachedNetworkImage(
                     imageUrl: widget.imgUrl!,
                     placeholder: (context, url) => Image.asset("assets/images/default_food.png"),
-                  ) : Image.asset("assets/images/default_food.png")
+                  ) : Image.network(widget.imgUrl!)
                 ),
                 VerticalDivider(
                   thickness: 1,
