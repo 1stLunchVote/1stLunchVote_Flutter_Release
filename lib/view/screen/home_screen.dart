@@ -5,6 +5,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lunch_vote/controller/group_controller.dart';
+import 'package:lunch_vote/controller/home_controller.dart';
 import 'package:lunch_vote/view/screen/group/group_screen.dart';
 import 'package:lunch_vote/model/group_id_notifier.dart';
 import 'package:lunch_vote/view/screen/profile_screen.dart';
@@ -71,8 +72,7 @@ void showFlutterNotification(RemoteMessage message) {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
-
+  final _controller = HomeController();
 
   @override
   void initState() {
@@ -262,11 +262,16 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Padding(
                 padding: const EdgeInsets.only(bottom: 50),
                 child: ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
+                    // Todo : groupId 보내기
+                    String groupId = context.read<GroupIdNotifier>().groupId;
+                    var res = await _controller.joinGroup(groupId);
                     context.read<GroupIdNotifier>().clearIndex();
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => ProfileScreen())
-                    );
+                    if (res == true){
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => const GroupScreen(isLeader: false))
+                      );
+                    }
                   },
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),

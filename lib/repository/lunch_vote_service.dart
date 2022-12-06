@@ -7,6 +7,7 @@ import 'package:lunch_vote/model/login/user_info.dart';
 import 'package:lunch_vote/model/group/group_create.dart';
 import 'package:lunch_vote/model/group/user_search.dart';
 
+import '../model/group/group_join_response.dart';
 import '../model/vote/final_result.dart';
 import '../model/vote/first_vote_result.dart';
 
@@ -51,4 +52,7 @@ abstract class LunchVoteService{
   // 최종 결과 조회
   @GET('/group/{groupId}/vote/second/result')
   Future<FinalResultResponse> getFinalResult(@Path() String groupId);
+
+  @PATCH('/group/{groupId}/join')
+  Future<GroupJoinResponse> joinGroup(@Path() String groupId);
 }
