@@ -77,7 +77,7 @@ class _MyAppState extends State<MyApp> {
             fontFamily: 'NanumSquareNeo',
             colorScheme: ColorScheme.fromSeed(
                 seedColor: mainColor, brightness: Brightness.dark)),
-        home: _autoLogin == true ? const HomeScreen() : const LoginScreen()
+        home: _autoLogin == true ? HomeScreen() : const LoginScreen()
     );
   }
 }

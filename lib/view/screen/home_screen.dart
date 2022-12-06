@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lunch_vote/controller/group_controller.dart';
 import 'package:lunch_vote/view/screen/group/group_screen.dart';
 import 'package:lunch_vote/view/screen/profile_screen.dart';
 import 'package:lunch_vote/view/screen/vote/second_vote_screen.dart';
@@ -8,7 +9,9 @@ import 'package:lunch_vote/view/widget/appbar_widget.dart';
 import 'package:lunch_vote/view/widget/custom_clip_path.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  HomeScreen({Key? key}) : super(key: key);
+
+  final GroupController _groupController = GroupController();
 
   @override
   Widget build(BuildContext context) {
@@ -88,8 +91,15 @@ class HomeScreen extends StatelessWidget {
                                   child: InkWell(
                                     borderRadius: BorderRadius.circular(16),
                                     onTap: () {
-                                      Navigator.of(context).push(MaterialPageRoute(
-                                          builder: (context) => const GroupScreen()));
+                                      _groupController.createGroup().then((value) {
+                                        if (value == null) {
+                                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                                            content: Text('방 생성에 오류가 발생했습니다.')));
+                                        } else {
+                                          Navigator.of(context).push(MaterialPageRoute(
+                                              builder: (context) => GroupScreen(groupId: value,)));
+                                        }
+                                      });
                                 },
                               ),
                             ))

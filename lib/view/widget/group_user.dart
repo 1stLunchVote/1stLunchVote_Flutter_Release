@@ -7,11 +7,13 @@ class GroupUser extends StatefulWidget {
   String userName = '';
   String imgUrl = '';
   bool isLeader = false;
+  String groupId = '';
 
   GroupUser({super.key,
+    required this.groupId,
     required this.userName,
     required this.imgUrl,
-    required this.isLeader
+    required this.isLeader,
   });
 
   @override
@@ -36,7 +38,7 @@ class _GroupUserState extends State<GroupUser> {
                   borderRadius: BorderRadius.circular(40),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const GroupInviteScreen(),));
+                      builder: (context) => GroupInviteScreen(groupId: widget.groupId),));
                   },
                 ),
               ),

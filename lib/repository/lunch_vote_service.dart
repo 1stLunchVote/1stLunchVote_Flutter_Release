@@ -3,6 +3,8 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:lunch_vote/model/profile/profile_info.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:lunch_vote/model/login/user_info.dart';
+import 'package:lunch_vote/model/group/group_create.dart';
+import 'package:lunch_vote/model/group/user_search.dart';
 
 part 'lunch_vote_service.g.dart';
 
@@ -17,4 +19,12 @@ abstract class LunchVoteService{
   // 유저 닉네임 변경
   @PATCH('/user/nickname')
   Future<NicknameResponse> patchNickname(@Body() Nickname nickname);
+
+  // 그룹 생성
+  @POST('/group')
+  Future<GroupCreateResponse> createGroup();
+
+  // 유저 검색
+  @GET('/group/{groupId}/invite')
+  Future<UserSearchResponse> searchUser(@Path() String groupId, @Body() String email);
 }

@@ -4,14 +4,10 @@ import 'package:lunch_vote/view/widget/custom_clip_path.dart';
 
 import '../../widget/group_user.dart';
 
-class GroupScreen extends StatefulWidget {
-  const GroupScreen({Key? key}) : super(key: key);
+class GroupScreen extends StatelessWidget {
+  const GroupScreen({Key? key, required this.groupId}) : super(key: key);
+  final String groupId;
 
-  @override
-  State<GroupScreen> createState() => _GroupScreenState();
-}
-
-class _GroupScreenState extends State<GroupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,6 +56,7 @@ class _GroupScreenState extends State<GroupScreen> {
                         Expanded(
                           flex: 1,
                           child: GroupUser(
+                            groupId: groupId,
                             userName: '참여자',
                             imgUrl: 'assets/images/profile_default.png',
                             isLeader: true,
@@ -69,6 +66,7 @@ class _GroupScreenState extends State<GroupScreen> {
                         Expanded(
                           flex: 1,
                           child: GroupUser(
+                            groupId: groupId,
                             userName: '참여자',
                             imgUrl: 'assets/images/profile_default.png',
                             isLeader: false,
@@ -86,6 +84,7 @@ class _GroupScreenState extends State<GroupScreen> {
                         Expanded(
                           flex: 1,
                           child: GroupUser(
+                            groupId: groupId,
                             userName: '참여자',
                             imgUrl: 'assets/images/profile_default.png',
                             isLeader: false,
@@ -95,6 +94,7 @@ class _GroupScreenState extends State<GroupScreen> {
                         Expanded(
                           flex: 1,
                           child: GroupUser(
+                            groupId: groupId,
                             userName: '참여자',
                             imgUrl: 'assets/images/profile_default.png',
                             isLeader: false,
@@ -112,6 +112,7 @@ class _GroupScreenState extends State<GroupScreen> {
                         Expanded(
                           flex: 1,
                           child: GroupUser(
+                            groupId: groupId,
                             userName: '참여자',
                             imgUrl: 'assets/images/profile_default.png',
                             isLeader: false,
@@ -121,6 +122,7 @@ class _GroupScreenState extends State<GroupScreen> {
                         Expanded(
                           flex: 1,
                           child: GroupUser(
+                            groupId: groupId,
                             userName: '참여자',
                             imgUrl: 'assets/images/profile_default.png',
                             isLeader: false,
