@@ -3,6 +3,7 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:lunch_vote/model/profile/profile_info.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:lunch_vote/model/login/user_info.dart';
+import 'package:lunch_vote/model/menu/menu_info.dart';
 
 part 'lunch_vote_service.g.dart';
 
@@ -21,4 +22,8 @@ abstract class LunchVoteService{
   // 유저 프로필 조회
   @GET('/user')
   Future<ProfileInfoResponse> getProfileInfo();
+
+  // 메뉴 정보 가져오기
+  @GET('/menu')
+  Future<MenuInfoResponse> getMenuInfo();
 }

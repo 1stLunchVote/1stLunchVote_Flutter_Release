@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lunch_vote/view/screen/profile_screen.dart';
+import 'package:lunch_vote/view/screen/vote/first_vote_ready_screen.dart';
 import 'package:lunch_vote/view/screen/vote/second_vote_screen.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
 import 'package:lunch_vote/view/widget/custom_clip_path.dart';
@@ -89,7 +90,7 @@ class HomeScreen extends StatelessWidget {
                                 onTap: () {
                                   // Todo : 임시로 최종 투표 화면으로 가게 함 (테스트 용)
                                   Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => const SecondVoteScreen())
+                                      builder: (context) => const FirstVoteReadyScreen())
                                   );
                                 },
                               ),
