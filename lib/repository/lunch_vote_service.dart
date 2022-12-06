@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:lunch_vote/model/profile/profile_info.dart';
+import 'package:lunch_vote/model/template/template_info.dart';
 import 'package:lunch_vote/model/vote/second_vote.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:lunch_vote/model/login/user_info.dart';
@@ -65,4 +66,7 @@ abstract class LunchVoteService{
 
   @PATCH('/group/{groupId}/join')
   Future<GroupJoinResponse> joinGroup(@Path() String groupId);
+
+  @POST('/lunchTemplate')
+  Future<TemplateInfoResponse> createTemplate(@Body() TemplateInfo templateInfo);
 }

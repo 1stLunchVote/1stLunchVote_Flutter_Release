@@ -233,7 +233,7 @@ class _GroupScreenState extends State<_GroupScreen> {
                         ElevatedButton(
                           onPressed: (){
                             Navigator.of(context).push(
-                                MaterialPageRoute(builder: (context) => FirstVoteScreen())
+                                MaterialPageRoute(builder: (context) => const FirstVoteScreen())
                             );
                           },
                           child: const Text("투표 시작!"),
