@@ -9,12 +9,11 @@ import 'package:lunch_vote/view/widget/appbar_widget.dart';
 import 'package:lunch_vote/view/widget/custom_clip_path.dart';
 
 class HomeScreen extends StatelessWidget {
-  HomeScreen({Key? key}) : super(key: key);
-
-  final GroupController _groupController = GroupController();
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    ScreenUtil.init(context, designSize: const Size(360, 800));
     return Scaffold(
         appBar: BasicAppbar(
           backVisible: false,
@@ -91,15 +90,8 @@ class HomeScreen extends StatelessWidget {
                                   child: InkWell(
                                     borderRadius: BorderRadius.circular(16),
                                     onTap: () {
-                                      _groupController.createGroup().then((value) {
-                                        if (value == null) {
-                                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                            content: Text('방 생성에 오류가 발생했습니다.')));
-                                        } else {
-                                          Navigator.of(context).push(MaterialPageRoute(
-                                              builder: (context) => GroupScreen(groupId: value,)));
-                                        }
-                                      });
+                                      Navigator.of(context).push(MaterialPageRoute(
+                                          builder: (context) => const GroupScreen(isLeader: true,)));
                                 },
                               ),
                             ))

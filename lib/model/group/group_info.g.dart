@@ -9,22 +9,26 @@ part of 'group_info.dart';
 MemberInfo _$MemberInfoFromJson(Map<String, dynamic> json) => MemberInfo(
       email: json['email'] as String,
       nickname: json['nickname'] as String,
+      profileImage: json['profileImage'] as String,
     );
 
 Map<String, dynamic> _$MemberInfoToJson(MemberInfo instance) =>
     <String, dynamic>{
       'email': instance.email,
       'nickname': instance.nickname,
+      'profileImage': instance.profileImage,
     };
 
 GroupInfo _$GroupInfoFromJson(Map<String, dynamic> json) => GroupInfo(
       groupId: json['groupId'] as String,
-      data: MemberInfo.fromJson(json['data'] as Map<String, dynamic>),
+      members: (json['members'] as List<dynamic>)
+          .map((e) => MemberInfo.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$GroupInfoToJson(GroupInfo instance) => <String, dynamic>{
       'groupId': instance.groupId,
-      'data': instance.data,
+      'members': instance.members,
     };
 
 GroupInfoResponse _$GroupInfoResponseFromJson(Map<String, dynamic> json) =>

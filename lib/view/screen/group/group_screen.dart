@@ -1,12 +1,66 @@
 import 'package:flutter/material.dart';
+import 'package:lunch_vote/model/group/group_notifier.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
 import 'package:lunch_vote/view/widget/custom_clip_path.dart';
+import 'package:lunch_vote/view/widget/group_user.dart';
+import 'package:provider/provider.dart';
 
-import '../../widget/group_user.dart';
+import 'package:lunch_vote/controller/group_controller.dart';
+
+import '../../../model/group/group_info.dart';
 
 class GroupScreen extends StatelessWidget {
-  const GroupScreen({Key? key, required this.groupId}) : super(key: key);
-  final String groupId;
+  const GroupScreen({Key? key, required this.isLeader}) : super(key: key);
+  final bool isLeader;
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => GroupNotifier(),
+      child: _GroupScreen(isLeader: isLeader,),
+    );
+  }
+}
+
+class _GroupScreen extends StatefulWidget {
+  const _GroupScreen({Key? key, required this.isLeader}) : super(key: key);
+  final bool isLeader;
+
+  @override
+  State<_GroupScreen> createState() => _GroupScreenState();
+}
+
+class _GroupScreenState extends State<_GroupScreen> {
+  final GroupController _groupController = GroupController();
+
+  bool isGroupCreated = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.isLeader) {
+      _groupController.createGroup().then((value) {
+        if (value == null) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text('방 생성에 오류가 발생했습니다.')));
+        } else {
+          context.read<GroupNotifier>().setGroupId(value);
+          _groupController.getMyProfile().then((value) {
+            if (value != null) {
+              context.read<GroupNotifier>().add(MemberInfo(
+                email: value.email,
+                nickname: value.nickname,
+                profileImage: value.profileImage,
+              ));
+            }
+            setState(() {
+              isGroupCreated = true;
+            });
+          });
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +68,7 @@ class GroupScreen extends StatelessWidget {
       resizeToAvoidBottomInset: false,
       appBar: BasicAppbar(
         backVisible: true,
-        appbarTitle: "친구 초대하기",
+        appbarTitle: "방 생성하기",
         isTitleCenter: true,
         context: context,
         trailingList: [
@@ -43,102 +97,103 @@ class GroupScreen extends StatelessWidget {
                 color: Theme.of(context).colorScheme.surfaceVariant,
               ),
             ),
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Expanded(flex: 1, child: SizedBox()),
-                  Expanded(
-                    flex: 2,
-                    child: Row(
+            Stack(
+              children: [
+                Visibility(
+                  visible: !isGroupCreated,
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+                Visibility(
+                  visible: isGroupCreated,
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Expanded(flex: 1, child: SizedBox()),
                         Expanded(
-                          flex: 1,
-                          child: GroupUser(
-                            groupId: groupId,
-                            userName: '참여자',
-                            imgUrl: 'assets/images/profile_default.png',
-                            isLeader: true,
+                          flex: 2,
+                          child: Row(
+                            children: const [
+                              Expanded(flex: 1, child: SizedBox()),
+                              Expanded(
+                                flex: 1,
+                                child: GroupUser(
+                                  userIdx: 0,
+                                  isLeader: true,
+                                ),
+                              ),
+                              Expanded(flex: 1, child: SizedBox()),
+                              Expanded(
+                                flex: 1,
+                                child: GroupUser(
+                                  userIdx: 1,
+                                  isLeader: false,
+                                ),
+                              ),
+                              Expanded(flex: 1, child: SizedBox()),
+                            ],
                           ),
                         ),
-                        const Expanded(flex: 1, child: SizedBox()),
                         Expanded(
-                          flex: 1,
-                          child: GroupUser(
-                            groupId: groupId,
-                            userName: '참여자',
-                            imgUrl: 'assets/images/profile_default.png',
-                            isLeader: false,
+                          flex: 2,
+                          child: Row(
+                            children: const [
+                              Expanded(flex: 1, child: SizedBox()),
+                              Expanded(
+                                flex: 1,
+                                child: GroupUser(
+                                  userIdx: 2,
+                                  isLeader: false,
+                                ),
+                              ),
+                              Expanded(flex: 1, child: SizedBox()),
+                              Expanded(
+                                flex: 1,
+                                child: GroupUser(
+                                  userIdx: 3,
+                                  isLeader: false,
+                                ),
+                              ),
+                              Expanded(flex: 1, child: SizedBox()),
+                            ],
                           ),
+                        ),
+                        Expanded(
+                          flex: 2,
+                          child: Row(
+                            children: const [
+                              Expanded(flex: 1, child: SizedBox()),
+                              Expanded(
+                                flex: 1,
+                                child: GroupUser(
+                                  userIdx: 4,
+                                  isLeader: false,
+                                ),
+                              ),
+                              Expanded(flex: 1, child: SizedBox()),
+                              Expanded(
+                                flex: 1,
+                                child: GroupUser(
+                                  userIdx: 6,
+                                  isLeader: false,
+                                ),
+                              ),
+                              Expanded(flex: 1, child: SizedBox()),
+                            ],
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: (){},
+                          child: const Text("투표 시작!"),
                         ),
                         const Expanded(flex: 1, child: SizedBox()),
                       ],
                     ),
                   ),
-                  Expanded(
-                    flex: 2,
-                    child: Row(
-                      children: [
-                        const Expanded(flex: 1, child: SizedBox()),
-                        Expanded(
-                          flex: 1,
-                          child: GroupUser(
-                            groupId: groupId,
-                            userName: '참여자',
-                            imgUrl: 'assets/images/profile_default.png',
-                            isLeader: false,
-                          ),
-                        ),
-                        const Expanded(flex: 1, child: SizedBox()),
-                        Expanded(
-                          flex: 1,
-                          child: GroupUser(
-                            groupId: groupId,
-                            userName: '참여자',
-                            imgUrl: 'assets/images/profile_default.png',
-                            isLeader: false,
-                          ),
-                        ),
-                        const Expanded(flex: 1, child: SizedBox()),
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Row(
-                      children: [
-                        const Expanded(flex: 1, child: SizedBox()),
-                        Expanded(
-                          flex: 1,
-                          child: GroupUser(
-                            groupId: groupId,
-                            userName: '참여자',
-                            imgUrl: 'assets/images/profile_default.png',
-                            isLeader: false,
-                          ),
-                        ),
-                        const Expanded(flex: 1, child: SizedBox()),
-                        Expanded(
-                          flex: 1,
-                          child: GroupUser(
-                            groupId: groupId,
-                            userName: '참여자',
-                            imgUrl: 'assets/images/profile_default.png',
-                            isLeader: false,
-                          ),
-                        ),
-                        const Expanded(flex: 1, child: SizedBox()),
-                      ],
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: (){},
-                    child: const Text("투표 시작!"),
-                  ),
-                  const Expanded(flex: 1, child: SizedBox()),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),

@@ -6,6 +6,8 @@ import 'package:lunch_vote/model/login/user_info.dart';
 import 'package:lunch_vote/model/group/group_create.dart';
 import 'package:lunch_vote/model/group/user_search.dart';
 
+import '../model/vote/first_vote_result.dart';
+
 part 'lunch_vote_service.g.dart';
 
 @RestApi(baseUrl: "http://54.173.224.149:8000")
@@ -27,4 +29,12 @@ abstract class LunchVoteService{
   // 유저 검색
   @GET('/group/{groupId}/invite')
   Future<UserSearchResponse> searchUser(@Path() String groupId, @Body() String email);
+
+  // 유저 프로필 조회
+  @GET('/user')
+  Future<ProfileInfoResponse> getProfileInfo();
+
+  // 1차 투표 결과 조회
+  @GET('/group/{groupId}/vote/first/result')
+  Future<FirstVoteResultResponse> getFirstVoteResult(@Path() String groupId);
 }

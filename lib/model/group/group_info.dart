@@ -6,10 +6,12 @@ part 'group_info.g.dart';
 class MemberInfo{
   final String email;
   final String nickname;
+  final String profileImage;
 
   MemberInfo({
     required this.email,
     required this.nickname,
+    required this.profileImage,
   });
 
   factory MemberInfo.fromJson(Map<String, dynamic> json) =>
@@ -21,11 +23,11 @@ class MemberInfo{
 @JsonSerializable()
 class GroupInfo{
   final String groupId;
-  final MemberInfo data;
+  final List<MemberInfo> members;
 
   GroupInfo({
     required this.groupId,
-    required this.data,
+    required this.members,
   });
 
   factory GroupInfo.fromJson(Map<String, dynamic> json) =>

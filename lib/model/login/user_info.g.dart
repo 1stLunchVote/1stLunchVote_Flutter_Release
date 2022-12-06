@@ -36,9 +36,11 @@ Map<String, dynamic> _$UserInfoResponseToJson(UserInfoResponse instance) =>
 
 SocialToken _$SocialTokenFromJson(Map<String, dynamic> json) => SocialToken(
       socialToken: json['socialToken'] as String?,
+      fcmToken: json['fcmToken'] as String?,
     );
 
 Map<String, dynamic> _$SocialTokenToJson(SocialToken instance) =>
     <String, dynamic>{
       'socialToken': instance.socialToken,
+      'fcmToken': instance.fcmToken,
     };
