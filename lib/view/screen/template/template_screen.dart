@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lunch_vote/controller/template_controller.dart';
 import 'package:lunch_vote/model/template/template_info.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
@@ -92,7 +91,7 @@ class _TemplateScreenState extends State<_TemplateScreen> {
                     cacheExtent: 999999999999999,
                     physics: const ScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: context1.watch<TemplateNotifier>().length,
+                    itemCount: context1.read<TemplateNotifier>().length,
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
                       childAspectRatio: 1 / 1,

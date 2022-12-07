@@ -1,11 +1,8 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lunch_vote/model/group/group_notifier.dart';
 import 'package:lunch_vote/model/template/template_notifier.dart';
 import 'package:provider/provider.dart';
-
-import '../../controller/group_controller.dart';
-import '../../model/group/group_info.dart';
 
 class TemplateTile extends StatefulWidget {
   final int menuIdx;
@@ -35,7 +32,7 @@ class _TemplateTileState extends State<TemplateTile> {
             children: [
               ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(16.0)),
-                child: Image(image: NetworkImage(context.watch<TemplateNotifier>().getImg(widget.menuIdx)),),
+                child: CachedNetworkImage(imageUrl: context.read<TemplateNotifier>().getImg(widget.menuIdx),),
               ),
               ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(16.0)),
@@ -58,7 +55,7 @@ class _TemplateTileState extends State<TemplateTile> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 4.0),
           child: Text(
-            context.watch<TemplateNotifier>().getName(widget.menuIdx),
+            context.read<TemplateNotifier>().getName(widget.menuIdx),
             style: Theme.of(context).textTheme.labelLarge,
           ),
         ),
