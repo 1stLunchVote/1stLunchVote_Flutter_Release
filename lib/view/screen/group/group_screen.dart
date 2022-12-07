@@ -11,6 +11,7 @@ import 'package:lunch_vote/controller/group_controller.dart';
 
 import '../../../model/group/group_info.dart';
 import '../vote/first_vote_screen.dart';
+import '../vote/second_vote_screen.dart';
 
 class GroupScreen extends StatelessWidget {
   GroupScreen({Key? key, required this.isLeader, required this.groupId}) : super(key: key);
@@ -234,7 +235,7 @@ class _GroupScreenState extends State<_GroupScreen> {
                           onPressed: (){
                             _timer?.cancel();
                             Navigator.of(context).push(
-                                MaterialPageRoute(builder: (context) => FirstVoteScreen())
+                                MaterialPageRoute(builder: (context) => const SecondVoteScreen())
                             );
                           },
                           child: const Text("투표 시작!"),

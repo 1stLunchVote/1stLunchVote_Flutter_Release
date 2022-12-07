@@ -9,6 +9,7 @@ import 'package:lunch_vote/controller/home_controller.dart';
 import 'package:lunch_vote/view/screen/group/group_screen.dart';
 import 'package:lunch_vote/model/group_id_notifier.dart';
 import 'package:lunch_vote/view/screen/profile_screen.dart';
+import 'package:lunch_vote/view/screen/template/template_screen.dart';
 import 'package:lunch_vote/view/screen/vote/first_vote_ready_screen.dart';
 import 'package:lunch_vote/view/screen/vote/second_vote_screen.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
@@ -240,7 +241,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Navigator.of(context).push(
                                         MaterialPageRoute(
                                             builder: (
-                                                context) => const SecondVoteScreen())
+                                                context) => TemplateScreen())
                                     );
                                   },
                                 ),
