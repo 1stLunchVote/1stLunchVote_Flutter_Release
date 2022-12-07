@@ -23,24 +23,32 @@ class _TemplateTileState extends State<TemplateTile> {
       children: [
         Container(
           width: 80.w,
-          height: 80.h,
+          height: 80.w,
           decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(16.0)),
             border: Border.all(
+              width: 2.0,
               color: context.watch<TemplateNotifier>().getColor(widget.menuIdx),
             ),
           ),
           child: Stack(
             children: [
-              Center(child: Image(image: NetworkImage(context.watch<TemplateNotifier>().getImg(widget.menuIdx)))),
-              Center(
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      setState(() {
-                        context.read<TemplateNotifier>().updateStatus(widget.menuIdx);
-                      });
-                    },
+              ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(16.0)),
+                child: Image(image: NetworkImage(context.watch<TemplateNotifier>().getImg(widget.menuIdx)),),
+              ),
+              ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(16.0)),
+                child: Center(
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          context.read<TemplateNotifier>().updateStatus(widget.menuIdx);
+                        });
+                      },
+                    ),
                   ),
                 ),
               ),
