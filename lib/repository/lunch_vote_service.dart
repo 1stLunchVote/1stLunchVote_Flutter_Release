@@ -11,6 +11,7 @@ import 'package:lunch_vote/model/menu/menu_info.dart';
 import '../model/group/group_info.dart';
 import '../model/group/user_invite.dart';
 import '../model/group/group_join_response.dart';
+import '../model/template/all_template_info.dart';
 import '../model/vote/final_result.dart';
 import '../model/vote/first_vote.dart';
 import '../model/vote/first_vote_result.dart';
@@ -52,6 +53,10 @@ abstract class LunchVoteService{
   // 1차 투표
   @PATCH('/group/{groupId}/vote/first')
   Future<FirstVoteResponse> submitFirstVote(@Path() String groupId, @Body() FirstVoteItem voteItem);
+
+  // 전체 템플릿 조회
+  @GET('/lunchTemplate')
+  Future<AllTemplateResponse> getAllTemplateInfo();
 
 
   // 1차 투표 결과 조회

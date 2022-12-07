@@ -4,6 +4,8 @@ import 'package:lunch_vote/model/template/template_info.dart';
 import 'package:lunch_vote/repository/lunch_vote_service.dart';
 import 'package:lunch_vote/view/widget/utils/shared_pref_manager.dart';
 
+import '../model/template/all_template_info.dart';
+
 class TemplateController{
   final dio = Dio();
   late LunchVoteService _lunchVoteService;
@@ -32,4 +34,13 @@ class TemplateController{
     }
     return null;
   }
+
+  Future<List<AllTemplateInfo>?> getAllTemplateInfo ()async{
+    var res = await _lunchVoteService.getAllTemplateInfo();
+    if (res.success){
+      return res.data;
+    }
+    return null;
+  }
+
 }

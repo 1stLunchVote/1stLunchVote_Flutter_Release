@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:lunch_vote/model/vote/first_vote.dart';
+import 'package:lunch_vote/model/template/all_template_info.dart';
 
 import '../model/vote/first_vote_result.dart';
 import '../repository/lunch_vote_service.dart';
@@ -22,5 +23,4 @@ class FirstVoteController{
 
     return res.message;
   }
-
 }
