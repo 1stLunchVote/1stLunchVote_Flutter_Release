@@ -55,7 +55,7 @@ abstract class LunchVoteService{
   Future<FirstVoteResponse> submitFirstVote(@Path() String groupId, @Body() FirstVoteItem voteItem);
 
   // 1차 투표 상태 조회
-  @GET('/group/{groupId}/void/first/status')
+  @GET('/group/{groupId}/vote/first/status')
   Future<VoteStateResponse> getFirstVoteState(@Path() String groupId);
 
   // 1차 투표 결과 조회
