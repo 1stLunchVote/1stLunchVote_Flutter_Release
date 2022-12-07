@@ -7,7 +7,6 @@ import '../view/widget/utils/shared_pref_manager.dart';
 
 class FirstVoteController{
   final dio = Dio();
-  late String groupId;
   late LunchVoteService _lunchVoteService;
   final SharedPrefManager _spfManager = SharedPrefManager();
 
@@ -15,32 +14,13 @@ class FirstVoteController{
     dio.options.headers["Content-Type"] = "application/json";
   }
 
-  Future<List<MenuInfo>?> getMenuInfo(String groupId) async {
-    this.groupId = groupId;
+  Future<String?> submitFirstVote(String groupId, List<String> likesMenu, List<String> dislikesMenu) async{
     dio.options.headers["Authorization"] = await _spfManager.getUserToken();
     dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
     _lunchVoteService = LunchVoteService(dio);
+    var res = await _lunchVoteService.submitFirstVote(groupId, FirstVoteItem(likesMenu: likesMenu, dislikesMenu: dislikesMenu));
 
-    var res = await _lunchVoteService.getFirstVoteResult(groupId);
-    if (res.success){
-      return res.data.menuInfos;
-    }
-    return null;
+    return res.message;
   }
 
-  Future<int?> voteItem(String menuId) async{
-    var res = await _lunchVoteService.secondVoteItem();
-    if (res.success){
-      return res.data.count;
-    }
-    return null;
-  }
-
-  Future<bool?> fetchVoteResult() async{
-    var res = await _lunchVoteService.getSecondVoteState(groupId);
-    if (res.success){
-      return res.data.finish;
-    }
-    return null;
-  }
 }

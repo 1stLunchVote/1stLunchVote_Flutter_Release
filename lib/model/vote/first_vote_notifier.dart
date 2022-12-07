@@ -21,6 +21,17 @@ class FirstVoteNotifier extends ChangeNotifier {
 
   int get length => _menus.length;
 
+  bool get visibility {
+    List<String> likesMenu = getLikeMenu();
+    List<String> dislikesMenu = getDislikeMenu();
+    for (int i = 0; i < _menus.length; i++) {
+      if (likesMenu.isNotEmpty && dislikesMenu.isNotEmpty) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   String getName(int menuIdx) {
     return _menus[menuIdx].menuInfo.menuName;
   }
@@ -41,11 +52,11 @@ class FirstVoteNotifier extends ChangeNotifier {
 
   double getWidth(int menuIdx){
     if (_menus[menuIdx].status == 0) {
-      return 0.0;
+      return 1.0;
     } else if (_menus[menuIdx].status == 1) {
-      return 3.0;
+      return 2.0;
     } else {
-      return 3.0;
+      return 2.0;
     }
   }
 

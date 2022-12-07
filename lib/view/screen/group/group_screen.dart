@@ -236,7 +236,7 @@ class _GroupScreenState extends State<_GroupScreen> {
                           onPressed: (){
                             _timer?.cancel();
                             Navigator.of(context).push(
-                                MaterialPageRoute(builder: (context) => const FirstVoteReadyScreen())
+                                MaterialPageRoute(builder: (context) => FirstVoteReadyScreen(groupId: widget.groupId))
                             );
                           },
                           child: const Text("투표 시작!"),

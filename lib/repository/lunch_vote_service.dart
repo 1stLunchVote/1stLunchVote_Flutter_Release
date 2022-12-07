@@ -50,8 +50,8 @@ abstract class LunchVoteService{
   Future<MenuInfoResponse> getMenuInfo();
 
   // 1차 투표
-  @PATCH('~/group/:groupId/vote/first')
-  Future<FirstVoteResponse> firstVoteItem(@Path() String groupId);
+  @PATCH('/group/{groupId}/vote/first')
+  Future<FirstVoteResponse> submitFirstVote(@Path() String groupId, @Body() FirstVoteItem voteItem);
 
 
   // 1차 투표 결과 조회

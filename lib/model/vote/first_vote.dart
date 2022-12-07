@@ -4,8 +4,9 @@ part 'first_vote.g.dart';
 
 @JsonSerializable()
 class FirstVoteItem{
-  final String templateId;
-  FirstVoteItem({required this.templateId});
+  final List<String> likesMenu;
+  final List<String> dislikesMenu;
+  FirstVoteItem({required this.likesMenu, required this.dislikesMenu});
 
   factory FirstVoteItem.fromJson(Map<String, dynamic> json) => _$FirstVoteItemFromJson(json);
   Map<String, dynamic> toJson() => _$FirstVoteItemToJson(this);

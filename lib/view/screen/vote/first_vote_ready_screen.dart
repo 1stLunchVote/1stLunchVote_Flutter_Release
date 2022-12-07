@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../widget/appbar_widget.dart';
 import '../../widget/custom_clip_path.dart';
 import 'first_vote_screen.dart';
 
 class FirstVoteReadyScreen extends StatelessWidget {
-  const FirstVoteReadyScreen({Key? key}) : super(key: key);
+  String groupId;
+
+  FirstVoteReadyScreen({
+    Key? key,
+    required this.groupId
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -62,12 +66,12 @@ class FirstVoteReadyScreen extends StatelessWidget {
                         border: Border.all(color: Colors.black, width: 1),
                       ),
                       child: Padding(
-                        padding: EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(8.0),
                         child: Row(
                           children: [
-                            Icon(Icons.search),
+                            const Icon(Icons.search),
                             SizedBox(width: 16.w,),
-                            Text('메뉴를 검색해주세요.'),
+                            const Text('메뉴를 검색해주세요.'),
                           ],
                         ),
                       )
@@ -104,10 +108,10 @@ class FirstVoteReadyScreen extends StatelessWidget {
                   ElevatedButton(
                     onPressed: (){
                       Navigator.of(context).push(
-                          MaterialPageRoute(builder: (context) => const FirstVoteScreen())
+                          MaterialPageRoute(builder: (context) => FirstVoteScreen(groupId: groupId))
                       );
                     },
-                    child: Text(
+                    child: const Text(
                       '투표시작!',
                       style: TextStyle(
                         color: Color.fromRGBO(161, 63, 36, 1),
