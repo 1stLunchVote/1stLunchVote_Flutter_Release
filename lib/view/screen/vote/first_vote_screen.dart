@@ -186,12 +186,7 @@ class _FirstVotePageState extends State<FirstVotePage> {
                             ),
                             onSubmitted: (text){
                               setState((){
-                                if(text == ''){
-                                  searchedMenu = '';
-                                }
-                                else {
-                                  searchedMenu = _textController.text.toString();
-                                }
+                                context1.read<FirstVoteNotifier>().searchMenu(_textController.text.toString());
                               });
                             },
                           ),

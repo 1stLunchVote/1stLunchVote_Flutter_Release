@@ -3,11 +3,13 @@ import 'package:lunch_vote/model/template/all_template_info.dart';
 import '../menu/menu_info.dart';
 
 class FirstVoteNotifier extends ChangeNotifier {
+  final List<MenuStatus> _allMenus = [];
   final List<MenuStatus> _menus = [];
   bool _isLoading = false;
 
   void addList(MenuInfo menuInfo) {
     _menus.add(MenuStatus(menuInfo: menuInfo, status: 0,));
+    _allMenus.add(MenuStatus(menuInfo: menuInfo, status: 0,));
     notifyListeners();
   }
 
@@ -26,16 +28,24 @@ class FirstVoteNotifier extends ChangeNotifier {
       menuName: menu.menuName,
       image: menu.image,
     ), status: status,));
+
+    _allMenus.add(MenuStatus(menuInfo: MenuInfo(
+      menuId: menu.menuId,
+      menuName: menu.menuName,
+      image: menu.image,
+    ), status: status,));
     notifyListeners();
   }
 
   void clearList() {
     _menus.clear();
+    _allMenus.clear();
     notifyListeners();
   }
 
   void updateStatus(int menuIdx) {
     _menus[menuIdx].status = (_menus[menuIdx].status + 1) % 3;
+    _allMenus[menuIdx].status = (_allMenus[menuIdx].status + 1) % 3;
     notifyListeners();
   }
 
@@ -114,11 +124,27 @@ class FirstVoteNotifier extends ChangeNotifier {
     for (int i = 0; i < _menus.length; i++) {
       _menus[i].status = 0;
     }
+    for (int i = 0; i < _allMenus.length; i++) {
+      _allMenus[i].status = 0;
+    }
     notifyListeners();
   }
 
-  void applyTemplate() {
-
+  void searchMenu(String text) {
+    if (text.isEmpty) {
+      _menus.clear();
+      for (int i = 0; i < _allMenus.length; i++) {
+        _menus.add(_allMenus[i]);
+      }
+    } else {
+      _menus.clear();
+      for (int i = 0; i < _allMenus.length; i++) {
+        if (_allMenus[i].menuInfo.menuName.contains(text)) {
+          _menus.add(_allMenus[i]);
+        }
+      }
+    }
+    notifyListeners();
   }
 }
 
