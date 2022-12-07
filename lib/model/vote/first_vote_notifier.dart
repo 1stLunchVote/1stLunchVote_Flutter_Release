@@ -45,7 +45,7 @@ class FirstVoteNotifier extends ChangeNotifier {
 
   void updateStatus(int menuIdx) {
     _menus[menuIdx].status = (_menus[menuIdx].status + 1) % 3;
-    _allMenus[menuIdx].status = (_allMenus[menuIdx].status + 1) % 3;
+    //_allMenus[menuIdx].status = (_allMenus[menuIdx].status + 1) % 3;
     notifyListeners();
   }
 
@@ -102,9 +102,9 @@ class FirstVoteNotifier extends ChangeNotifier {
 
   List<String> getLikeMenu() {
     List<String> res = [];
-    for (int i = 0; i < _menus.length; i++) {
-      if (_menus[i].status == 1) {
-        res.add(_menus[i].menuInfo.menuId);
+    for (int i = 0; i < _allMenus.length; i++) {
+      if (_allMenus[i].status == 1) {
+        res.add(_allMenus[i].menuInfo.menuId);
       }
     }
     return res;
@@ -112,9 +112,9 @@ class FirstVoteNotifier extends ChangeNotifier {
 
   List<String> getDislikeMenu() {
     List<String> res = [];
-    for (int i = 0; i < _menus.length; i++) {
-      if (_menus[i].status == 2) {
-        res.add(_menus[i].menuInfo.menuId);
+    for (int i = 0; i < _allMenus.length; i++) {
+      if (_allMenus[i].status == 2) {
+        res.add(_allMenus[i].menuInfo.menuId);
       }
     }
     return res;
