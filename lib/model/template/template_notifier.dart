@@ -23,6 +23,15 @@ class TemplateNotifier extends ChangeNotifier {
 
   int get length => _menus.length;
 
+  bool get visibility {
+    for (int i = 0; i < _menus.length; i++) {
+      if (_menus[i].status != 0) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   String getName(int menuIdx) {
     return _menus[menuIdx].menuInfo.menuName;
   }
@@ -39,6 +48,26 @@ class TemplateNotifier extends ChangeNotifier {
     } else {
       return Colors.red;
     }
+  }
+
+  List<String> getLikeMenu() {
+    List<String> res = [];
+    for (int i = 0; i < _menus.length; i++) {
+      if (_menus[i].status == 1) {
+        res.add(_menus[i].menuInfo.menuId);
+      }
+    }
+    return res;
+  }
+
+  List<String> getDislikeMenu() {
+    List<String> res = [];
+    for (int i = 0; i < _menus.length; i++) {
+      if (_menus[i].status == 2) {
+        res.add(_menus[i].menuInfo.menuId);
+      }
+    }
+    return res;
   }
 }
 

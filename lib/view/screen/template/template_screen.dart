@@ -52,13 +52,13 @@ class _TemplateScreenState extends State<_TemplateScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context1) {
     return Scaffold(
       appBar: BasicAppbar(
         backVisible: false,
         appbarTitle: "템플릿 사전 설정",
         isTitleCenter: false,
-        context: context,
+        context: context1,
         trailingList: [
           IconButton(
             onPressed: (){},
@@ -75,7 +75,7 @@ class _TemplateScreenState extends State<_TemplateScreen> {
                 alignment: Alignment.bottomCenter,
                 width: double.infinity,
                 height: double.infinity,
-                color: Theme.of(context).colorScheme.surfaceVariant,
+                color: Theme.of(context1).colorScheme.surfaceVariant,
               ),
             ),
             Stack(
@@ -92,7 +92,7 @@ class _TemplateScreenState extends State<_TemplateScreen> {
                     cacheExtent: 999999999999999,
                     physics: const ScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: context.watch<TemplateNotifier>().length,
+                    itemCount: context1.watch<TemplateNotifier>().length,
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 3,
                       childAspectRatio: 1 / 1,
@@ -113,8 +113,8 @@ class _TemplateScreenState extends State<_TemplateScreen> {
         child: const Text("저장하기"),
         onPressed: () {
           showDialog(
-              context: context,
-              builder: (BuildContext context) {
+              context: context1,
+              builder: (BuildContext context2) {
                 return AlertDialog(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10.0),
@@ -126,6 +126,7 @@ class _TemplateScreenState extends State<_TemplateScreen> {
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: '템플릿명',
+                        hintText: '2~10 자로 입력해주세요.',
                         helperText: '',
                       ),
                       onSaved: (value) {
@@ -136,6 +137,8 @@ class _TemplateScreenState extends State<_TemplateScreen> {
                           return "Please enter an name.";
                         } else if (value.isEmpty) {
                           return "Please enter an name";
+                        } else if (value.length < 2 || value.length > 10) {
+                          return "Please enter text 2 to 10.";
                         }
                         return null;
                       },
@@ -147,9 +150,12 @@ class _TemplateScreenState extends State<_TemplateScreen> {
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
-                          var template = TemplateInfo(templateName: name, likesMenu: [], dislikesMenu: [],);
-                          await _templateController.createTemplate(template);
-                          Navigator.popUntil(context, (route) => route.isFirst);
+                          await _templateController.createTemplate(TemplateInfo(
+                            templateName: name,
+                            likesMenu: context1.read<TemplateNotifier>().getLikeMenu(),
+                            dislikesMenu: context1.read<TemplateNotifier>().getDislikeMenu(),
+                          ));
+                          Navigator.popUntil(context2, (route) => route.isFirst);
                         }
                       },
                     ),
