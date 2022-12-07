@@ -3,6 +3,7 @@ import '../menu/menu_info.dart';
 
 class FirstVoteNotifier extends ChangeNotifier {
   final List<MenuStatus> _menus = [];
+  bool _isLoading = false;
 
   void addList(MenuInfo menuInfo) {
     _menus.add(MenuStatus(menuInfo: menuInfo, status: 0,));
@@ -21,7 +22,12 @@ class FirstVoteNotifier extends ChangeNotifier {
 
   int get length => _menus.length;
 
+  bool get isLoading => _isLoading;
+
   bool get visibility {
+    if (_isLoading) {
+      return false;
+    }
     List<String> likesMenu = getLikeMenu();
     List<String> dislikesMenu = getDislikeMenu();
     for (int i = 0; i < _menus.length; i++) {
@@ -30,6 +36,11 @@ class FirstVoteNotifier extends ChangeNotifier {
       }
     }
     return false;
+  }
+
+  void startLoading() {
+    _isLoading = true;
+    notifyListeners();
   }
 
   String getName(int menuIdx) {

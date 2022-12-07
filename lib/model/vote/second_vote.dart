@@ -32,26 +32,3 @@ class SecondVoteResponse{
   factory SecondVoteResponse.fromJson(Map<String, dynamic> json) => _$SecondVoteResponseFromJson(json);
   Map<String, dynamic> toJson() => _$SecondVoteResponseToJson(this);
 }
-
-@JsonSerializable()
-class SecondVoteState{
-  final bool finish;
-
-  SecondVoteState({required this.finish});
-
-  factory SecondVoteState.fromJson(Map<String, dynamic> json) => _$SecondVoteStateFromJson(json);
-  Map<String, dynamic> toJson() => _$SecondVoteStateToJson(this);
-}
-
-@JsonSerializable()
-class SecondVoteStateResponse{
-  final int status;
-  final bool success;
-  final String message;
-  final SecondVoteState data;
-
-  SecondVoteStateResponse({required this.status, required this.success, required this.message, required this.data});
-
-  factory SecondVoteStateResponse.fromJson(Map<String, dynamic> json) => _$SecondVoteStateResponseFromJson(json);
-  Map<String, dynamic> toJson() => _$SecondVoteStateResponseToJson(this);
-}

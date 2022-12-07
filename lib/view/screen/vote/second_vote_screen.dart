@@ -5,6 +5,7 @@ import 'package:drop_shadow/drop_shadow.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lunch_vote/controller/second_vote_controller.dart';
+import 'package:lunch_vote/controller/vote_state_controller.dart';
 import 'package:lunch_vote/model/vote/vote_item_notifier.dart';
 import 'package:lunch_vote/styles.dart';
 import 'package:lunch_vote/view/screen/vote/result_screen.dart';
@@ -14,32 +15,30 @@ import 'package:lunch_vote/view/widget/second_vote_tile.dart';
 import 'package:provider/provider.dart';
 
 class SecondVoteScreen extends StatelessWidget {
-  const SecondVoteScreen({Key? key}) : super(key: key);
+  final String groupId;
+  const SecondVoteScreen({Key? key, required this.groupId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
         create: (context) => VoteItemNotifier(),
-        child: const SecondVotePage(),
+        child: SecondVotePage(groupId: groupId,),
     );
   }
 }
 
 class SecondVotePage extends StatefulWidget {
-  const SecondVotePage({Key? key}) : super(key: key);
+  final String groupId;
+  const SecondVotePage({Key? key, required this.groupId}) : super(key: key);
 
   @override
   State<SecondVotePage> createState() => _SecondVotePageState();
 }
 
 class _SecondVotePageState extends State<SecondVotePage> {
-  final _controller = SecondVoteController();
+  final _secondVoteController = SecondVoteController();
+  final _voteStateController = VoteStateController();
   late Future future;
-  
-  // Todo : 임시 그룹 ID
-  String groupId = "638de27375404f13e7cbf430";
-
-  String _name = '사용자';
   
   // 3초 타이머
   Timer? _timer;
@@ -50,7 +49,7 @@ class _SecondVotePageState extends State<SecondVotePage> {
   @override
   void initState() {
     super.initState();
-    future = _controller.getMenuInfo(groupId);
+    future = _secondVoteController.getMenuInfo(widget.groupId);
   }
 
   @override
@@ -122,9 +121,9 @@ class _SecondVotePageState extends State<SecondVotePage> {
                               const SizedBox(
                                 height: 30,
                               ),
-                              Text(
-                                "$_name 님의 투표",
-                                style: const TextStyle(
+                              const Text(
+                                "투표 용지",
+                                style: TextStyle(
                                     fontSize: 36, fontWeight: FontWeight.w800),
                               ),
                               const SizedBox(
@@ -207,25 +206,25 @@ class _SecondVotePageState extends State<SecondVotePage> {
             child: ElevatedButton(
                 onPressed: () async {
                   // 투표
-                  await _controller.voteItem(context.read<VoteItemNotifier>().menuId);
-                  var temp = await _controller.fetchVoteResult();
+                  await _secondVoteController.voteItem(context.read<VoteItemNotifier>().menuId);
+                  var temp = await _voteStateController.fetchSecondVoteResult(widget.groupId);
                   setState(() {
                     _voteCompleted = true;
                   });
 
                   if (temp != true){
                     _timer = Timer.periodic( const Duration(milliseconds: 3000), (timer) async {
-                      var temp = await _controller.fetchVoteResult();
+                      var temp = await _voteStateController.fetchSecondVoteResult(widget.groupId);
                       if (temp == true){
                         _timer?.cancel();
                         Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => ResultScreen(groupId: groupId))
+                            MaterialPageRoute(builder: (context) => ResultScreen(groupId: widget.groupId))
                         );
                       }
                     });
                   } else{
                     Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => ResultScreen(groupId: groupId))
+                        MaterialPageRoute(builder: (context) => ResultScreen(groupId: widget.groupId))
                     );
                   }
                 },
