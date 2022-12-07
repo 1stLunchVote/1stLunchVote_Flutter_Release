@@ -36,9 +36,13 @@ class TemplateController{
   }
 
   Future<List<AllTemplateInfo>?> getAllTemplateInfo ()async{
+    dio.options.headers["Authorization"] = await _spfManager.getUserToken();
+    dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
+    _lunchVoteService = LunchVoteService(dio);
+
     var res = await _lunchVoteService.getAllTemplateInfo();
     if (res.success){
-      return res.data;
+      return res.data.lunchTemplates;
     }
     return null;
   }

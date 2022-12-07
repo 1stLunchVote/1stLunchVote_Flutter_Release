@@ -8,7 +8,7 @@ class AllTemplateResponse{
   final int status;
   final String message;
   final bool success;
-  final List<AllTemplateInfo> data;
+  final ResponseData data;
 
   AllTemplateResponse({required this.status, required this.message, required this.success, required this.data});
 
@@ -16,6 +16,19 @@ class AllTemplateResponse{
       _$AllTemplateResponseFromJson(json);
 
   Map<String, dynamic> toJson() => _$AllTemplateResponseToJson(this);
+}
+
+@JsonSerializable()
+class ResponseData{
+  final List<AllTemplateInfo> lunchTemplates;
+
+  ResponseData({required this.lunchTemplates});
+
+  factory ResponseData.fromJson(Map<String, dynamic> json) =>
+      _$ResponseDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ResponseDataToJson(this);
+
 }
 
 @JsonSerializable()

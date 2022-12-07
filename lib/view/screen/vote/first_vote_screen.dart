@@ -49,15 +49,14 @@ class _FirstVotePageState extends State<FirstVotePage> {
   final _firstVoteController = FirstVoteController();
   final _templateController = TemplateController();
   final _voteStateController = VoteStateController();
-  final TextEditingController _textController = TextEditingController();
+  final _textController = TextEditingController();
   String searchedMenu = '';
   late Future future;
   late Future afterSearch;
   List<MenuInfo> menuList = [];
-  List<String> allTemplateList = [];
+  List<String> allTemplateList = ["선택 안함"];
   bool isMenuLoaded = false;
   bool isAllTemplateLoaded = false;
-  String selectedTemplate = '선택 안함';
 
   Timer? _timer;
 
@@ -65,25 +64,26 @@ class _FirstVotePageState extends State<FirstVotePage> {
   void initState(){
     super.initState();
     _menuController.getMenuInfo().then((value) {
-      if (value != null) {
-        for (int i = 0; i < value.length; i++) {
-          context.read<FirstVoteNotifier>().addList(value[i]);
-        }
-      }
+
       setState(() {
+        if (value != null) {
+          for (int i = 0; i < value.length; i++) {
+            context.read<FirstVoteNotifier>().addList(value[i]);
+          }
+        }
         isMenuLoaded = true;
       });
     });
 
     _templateController.getAllTemplateInfo().then((value) {
-      if (value != null) {
-        allTemplateList.add(selectedTemplate);
-        for (int i = 1; i<value.length; i++) {
-          allTemplateList.add(value[i].templateName);
-        }
-      }
+
       setState(() {
         isAllTemplateLoaded = true;
+        if (value != null) {
+          for (int i = 0; i<value.length; i++) {
+            allTemplateList.add(value[i].templateName);
+          }
+        }
       });
     });
   }
@@ -105,7 +105,6 @@ class _FirstVotePageState extends State<FirstVotePage> {
         trailingList: [
           IconButton(
               onPressed: (){
-
               },
               icon: const Icon(Icons.more_vert)
           ),
@@ -202,7 +201,43 @@ class _FirstVotePageState extends State<FirstVotePage> {
                       SizedBox(
                         height: 12.h,
                       ),
-
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: DropdownButtonFormField(
+                          key: UniqueKey(),
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            labelText: '템플릿을 선택해주세요.',
+                          ),
+                          items: allTemplateList.map((value) {
+                            if (value == '') {
+                              print('여기야!');
+                              return DropdownMenuItem(
+                                value: value,
+                                child: const Text("선택 안함."),
+                              );
+                            } else {
+                              return DropdownMenuItem(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }
+                          }
+                          ).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              //studentResult.addition = value!;
+                              print(value);
+                            });
+                          },
+                          validator: (value) {
+                            if (value == '') {
+                              return "Please select the point.";
+                            }
+                            return null;
+                          },
+                        ),
+                      ),
                       SizedBox(height: 16.h,),
                       Stack(
                         children: [
