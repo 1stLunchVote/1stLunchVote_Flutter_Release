@@ -59,6 +59,10 @@ abstract class LunchVoteService{
   @GET('/lunchTemplate')
   Future<AllTemplateResponse> getAllTemplateInfo();
 
+  // 템플릿 하나 조회
+  @GET('/lunchTemplate/{lunchTemplateId}')
+  Future<OneTemplateResponse> getOneTemplateInfo(@Path() String lunchTemplateId);
+
   // 1차 투표 상태 조회
   @GET('/group/{groupId}/vote/first/status')
   Future<VoteStateResponse> getFirstVoteState(@Path() String groupId);

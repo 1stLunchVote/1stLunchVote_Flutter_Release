@@ -54,7 +54,7 @@ class _FirstVotePageState extends State<FirstVotePage> {
   late Future future;
   late Future afterSearch;
   List<MenuInfo> menuList = [];
-  List<String> allTemplateList = ["선택 안함"];
+  List<AllTemplateInfo> allTemplateList = [AllTemplateInfo(lunchTemplateId: "", templateName: "선택 안함")];
   bool isMenuLoaded = false;
   bool isAllTemplateLoaded = false;
 
@@ -81,7 +81,7 @@ class _FirstVotePageState extends State<FirstVotePage> {
         isAllTemplateLoaded = true;
         if (value != null) {
           for (int i = 0; i<value.length; i++) {
-            allTemplateList.add(value[i].templateName);
+            allTemplateList.add(value[i]);
           }
         }
       });
@@ -104,8 +104,7 @@ class _FirstVotePageState extends State<FirstVotePage> {
         context: context1,
         trailingList: [
           IconButton(
-              onPressed: (){
-              },
+              onPressed: (){},
               icon: const Icon(Icons.more_vert)
           ),
         ],
@@ -210,30 +209,28 @@ class _FirstVotePageState extends State<FirstVotePage> {
                             labelText: '템플릿을 선택해주세요.',
                           ),
                           items: allTemplateList.map((value) {
-                            if (value == '') {
-                              print('여기야!');
-                              return DropdownMenuItem(
-                                value: value,
-                                child: const Text("선택 안함."),
-                              );
-                            } else {
-                              return DropdownMenuItem(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }
+                            return DropdownMenuItem(
+                              value: value.lunchTemplateId,
+                              child: Text(value.templateName),
+                            );
                           }
                           ).toList(),
                           onChanged: (value) {
-                            setState(() {
-                              //studentResult.addition = value!;
-                              print(value);
+                            setState(() async {
+                              if (value == "") {
+                                context1.read<FirstVoteNotifier>().resetTemplate();
+                              } else {
+                                var list = await _templateController.getOneTemplateInfo(value!);
+                                if (list != null) {
+                                  context1.read<FirstVoteNotifier>().clearList();
+                                  for (int i = 0; i < list.length; i++) {
+                                    context1.read<FirstVoteNotifier>().addListWithStatus(list[i]);
+                                  }
+                                }
+                              }
                             });
                           },
                           validator: (value) {
-                            if (value == '') {
-                              return "Please select the point.";
-                            }
                             return null;
                           },
                         ),

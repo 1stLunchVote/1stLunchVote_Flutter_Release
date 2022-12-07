@@ -47,4 +47,11 @@ class TemplateController{
     return null;
   }
 
+  Future<List<Menu>?> getOneTemplateInfo(String lunchTemplateId) async {
+    var res = await _lunchVoteService.getOneTemplateInfo(lunchTemplateId);
+    if (res.success){
+      return res.data.menu;
+    }
+    return null;
+  }
 }

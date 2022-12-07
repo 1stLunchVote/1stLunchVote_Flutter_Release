@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lunch_vote/model/template/all_template_info.dart';
 import '../menu/menu_info.dart';
 
 class FirstVoteNotifier extends ChangeNotifier {
@@ -7,6 +8,24 @@ class FirstVoteNotifier extends ChangeNotifier {
 
   void addList(MenuInfo menuInfo) {
     _menus.add(MenuStatus(menuInfo: menuInfo, status: 0,));
+    notifyListeners();
+  }
+
+  void addListWithStatus(Menu menu) {
+    int status = -1;
+    if (menu.likesAndDislikes == "NORMAL") {
+      status = 0;
+    } else if (menu.likesAndDislikes == "LIKES") {
+      status = 1;
+    } else {
+      status = 2;
+    }
+
+    _menus.add(MenuStatus(menuInfo: MenuInfo(
+      menuId: menu.menuId,
+      menuName: menu.menuName,
+      image: menu.image,
+    ), status: status,));
     notifyListeners();
   }
 
@@ -89,6 +108,17 @@ class FirstVoteNotifier extends ChangeNotifier {
       }
     }
     return res;
+  }
+
+  void resetTemplate() {
+    for (int i = 0; i < _menus.length; i++) {
+      _menus[i].status = 0;
+    }
+    notifyListeners();
+  }
+
+  void applyTemplate() {
+
   }
 }
 
