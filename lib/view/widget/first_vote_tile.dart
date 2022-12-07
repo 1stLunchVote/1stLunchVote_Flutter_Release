@@ -4,6 +4,8 @@ import 'package:lunch_vote/model/vote/vote_item_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../model/menu/menu_info.dart';
+
 class FirstVoteTile extends StatefulWidget {
   String menuName = '';
   String menuId = '';
@@ -31,71 +33,71 @@ class _FirstVoteTileState extends State<FirstVoteTile> {
   @override
   Widget build(BuildContext context) {
     return IntrinsicHeight(
-      child: ChangeNotifierProvider(
-        create: (context) {
-          return VoteItemNotifier();
+      child: InkWell(
+        onTap: () {
+          setState(() {
+            if (check % 3 == 0) {
+              border_color = Colors.green;
+              border_width = 3.0;
+              check++;
+              check %= 3;
+              print(widget.menuName+' 선호 리스트에 삽입');
+              context.read<VoteItemNotifier>().pushPreMenu(widget.index, widget.menuId);
+            } else if (check % 3 == 1) {
+              border_color = Colors.red;
+              check++;
+              border_width = 3.0;
+              check %= 3;
+              print(widget.menuName+' 비선호 리스트에 삽입');
+              context.read<VoteItemNotifier>().pushHateMenu(widget.index, widget.menuId);
+            } else if (check % 3 == 2) {
+              border_color = Colors.black;
+              border_width = 1.0;
+              check++;
+              check %= 3;
+              print(widget.menuName+' 선호 & 비선호 리스트에 제거');
+              context.read<VoteItemNotifier>().popMenu(widget.index);
+            }
+          });
         },
-        child: InkWell(
-          onTap: () {
-            setState(() {
-              if (check % 3 == 0) {
-                border_color = Colors.black;
-                border_width = 1.0;
-                check %= 3;
-                check++;
-
-              }
-              else if (check % 3 == 1) {
-                border_color = Colors.green;
-                border_width = 3.0;
-                check %= 3;
-                check++;
-              }
-              else if (check % 3 == 2) {
-                border_color = Colors.red;
-                border_width = 3.0;
-                check %= 3;
-                check++;
-              }
-            });
-          },
-          child: Column(
-            children: [
-              Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                          border: Border.all(
-                            color: border_color,
-                            width: border_width,
-                          ),
-                      ),
-                      child: widget.image != null ? CachedNetworkImage(
-                        width: 120.w,
-                        height: 120.h,
-                        fit: BoxFit.cover,
-                        imageUrl: widget.image!,
-                        placeholder: (context, url) =>
-                            Image.asset("assets/images/default_food.png"),
-                      ) : Image.asset("assets/images/default_food.png"),
+        child: Column(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: border_color,
+                      width: border_width,
                     ),
                   ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(4),
-                  child: Text(
-                    widget.menuName,
-                    style: TextStyle(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onSurface),
-                  ),
+                  child: widget.image != null
+                      ? CachedNetworkImage(
+                          width: 120.w,
+                          height: 120.h,
+                          fit: BoxFit.cover,
+                          imageUrl: widget.image!,
+                          placeholder: (context, url) =>
+                              Image.asset("assets/images/default_food.png"),
+                        )
+                      : Image.asset("assets/images/default_food.png"),
                 ),
               ),
-            ],
-          ),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(4),
+                child: Text(
+                  widget.menuName,
+                  style: TextStyle(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.onSurface),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

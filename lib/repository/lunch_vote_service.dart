@@ -11,6 +11,7 @@ import '../model/group/group_info.dart';
 import '../model/group/user_invite.dart';
 import '../model/group/group_join_response.dart';
 import '../model/vote/final_result.dart';
+import '../model/vote/first_vote.dart';
 import '../model/vote/first_vote_result.dart';
 
 part 'lunch_vote_service.g.dart';
@@ -46,6 +47,11 @@ abstract class LunchVoteService{
   // 메뉴 정보 가져오기
   @GET('/menu')
   Future<MenuInfoResponse> getMenuInfo();
+
+  // 1차 투표
+  @PATCH('~/group/:groupId/vote/first')
+  Future<FirstVoteResponse> firstVoteItem(@Path() String groupId);
+
 
   // 1차 투표 결과 조회
   @GET('/group/{groupId}/vote/first/result')

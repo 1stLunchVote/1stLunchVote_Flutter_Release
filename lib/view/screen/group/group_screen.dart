@@ -232,6 +232,7 @@ class _GroupScreenState extends State<_GroupScreen> {
                         ),
                         ElevatedButton(
                           onPressed: (){
+                            _timer?.cancel();
                             Navigator.of(context).push(
                                 MaterialPageRoute(builder: (context) => FirstVoteScreen())
                             );

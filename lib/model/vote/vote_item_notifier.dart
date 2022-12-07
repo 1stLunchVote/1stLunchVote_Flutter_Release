@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-
 import 'package:lunch_vote/model/menu/menu_info.dart';
 
 class VoteItemNotifier extends ChangeNotifier{
+
   int _index = -1;
   int get index => _index;
 
@@ -12,17 +12,27 @@ class VoteItemNotifier extends ChangeNotifier{
   int _checkTouch = 0;
   int get checkTouch => _checkTouch;
 
-  List<MenuInfo> selectedMenu = [];
-
-  void pushMenu(int index, MenuInfo menuInfo){
-    selectedMenu.add(menuInfo);
+  void pushPreMenu(int index, String menuId){
+    hateMenu[index] = '';
+    preferMenu[index] = menuId;
+    for(int i=0;i<preferMenu.length;i++){
+      print(preferMenu[i]);
+    }
+    notifyListeners();
+  }
+  
+  void pushHateMenu(int index, String menuId){
+    preferMenu[index] = '';
+    hateMenu[index] = menuId;
     notifyListeners();
   }
 
   void popMenu(int index){
-    selectedMenu.removeAt(index);
+    preferMenu.removeAt(index);
+    hateMenu.removeAt(index);
     notifyListeners();
   }
+
 
   void setIndex(int idx, String menuId){
     _index = idx;
@@ -36,9 +46,8 @@ class VoteItemNotifier extends ChangeNotifier{
     notifyListeners();
   }
 
-  void getselectedMenu(){
+  void updateMenu(){
     notifyListeners();
-
   }
 
 }
