@@ -252,11 +252,13 @@ class _FirstVotePageState extends State<FirstVotePage> {
                     width: double.infinity,
                     height: double.infinity,
                     decoration: BoxDecoration(
-                      color: Theme.of(context1).colorScheme.surface,
+                      color: Theme.of(context1).colorScheme.surfaceVariant,
                     ),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const CircularProgressIndicator(),
+                        const SizedBox(height: 20,),
                         Text(
                           "다른 참가자들이 투표 중입니다.\n잠시만 기다려주세요...",
                           style: Theme.of(context).textTheme.titleLarge,
