@@ -4,7 +4,6 @@ import 'package:lunch_vote/model/group/group_notifier.dart';
 import 'package:provider/provider.dart';
 
 import '../../controller/group_controller.dart';
-import '../../model/group/group_info.dart';
 
 class GroupUser extends StatefulWidget {
   final int userIdx;
