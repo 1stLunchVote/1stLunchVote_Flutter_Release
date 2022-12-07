@@ -3,6 +3,7 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:lunch_vote/model/profile/profile_info.dart';
 import 'package:lunch_vote/model/template/template_info.dart';
 import 'package:lunch_vote/model/vote/second_vote.dart';
+import 'package:lunch_vote/model/vote/vote_state.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:lunch_vote/model/login/user_info.dart';
 
@@ -53,6 +54,9 @@ abstract class LunchVoteService{
   @PATCH('/group/{groupId}/vote/first')
   Future<FirstVoteResponse> submitFirstVote(@Path() String groupId, @Body() FirstVoteItem voteItem);
 
+  // 1차 투표 상태 조회
+  @GET('/group/{groupId}/void/first/status')
+  Future<VoteStateResponse> getFirstVoteState(@Path() String groupId);
 
   // 1차 투표 결과 조회
   @GET('/group/{groupId}/vote/first/result')
@@ -64,7 +68,7 @@ abstract class LunchVoteService{
 
   // 2차 투표 상태 조회
   @GET('/group/{groupId}/vote/second/status')
-  Future<SecondVoteStateResponse> getSecondVoteState(@Path() String groupId);
+  Future<VoteStateResponse> getSecondVoteState(@Path() String groupId);
 
   // 최종 결과 조회
   @GET('/group/{groupId}/vote/second/result')

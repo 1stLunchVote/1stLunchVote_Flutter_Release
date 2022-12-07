@@ -35,12 +35,4 @@ class SecondVoteController{
     }
     return null;
   }
-
-  Future<bool?> fetchVoteResult() async{
-    var res = await _lunchVoteService.getSecondVoteState(groupId);
-    if (res.success){
-      return res.data.finish;
-    }
-    return null;
-  }
 }

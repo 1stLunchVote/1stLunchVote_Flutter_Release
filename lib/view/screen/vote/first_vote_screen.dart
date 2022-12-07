@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lunch_vote/controller/first_vote_controller.dart';
+import 'package:lunch_vote/controller/vote_state_controller.dart';
+import 'package:lunch_vote/view/screen/vote/second_vote_screen.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
 import 'package:lunch_vote/view/widget/custom_clip_path.dart';
 import 'package:lunch_vote/view/widget/first_vote_tile.dart';
@@ -41,12 +45,15 @@ class FirstVotePage extends StatefulWidget {
 class _FirstVotePageState extends State<FirstVotePage> {
   final _menuController = MenuController();
   final _firstVoteController = FirstVoteController();
+  final _voteStateController = VoteStateController();
   final TextEditingController _textController = TextEditingController();
   String searchedMenu = '';
   late Future future;
   late Future afterSearch;
   List<MenuInfo> menuList = [];
   bool isMenuLoaded = false;
+
+  Timer? _timer;
 
   @override
   void initState(){
@@ -63,6 +70,13 @@ class _FirstVotePageState extends State<FirstVotePage> {
     });
 
   }
+
+  @override
+  void dispose(){
+    super.dispose();
+    _timer?.cancel();
+  }
+
   @override
   Widget build(BuildContext context1) {
     return Scaffold(
@@ -70,7 +84,7 @@ class _FirstVotePageState extends State<FirstVotePage> {
         backVisible: false,
         appbarTitle: "투표 1단계 - 선호&비선호",
         isTitleCenter: false,
-        context: context,
+        context: context1,
         trailingList: [
           IconButton(
               onPressed: (){
@@ -84,18 +98,31 @@ class _FirstVotePageState extends State<FirstVotePage> {
         visible: context1.watch<FirstVoteNotifier>().visibility,
         child: ElevatedButton(
           onPressed: () async{
-            await _firstVoteController.submitFirstVote(
+            _firstVoteController.submitFirstVote(
                 widget.groupId,
-                context.read<FirstVoteNotifier>().getLikeMenu(),
-                context.read<FirstVoteNotifier>().getDislikeMenu()
+                context1.read<FirstVoteNotifier>().getLikeMenu(),
+                context1.read<FirstVoteNotifier>().getDislikeMenu()
             );
+            context1.read<FirstVoteNotifier>().startLoading();
+            var temp = await _voteStateController.fetchFirstVoteResult(widget.groupId);
+
+            if (temp != true){
+              _timer = Timer.periodic(const Duration(milliseconds: 3000), (timer) async {
+                var temp = await _voteStateController.fetchFirstVoteResult(widget.groupId);
+                if (temp == true){
+                  _timer?.cancel();
+                  Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => SecondVoteScreen(groupId: widget.groupId))
+                  );
+                }
+              });
+            } else{
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => SecondVoteScreen(groupId: widget.groupId))
+              );
+            }
           },
-          child: const Text(
-            '선택 완료!',
-            style: TextStyle(
-              color: Color.fromRGBO(161, 63, 36, 1),
-            ),
-          ),
+          child: const Text('선택 완료!',),
         ),
       ),
       body: Consumer<FirstVoteNotifier>(
@@ -218,6 +245,27 @@ class _FirstVotePageState extends State<FirstVotePage> {
                     ],
                   ),
                 ),
+                Visibility(
+                  visible: context1.watch<FirstVoteNotifier>().isLoading,
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: double.infinity,
+                    height: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context1).colorScheme.surface,
+                    ),
+                    child: Column(
+                      children: [
+                        const CircularProgressIndicator(),
+                        Text(
+                          "다른 참가자들이 투표 중입니다.\n잠시만 기다려주세요...",
+                          style: Theme.of(context).textTheme.titleLarge,
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                )
               ],
             ),
           );
