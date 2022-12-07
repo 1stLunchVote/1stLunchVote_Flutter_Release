@@ -51,33 +51,7 @@ class FirstVoteReadyScreen extends StatelessWidget {
               child: Column(
                 //mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: 16.h,
-                  ),
-                  GestureDetector(
-                    onTap: () {
-
-                    },
-                    child: Container(
-                      width: 320.w,
-                      height: 56.h,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4.0),
-                        border: Border.all(color: Colors.black, width: 1),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.search),
-                            SizedBox(width: 16.w,),
-                            const Text('메뉴를 검색해주세요.'),
-                          ],
-                        ),
-                      )
-                    ),
-                  ),
-                  SizedBox(height: 200.h,),
+                  SizedBox(height: 230.h,),
                   Text(
                     'Tips!',
                     style: TextStyle(fontSize: 24.sp, color: Colors.black),
@@ -100,9 +74,12 @@ class FirstVoteReadyScreen extends StatelessWidget {
                         ]
                     ),
                   ),
-                  Text(
-                    '세 번 클릭하면 선택이 해제됩니다!',
-                    style: TextStyle(fontSize: 16.sp, color: Colors.black),
+                  RichText(
+                    text: TextSpan(
+                        children: [
+                          TextSpan(text: '세 번 클릭하면 선택이 해제됩니다!', style: TextStyle(fontSize: 16.sp, color: Colors.black)),
+                        ]
+                    ),
                   ),
                   SizedBox(height: 160.h),
                   ElevatedButton(
