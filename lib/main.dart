@@ -28,7 +28,6 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await FirebaseMessaging.instance.getInitialMessage();
 
   // runApp() 호출 전 Flutter SDK 초기화
   KakaoSdk.init(
@@ -37,6 +36,9 @@ Future<void> main() async {
 
   String? token = await FirebaseMessaging.instance.getToken();
   _spfManager.setFCMToken(token);
+
+  await FirebaseMessaging.instance.getInitialMessage();
+
   print("FCM Token : $token");
 
   runApp(

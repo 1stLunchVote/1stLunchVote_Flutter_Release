@@ -108,61 +108,64 @@ class _TemplateScreenState extends State<_TemplateScreen> {
           ],
         ),
       ),
-      floatingActionButton: ElevatedButton(
-        child: const Text("저장하기"),
-        onPressed: () {
-          showDialog(
-              context: context1,
-              builder: (BuildContext context2) {
-                return AlertDialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  title: const Text("템플릿 이름 설정"),
-                  content: Form(
-                    key: _formKey,
-                    child: TextFormField(
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: '템플릿명',
-                        hintText: '2~10 자로 입력해주세요.',
-                        helperText: '',
+      floatingActionButton: Visibility(
+        visible: context1.watch<TemplateNotifier>().visibility,
+        child: ElevatedButton(
+          child: const Text("저장하기"),
+          onPressed: () {
+            showDialog(
+                context: context1,
+                builder: (BuildContext context2) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    title: const Text("템플릿 이름 설정"),
+                    content: Form(
+                      key: _formKey,
+                      child: TextFormField(
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: '템플릿명',
+                          hintText: '2~10 자로 입력해주세요.',
+                          helperText: '',
+                        ),
+                        onSaved: (value) {
+                          name = value!;
+                        },
+                        validator: (value) {
+                          if (value == null) {
+                            return "Please enter an name.";
+                          } else if (value.isEmpty) {
+                            return "Please enter an name";
+                          } else if (value.length < 2 || value.length > 10) {
+                            return "Please enter text 2 to 10.";
+                          }
+                          return null;
+                        },
                       ),
-                      onSaved: (value) {
-                        name = value!;
-                      },
-                      validator: (value) {
-                        if (value == null) {
-                          return "Please enter an name.";
-                        } else if (value.isEmpty) {
-                          return "Please enter an name";
-                        } else if (value.length < 2 || value.length > 10) {
-                          return "Please enter text 2 to 10.";
-                        }
-                        return null;
-                      },
                     ),
-                  ),
-                  actions: [
-                    TextButton(
-                      child: const Text("확인"),
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState!.save();
-                          await _templateController.createTemplate(TemplateInfo(
-                            templateName: name,
-                            likesMenu: context1.read<TemplateNotifier>().getLikeMenu(),
-                            dislikesMenu: context1.read<TemplateNotifier>().getDislikeMenu(),
-                          ));
-                          Navigator.popUntil(context2, (route) => route.isFirst);
-                        }
-                      },
-                    ),
-                  ],
-                );
-              }
-          );
-        },
+                    actions: [
+                      TextButton(
+                        child: const Text("확인"),
+                        onPressed: () async {
+                          if (_formKey.currentState!.validate()) {
+                            _formKey.currentState!.save();
+                            await _templateController.createTemplate(TemplateInfo(
+                              templateName: name,
+                              likesMenu: context1.read<TemplateNotifier>().getLikeMenu(),
+                              dislikesMenu: context1.read<TemplateNotifier>().getDislikeMenu(),
+                            ));
+                            Navigator.popUntil(context2, (route) => route.isFirst);
+                          }
+                        },
+                      ),
+                    ],
+                  );
+                }
+            );
+          },
+        ),
       ),
     );
   }
