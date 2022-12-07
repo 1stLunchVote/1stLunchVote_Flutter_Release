@@ -127,13 +127,13 @@ class _FirstVotePageState extends State<FirstVotePage> {
                 var temp = await _voteStateController.fetchFirstVoteResult(widget.groupId);
                 if (temp == true){
                   _timer?.cancel();
-                  Navigator.of(context).push(
+                  Navigator.of(context1).push(
                       MaterialPageRoute(builder: (context) => SecondVoteScreen(groupId: widget.groupId))
                   );
                 }
               });
             } else{
-              Navigator.of(context).push(
+              Navigator.of(context1).push(
                   MaterialPageRoute(builder: (context) => SecondVoteScreen(groupId: widget.groupId))
               );
             }
