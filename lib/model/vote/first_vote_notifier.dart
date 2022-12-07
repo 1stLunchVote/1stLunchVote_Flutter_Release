@@ -59,12 +59,7 @@ class FirstVoteNotifier extends ChangeNotifier {
     }
     List<String> likesMenu = getLikeMenu();
     List<String> dislikesMenu = getDislikeMenu();
-    for (int i = 0; i < _menus.length; i++) {
-      if (likesMenu.isNotEmpty && dislikesMenu.isNotEmpty) {
-        return true;
-      }
-    }
-    return false;
+    return likesMenu.isNotEmpty && dislikesMenu.isNotEmpty;
   }
 
   void startLoading() {
@@ -107,6 +102,13 @@ class FirstVoteNotifier extends ChangeNotifier {
         res.add(_allMenus[i].menuInfo.menuId);
       }
     }
+    for (int i = 0; i < _menus.length; i++) {
+      if (_menus[i].status == 1) {
+        if (!res.contains(_menus[i].menuInfo.menuId)) {
+          res.add(_menus[i].menuInfo.menuId);
+        }
+      }
+    }
     return res;
   }
 
@@ -115,6 +117,13 @@ class FirstVoteNotifier extends ChangeNotifier {
     for (int i = 0; i < _allMenus.length; i++) {
       if (_allMenus[i].status == 2) {
         res.add(_allMenus[i].menuInfo.menuId);
+      }
+    }
+    for (int i = 0; i < _menus.length; i++) {
+      if (_menus[i].status == 2) {
+        if (!res.contains(_menus[i].menuInfo.menuId)) {
+          res.add(_menus[i].menuInfo.menuId);
+        }
       }
     }
     return res;
