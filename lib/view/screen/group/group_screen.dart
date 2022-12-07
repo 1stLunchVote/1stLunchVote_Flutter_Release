@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:lunch_vote/model/group/group_notifier.dart';
+import 'package:lunch_vote/view/screen/vote/first_vote_ready_screen.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
 import 'package:lunch_vote/view/widget/custom_clip_path.dart';
 import 'package:lunch_vote/view/widget/group_user.dart';
@@ -235,7 +236,7 @@ class _GroupScreenState extends State<_GroupScreen> {
                           onPressed: (){
                             _timer?.cancel();
                             Navigator.of(context).push(
-                                MaterialPageRoute(builder: (context) => const SecondVoteScreen())
+                                MaterialPageRoute(builder: (context) => const FirstVoteReadyScreen())
                             );
                           },
                           child: const Text("투표 시작!"),

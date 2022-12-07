@@ -103,9 +103,6 @@ class FirstVoteReadyScreen extends StatelessWidget {
                   SizedBox(height: 160.h),
                   ElevatedButton(
                     onPressed: (){
-                      setState(){
-                        print('hi');
-                      }
                       Navigator.of(context).push(
                           MaterialPageRoute(builder: (context) => const FirstVoteScreen())
                       );

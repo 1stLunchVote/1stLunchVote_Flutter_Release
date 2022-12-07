@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
 import 'package:lunch_vote/view/widget/custom_clip_path.dart';
 import 'package:lunch_vote/view/widget/first_vote_tile.dart';
 import 'package:lunch_vote/controller/menu_controller.dart';
 import 'package:provider/provider.dart';
-
 import '../../../model/menu/menu_info.dart';
+import '../../../model/vote/first_vote_notifier.dart';
 import '../../../model/vote/vote_item_notifier.dart';
 
 
@@ -17,7 +16,7 @@ class FirstVoteScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => VoteItemNotifier(),
+      create: (context) => FirstVoteNotifier(),
       child: const FirstVotePage(),
     );
   }
@@ -64,17 +63,17 @@ class _FirstVotePageState extends State<FirstVotePage> {
       floatingActionButton: ElevatedButton(
         onPressed: (){
           Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => const FirstVoteScreen())
+              MaterialPageRoute(builder: (context) => const FirstVoteScreen()) // TODO 다른 사람 투표하는거 기다려줘야합니다.
           );
         },
-        child: Text(
+        child: const Text(
           '선택완료!',
           style: TextStyle(
             color: Color.fromRGBO(161, 63, 36, 1),
           ),
         ),
       ),
-      body: Consumer<VoteItemNotifier>(
+      body: Consumer<FirstVoteNotifier>(
         builder: (BuildContext newContext, notifier, _){
           return SafeArea(
             child: Stack(
@@ -143,7 +142,7 @@ class _FirstVotePageState extends State<FirstVotePage> {
                       ),
                       GestureDetector(
                         onTap: () {
-
+                          // TODO 템플릿 선택하는 기능 추가
                         },
                         child: Container(
                             width: 320.w,
@@ -159,12 +158,7 @@ class _FirstVotePageState extends State<FirstVotePage> {
                                   SizedBox(width: 16.w,),
                                   Text('템플릿을 선택해주세요.'),
                                   SizedBox(width: 100.w,),
-                                  IconButton(
-                                    icon: Icon(Icons.unfold_more),
-                                    onPressed: (){
-                                      // TODO 템플릿 선택하는 함수 넣어야 함.
-                                    },
-                                  ),
+                                  Icon(Icons.unfold_more),
                                 ],
                               ),
                             )

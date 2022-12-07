@@ -29,7 +29,7 @@ class FirstVoteController{
   }
 
   Future<int?> voteItem(String menuId) async{
-    var res = await _lunchVoteService.secondVoteItem(groupId, FirstVoteItem(menuId: menuId));
+    var res = await _lunchVoteService.secondVoteItem();
     if (res.success){
       return res.data.count;
     }

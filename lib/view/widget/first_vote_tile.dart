@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:lunch_vote/model/vote/vote_item_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import '../../controller/menu_controller.dart';
 import '../../model/menu/menu_info.dart';
+import '../../model/vote/first_vote_notifier.dart';
 
 class FirstVoteTile extends StatefulWidget {
   String menuName = '';
@@ -29,6 +30,13 @@ class _FirstVoteTileState extends State<FirstVoteTile> {
   int check = 0;
   Color border_color = Colors.black;
   double border_width = 1.0;
+  final _controller = MenuController();
+  late Future future;
+
+  @override
+  void initState(){
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,28 +44,7 @@ class _FirstVoteTileState extends State<FirstVoteTile> {
       child: InkWell(
         onTap: () {
           setState(() {
-            if (check % 3 == 0) {
-              border_color = Colors.green;
-              border_width = 3.0;
-              check++;
-              check %= 3;
-              print(widget.menuName+' 선호 리스트에 삽입');
-              context.read<VoteItemNotifier>().pushPreMenu(widget.index, widget.menuId);
-            } else if (check % 3 == 1) {
-              border_color = Colors.red;
-              check++;
-              border_width = 3.0;
-              check %= 3;
-              print(widget.menuName+' 비선호 리스트에 삽입');
-              context.read<VoteItemNotifier>().pushHateMenu(widget.index, widget.menuId);
-            } else if (check % 3 == 2) {
-              border_color = Colors.black;
-              border_width = 1.0;
-              check++;
-              check %= 3;
-              print(widget.menuName+' 선호 & 비선호 리스트에 제거');
-              context.read<VoteItemNotifier>().popMenu(widget.index);
-            }
+            context.read<FirstVoteNotifier>().updateStatus(widget.index);
           });
         },
         child: Column(
@@ -68,8 +55,8 @@ class _FirstVoteTileState extends State<FirstVoteTile> {
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: border_color,
-                      width: border_width,
+                      color: context.read<FirstVoteNotifier>().getColor(widget.index),
+                      width: context.read<FirstVoteNotifier>().getWidth(widget.index),
                     ),
                   ),
                   child: widget.image != null
