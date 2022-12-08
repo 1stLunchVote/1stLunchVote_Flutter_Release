@@ -3,7 +3,7 @@ import 'package:lunch_vote/repository/lunch_vote_service.dart';
 import 'package:lunch_vote/view/widget/utils/shared_pref_manager.dart';
 
 import '../model/group/group_info.dart';
-import '../model/group/user_invite.dart';
+import '../model/group/user_manage.dart';
 
 class GroupController{
   final dio = Dio();
@@ -38,12 +38,9 @@ class GroupController{
     return null;
   }
 
-  Future<MemberInfo?> inviteUser(String groupId, String email) async{
+  Future<String> inviteUser(String groupId, String email) async{
     var res = await _lunchVoteService.inviteUser(groupId, UserEmail(email: email));
-    if (res.success){
-      return MemberInfo(email: res.data.email, nickname: res.data.nickname, profileImage: res.data.profileImage,);
-    }
-    return null;
+    return res.message;
   }
 
   Future<MemberInfo?> getMyProfile() async {
@@ -52,5 +49,10 @@ class GroupController{
       return MemberInfo(email: res.data.email, nickname: res.data.nickname, profileImage: res.data.profileImage,);
     }
     return null;
+  }
+
+  Future<String> withdrawalUser(String groupId) async {
+    var res = await _lunchVoteService.withdrawalUser(groupId);
+    return res.message;
   }
 }

@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-part 'user_invite.g.dart';
+part 'user_manage.g.dart';
 
 @JsonSerializable()
 class UserInviteInfo{
@@ -45,4 +45,18 @@ class UserEmail{
       _$UserEmailFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserEmailToJson(this);
+}
+
+@JsonSerializable()
+class UserWithdrawalResponse{
+  final int status;
+  final bool success;
+  final String message;
+
+  UserWithdrawalResponse({required this.status, required this.success, required this.message});
+
+  factory UserWithdrawalResponse.fromJson(Map<String, dynamic> json) =>
+      _$UserWithdrawalResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UserWithdrawalResponseToJson(this);
 }

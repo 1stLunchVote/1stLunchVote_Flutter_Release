@@ -10,7 +10,7 @@ import 'package:lunch_vote/model/login/user_info.dart';
 import 'package:lunch_vote/model/menu/menu_info.dart';
 
 import '../model/group/group_info.dart';
-import '../model/group/user_invite.dart';
+import '../model/group/user_manage.dart';
 import '../model/group/group_join_response.dart';
 import '../model/template/all_template_info.dart';
 import '../model/vote/final_result.dart';
@@ -42,6 +42,10 @@ abstract class LunchVoteService{
   // 유저 초대
   @PATCH('/group/{groupId}/invite')
   Future<UserInviteResponse> inviteUser(@Path() String groupId, @Body() UserEmail email);
+
+  // 그룹 탈퇴
+  @PATCH('/group/{groupId}/withdrawal')
+  Future<UserWithdrawalResponse> withdrawalUser(@Path() String groupId);
 
   // 유저 프로필 조회
   @GET('/user')

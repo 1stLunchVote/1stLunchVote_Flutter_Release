@@ -51,6 +51,7 @@ class _GroupUserState extends State<GroupUser> {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
+                          var visibilityBtn = true;
                           return AlertDialog(
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10.0),
@@ -78,15 +79,22 @@ class _GroupUserState extends State<GroupUser> {
                               ),
                             ),
                             actions: [
-                              TextButton(
-                                child: const Text("확인"),
-                                onPressed: () async {
-                                  if (_formKey.currentState!.validate()) {
-                                    _formKey.currentState!.save();
-                                     await widget.groupController.inviteUser(_groupId, email);
-                                     Navigator.pop(context);
-                                  }
-                                },
+                              Visibility(
+                                visible: visibilityBtn,
+                                child: TextButton(
+                                  child: const Text("확인"),
+                                  onPressed: () async {
+                                    if (_formKey.currentState!.validate()) {
+                                      _formKey.currentState!.save();
+                                      setState((){
+                                        visibilityBtn = false;
+                                      });
+                                      var message = await widget.groupController.inviteUser(_groupId, email);
+                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+                                      Navigator.pop(context);
+                                    }
+                                  },
+                                ),
                               ),
                             ],
                           );
