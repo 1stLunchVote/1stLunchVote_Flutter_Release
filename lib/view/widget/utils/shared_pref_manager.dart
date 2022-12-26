@@ -14,6 +14,11 @@ class SharedPrefManager{
     return null;
   }
 
+  void clearUserToken() async{
+    final spf = await SharedPreferences.getInstance();
+    spf.remove('userToken');
+  }
+
   void setFCMToken(String? token) async{
     final spf = await SharedPreferences.getInstance();
     spf.setString('fcmToken', token!);

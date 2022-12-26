@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:flutter/scheduler.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:lunch_vote/model/group_id_notifier.dart';
@@ -31,8 +32,9 @@ Future<void> main() async {
 
   // runApp() 호출 전 Flutter SDK 초기화
   KakaoSdk.init(
-      nativeAppKey: '460927feb9d1b043b37bd492992f62b0',
-      javaScriptAppKey: 'c5e7ae17bbb1d4f127300c6c7038c8eb');
+    nativeAppKey: '460927feb9d1b043b37bd492992f62b0',
+    javaScriptAppKey: 'c5e7ae17bbb1d4f127300c6c7038c8eb',
+  );
 
   String? token = await FirebaseMessaging.instance.getToken();
   _spfManager.setFCMToken(token);
@@ -41,11 +43,16 @@ Future<void> main() async {
 
   print("FCM Token : $token");
 
-  runApp(
-    ChangeNotifierProvider(
-      create: (context) => GroupIdNotifier(),
-      child: const MyApp(),
-    ));
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarBrightness: Brightness.light,
+      statusBarIconBrightness: Brightness.dark,
+      statusBarColor: mainBackgroundColor
+  ));
+
+  runApp(ChangeNotifierProvider(
+    create: (context) => GroupIdNotifier(),
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends StatefulWidget {
@@ -58,7 +65,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   bool _autoLogin = false;
   SharedPrefManager spfManager = SharedPrefManager();
-
 
   @override
   void initState() {
@@ -89,18 +95,18 @@ class _MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           title: "1st Lunch Vote",
           theme: ThemeData(
-              useMaterial3: true,
-              fontFamily: 'NanumSquareNeo',
-              colorScheme: ColorScheme.fromSeed(
-                  seedColor: mainColor, brightness: Brightness.light),
-              scaffoldBackgroundColor: mainBackgroundColor),
+            useMaterial3: true,
+            fontFamily: 'NanumSquareNeo',
+            colorScheme: ColorScheme.fromSeed(
+                seedColor: mainColor, brightness: Brightness.light),
+          ),
           darkTheme: ThemeData(
-              useMaterial3: true,
-              fontFamily: 'NanumSquareNeo',
-              colorScheme: ColorScheme.fromSeed(
-                  seedColor: mainColor, brightness: Brightness.dark)),
-          home: _autoLogin == true ? const HomeScreen() : const LoginScreen()
-      ),
+            useMaterial3: true,
+            fontFamily: 'NanumSquareNeo',
+            colorScheme: ColorScheme.fromSeed(
+                seedColor: mainColor, brightness: Brightness.dark),
+          ),
+          home: _autoLogin == true ? const HomeScreen() : const LoginScreen()),
     );
   }
 }

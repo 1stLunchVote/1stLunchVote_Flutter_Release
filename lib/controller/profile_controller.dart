@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:dio/dio.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:lunch_vote/model/profile/profile_info.dart';
 import 'package:lunch_vote/repository/lunch_vote_service.dart';
 import 'package:lunch_vote/view/widget/utils/shared_pref_manager.dart';
@@ -31,5 +32,9 @@ class ProfileController{
       return res.data;
     }
     return null;
+  }
+
+  Future<void> logout() async{
+    _spfManager.clearUserToken();
   }
 }

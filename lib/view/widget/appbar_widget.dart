@@ -10,54 +10,48 @@ class BasicAppbar extends AppBar {
   final BuildContext context;
   final List<Widget>? trailingList;
 
-  BasicAppbar({super.key,
-    required this.backVisible,
-    required this.appbarTitle,
-    required this.isTitleCenter,
-    required this.context,
-    required this.trailingList
-  });
+  BasicAppbar(
+      {super.key,
+      required this.backVisible,
+      required this.appbarTitle,
+      required this.isTitleCenter,
+      required this.context,
+      required this.trailingList});
 
   @override
   double? get elevation => 0;
 
   @override
-  Color? get surfaceTintColor => mainBackgroundColor;
-
-  @override
   Widget? get title => Text(appbarTitle,
-      style: const TextStyle(
-        fontSize: 22,
-        color: voteBlackColor
-  ));
+      style: const TextStyle(fontSize: 22, color: voteBlackColor));
 
   @override
   bool? get centerTitle => isTitleCenter;
 
-
   @override
   Widget? get leading => Visibility(
-    visible: backVisible,
-    child: IconButton(
-      icon: Icon(
-        Icons.arrow_back,
-        color: Theme.of(context).colorScheme.onSurface,
-      ),
-      onPressed: (){
-        Navigator.of(context).pop();
-      },
-    ),
-  );
-
+        visible: backVisible,
+        child: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      );
 
   @override
-  List<Widget>? get actions => trailingList;
+  Color? get backgroundColor => mainBackgroundColor;
 
   @override
   SystemUiOverlayStyle? get systemOverlayStyle => const SystemUiOverlayStyle(
-    statusBarColor: mainBackgroundColor,
-    statusBarIconBrightness: Brightness.dark
+      statusBarBrightness: Brightness.light,
+      statusBarIconBrightness: Brightness.dark,
+      statusBarColor: mainBackgroundColor
   );
 
-  @override Color? get backgroundColor => mainBackgroundColor;
+  @override
+  List<Widget>? get actions => trailingList;
 }

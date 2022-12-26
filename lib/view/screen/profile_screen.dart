@@ -1,7 +1,9 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lunch_vote/controller/profile_controller.dart';
 import 'package:lunch_vote/styles.dart';
+import 'package:lunch_vote/view/screen/login_screen.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
 import 'package:lunch_vote/view/widget/custom_clip_path.dart';
 
@@ -208,8 +210,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     ),
-                  )
-                ],
+                  ),
+                    Visibility(
+                        visible: !_nicknameChange,
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 90),
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                bool res = await _showDialog();
+                                if (res){
+                                  _profileController.logout();
+                                  Navigator.of(context).pushAndRemoveUntil(
+                                      MaterialPageRoute(builder: (context) =>
+                                          const LoginScreen()), (route) => false);
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                padding: const EdgeInsets.fromLTRB(24, 10, 24, 10)),
+                              child: const Text("로그아웃")
+                              )
+                            ),
+                          ),
+                        )
+                  ],
               );
             }
             }
@@ -217,5 +242,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
+  }
+
+  Future<bool> _showDialog() async{
+    bool? canExit;
+    AwesomeDialog dlg = AwesomeDialog(
+      context: context,
+      dialogType: DialogType.warning,
+      animType: AnimType.scale,
+      title: "로그아웃",
+      desc: "정말로 로그아웃 하시겠습니까?",
+      dismissOnTouchOutside: true,
+      btnCancelOnPress: () => canExit = false,
+      btnOkOnPress: () => canExit = true,
+      btnOkText: "예",
+      btnCancelText: "아니요",
+
+    );
+    await dlg.show();
+
+    return Future.value(canExit);
   }
 }

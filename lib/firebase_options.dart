@@ -26,10 +26,7 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for ios - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return ios;
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -58,5 +55,15 @@ class DefaultFirebaseOptions {
     messagingSenderId: '865155786423',
     projectId: 'lunch-vote-ed5de',
     storageBucket: 'lunch-vote-ed5de.appspot.com',
+  );
+
+  static const FirebaseOptions ios = FirebaseOptions(
+    apiKey: 'AIzaSyAf7mfLdj09gF_2nkQXyHJszZYK2vdww3Q',
+    appId: '1:865155786423:ios:78902c7c6a79505e594f32',
+    messagingSenderId: '865155786423',
+    projectId: 'lunch-vote-ed5de',
+    storageBucket: 'lunch-vote-ed5de.appspot.com',
+    iosClientId: '865155786423-hf6jqhv1d9n8b64tjqjsaarfnk3vs207.apps.googleusercontent.com',
+    iosBundleId: 'com.flutterproject.lunchvote.lunchVote',
   );
 }
