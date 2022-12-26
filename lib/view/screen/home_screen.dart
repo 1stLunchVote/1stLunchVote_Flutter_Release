@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lunch_vote/controller/group_controller.dart';
 import 'package:lunch_vote/controller/home_controller.dart';
+import 'package:lunch_vote/styles.dart';
 import 'package:lunch_vote/view/screen/group/group_screen.dart';
 import 'package:lunch_vote/model/group_id_notifier.dart';
 import 'package:lunch_vote/view/screen/profile_screen.dart';
@@ -106,6 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Consumer<GroupIdNotifier>(
         builder: (BuildContext newContext, notifier, _) {
       return Scaffold(
+        backgroundColor: mainBackgroundColor,
         appBar: BasicAppbar(
           backVisible: false,
           appbarTitle: '제 1회 점심메뉴 총선거',

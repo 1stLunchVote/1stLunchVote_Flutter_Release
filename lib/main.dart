@@ -33,8 +33,10 @@ Future<void> main() async {
 
   await dotenv.load(fileName: 'assets/config/.env');
   // runApp() 호출 전 Flutter SDK 초기화
+  String kakaoNativeAppKey = dotenv.get('kakao_native_app_key');
+  print(kakaoNativeAppKey);
   KakaoSdk.init(
-    nativeAppKey: dotenv.get('kakao_native_app_key')
+    nativeAppKey: kakaoNativeAppKey
   );
 
   String? token = await FirebaseMessaging.instance.getToken();
