@@ -42,6 +42,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Theme.of(context).scaffoldBackgroundColor,
+        // Android Status Bar Color
+        statusBarIconBrightness: Brightness.dark
+      )
+    );
     ScreenUtil.init(context, designSize: const Size(360, 800));
     return Scaffold(
       backgroundColor: mainBackgroundColor,

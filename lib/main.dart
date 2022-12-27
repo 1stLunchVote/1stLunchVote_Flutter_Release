@@ -47,11 +47,6 @@ Future<void> main() async {
 
   print("FCM Token : $token");
 
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarBrightness: Brightness.light,
-      statusBarIconBrightness: Brightness.dark,
-      statusBarColor: mainBackgroundColor
-  ));
 
   runApp(ChangeNotifierProvider(
     create: (context) => GroupIdNotifier(),
@@ -93,29 +88,20 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => GroupIdNotifier(),
-      child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: "제 1회 점심메뉴 총선거",
-          theme: ThemeData(
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: "제 1회 점심메뉴 총선거",
+        theme: ThemeData(
+          useMaterial3: true,
+          fontFamily: 'NanumSquareNeo',
+          scaffoldBackgroundColor: backgroundLight1,
+        ),
+        darkTheme: ThemeData(
             useMaterial3: true,
             fontFamily: 'NanumSquareNeo',
-            textTheme: Theme.of(context).textTheme.apply(
-              bodyColor: textLightMain,
-              displayColor: textLightSecondary
-            ),
-            scaffoldBackgroundColor: backgroundLight1,
-          ),
-          darkTheme: ThemeData(
-              useMaterial3: true,
-              fontFamily: 'NanumSquareNeo',
-              textTheme: Theme.of(context).textTheme.apply(
-                  bodyColor: textDarkMain,
-                  displayColor: textDarkSecondary,
-              ),
-              scaffoldBackgroundColor: backgroundDark1),
-          home: _autoLogin == true ? const HomeScreen() : const LoginScreen()),
-    );
+            scaffoldBackgroundColor: backgroundDark1,
+        ),
+        home: _autoLogin == true ? const HomeScreen() : const LoginScreen());
   }
+
 }
