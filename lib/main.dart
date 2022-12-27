@@ -97,19 +97,24 @@ class _MyAppState extends State<MyApp> {
       create: (context) => GroupIdNotifier(),
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: "1st Lunch Vote",
+          title: "제 1회 점심메뉴 총선거",
           theme: ThemeData(
             useMaterial3: true,
             fontFamily: 'NanumSquareNeo',
-            colorScheme: ColorScheme.fromSeed(
-                seedColor: mainColor, brightness: Brightness.light),
+            textTheme: Theme.of(context).textTheme.apply(
+              bodyColor: textLightMain,
+              displayColor: textLightSecondary
+            ),
+            scaffoldBackgroundColor: backgroundLight1,
           ),
           darkTheme: ThemeData(
-            useMaterial3: true,
-            fontFamily: 'NanumSquareNeo',
-            colorScheme: ColorScheme.fromSeed(
-                seedColor: mainColor, brightness: Brightness.dark),
-          ),
+              useMaterial3: true,
+              fontFamily: 'NanumSquareNeo',
+              textTheme: Theme.of(context).textTheme.apply(
+                  bodyColor: textDarkMain,
+                  displayColor: textDarkSecondary,
+              ),
+              scaffoldBackgroundColor: backgroundDark1),
           home: _autoLogin == true ? const HomeScreen() : const LoginScreen()),
     );
   }
