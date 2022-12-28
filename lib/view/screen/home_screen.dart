@@ -123,28 +123,27 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Row(
-                    children: const [
-                      Text("이동건", style: TextStyle(
-                          fontSize: 28,
-                          color: primary1,
-                          fontWeight: FontWeight.w800
+                    children: [
+                      Text(
+                        "이동건",
+                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                          color: Theme.of(context).primaryColor,
                         ),
                       ),
-                      Text("님, 환영합니다!", style: TextStyle(
-                          fontSize: 28,
-                          color: textLightMain,
-                          fontWeight: FontWeight.w700
-                      ),)
+                      Text(
+                        "님, 환영합니다!",
+                        style: Theme.of(context).textTheme.headlineMedium,
+                      ),
                     ],
                   ),
                   const SizedBox(height: 8),
                   Row(
-                    children: const [
-                      Text("저희 앱이 처음이신가요?", style: TextStyle(
-                        fontSize: 16,
-                        color: textLightHint,
-                        fontWeight: FontWeight.bold
-                        )
+                    children: [
+                      Text(
+                        "저희 앱이 처음이신가요?",
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: Theme.of(context).hintColor,
+                        ),
                       ),
                     ],
                   ),
@@ -165,16 +164,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Icon(Icons.add, color: Theme.of(context).scaffoldBackgroundColor),
                   ),
                   const SizedBox(height: 12),
-                  const Text('새로운 투표 생성하기', style: TextStyle(
-                    fontSize: 22,
-                    color: textLightMain,
-                    fontWeight: FontWeight.bold)
+                  Text(
+                    '새로운 투표 생성하기',
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 4),
-                  const Text('버튼을 눌러 새로운 투표를 시작하세요!', style: TextStyle(
-                      fontSize: 16,
-                      color: textLightHint,
-                      fontWeight: FontWeight.bold)
+                  Text(
+                    '버튼을 눌러 새로운 투표를 시작하세요!',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).hintColor,
+                    ),
                   ),
                 ],
               ),
@@ -193,9 +192,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Icon(Icons.mode_edit, color: Theme.of(context).scaffoldBackgroundColor),
                         ),
                         const SizedBox(height: 8),
-                        const Text('템플릿 설정', style: TextStyle(
-                          fontSize: 14),
-                        )
+                        Text(
+                          '템플릿 설정',
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
                       ],
                     ),
                     Column(
@@ -205,9 +205,10 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Icon(Icons.person_outline, color: Theme.of(context).scaffoldBackgroundColor,),
                         ),
                         const SizedBox(height: 8),
-                        const Text('친구 관리', style: TextStyle(
-                            fontSize: 14),
-                        )
+                        Text(
+                          '친구 관리',
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
                       ],
                     ),
                     Column(
@@ -217,9 +218,9 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Icon(Icons.settings, color: Theme.of(context).scaffoldBackgroundColor),
                         ),
                         const SizedBox(height: 8),
-                        const Text('마이페이지', style: TextStyle(
-                            fontSize: 14),
-                        )
+                        Text('마이페이지',
+                          style: Theme.of(context).textTheme.titleSmall,
+                        ),
                       ],
                     ),
                   ],

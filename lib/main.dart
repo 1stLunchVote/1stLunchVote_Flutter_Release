@@ -42,7 +42,6 @@ Future<void> main() async {
   String? token = await FirebaseMessaging.instance.getToken();
   _spfManager.setFCMToken(token);
 
-
   await FirebaseMessaging.instance.getInitialMessage();
 
   print("FCM Token : $token");
@@ -91,17 +90,8 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: "제 1회 점심메뉴 총선거",
-        theme: ThemeData(
-          useMaterial3: true,
-          fontFamily: 'NanumSquareNeo',
-          scaffoldBackgroundColor: backgroundLight1,
-        ),
-        darkTheme: ThemeData(
-            useMaterial3: true,
-            fontFamily: 'NanumSquareNeo',
-            scaffoldBackgroundColor: backgroundDark1,
-        ),
+        theme: lightColorTheme,
+        darkTheme: darkColorTheme,
         home: _autoLogin == true ? const HomeScreen() : const LoginScreen());
   }
-
 }
