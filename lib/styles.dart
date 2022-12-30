@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:material_color_generator/material_color_generator.dart';
 
 
 const mainColor = Color(0xFFF67F5E);
@@ -76,6 +78,14 @@ ThemeData lightColorTheme = ThemeData(
   secondaryHeaderColor: primary2,
   splashColor: backgroundLight1,
   toggleableActiveColor: primary1,
+  primarySwatch: generateMaterialColor(color: primary1),
+  appBarTheme: const AppBarTheme(
+    systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: backgroundLight1,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.dark,
+    )
+  )
 );
 
 ThemeData darkColorTheme = ThemeData(
@@ -96,4 +106,12 @@ ThemeData darkColorTheme = ThemeData(
   secondaryHeaderColor: primary2,
   splashColor: backgroundDark1,
   toggleableActiveColor: primary1,
+  primarySwatch: generateMaterialColor(color: primary1),
+  appBarTheme: const AppBarTheme(
+    systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: backgroundDark1,
+        statusBarIconBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.dark
+    )
+  )
 );
