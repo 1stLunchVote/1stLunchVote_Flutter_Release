@@ -19,6 +19,7 @@ import 'package:lunch_vote/view/widget/appbar_widget.dart';
 import 'package:lunch_vote/view/widget/custom_clip_path.dart';
 import 'package:provider/provider.dart';
 
+
 import '../../firebase_options.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -105,11 +106,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: Theme.of(context).scaffoldBackgroundColor,
-        statusBarIconBrightness: Brightness.dark
-      )
-    );
     ScreenUtil.init(context, designSize: const Size(360, 800));
     return Scaffold(
       body: SafeArea(
@@ -213,7 +209,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Column(
                       children: [
-                        FloatingActionButton(onPressed: (){},
+                        FloatingActionButton(onPressed: (){
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => const ProfileScreen()));
+                          },
                           backgroundColor: secondary1,
                           child: Icon(Icons.settings, color: Theme.of(context).scaffoldBackgroundColor),
                         ),
@@ -335,36 +334,7 @@ class _HomeScreenState extends State<HomeScreen> {
       //     ],
       //   ),
       // ),
-      // floatingActionButton: Visibility(
-      //     visible: context.watch<GroupIdNotifier>().groupId.isNotEmpty,
-      //     child: Padding(
-      //         padding: const EdgeInsets.only(bottom: 50),
-      //         child: ElevatedButton(
-      //           onPressed: () async {
-      //             // Todo : groupId 보내기
-      //             String groupId = context.read<GroupIdNotifier>().groupId;
-      //             var res = await _controller.joinGroup(groupId);
-      //             context.read<GroupIdNotifier>().clearIndex();
-      //             if (res == true) {
-      //               Navigator.of(context).push(MaterialPageRoute(
-      //                   builder: (context) => GroupScreen(
-      //                         isLeader: false,
-      //                         groupId: groupId,
-      //                       )));
-      //             }
-      //           },
-      //           child: Padding(
-      //             padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-      //             child: Text(
-      //               "초대된 그룹 화면으로 넘어가기",
-      //               style: Theme.of(context)
-      //                   .textTheme
-      //                   .labelMedium
-      //                   ?.copyWith(fontWeight: FontWeight.bold, fontSize: 16),
-      //             ),
-      //           ),
-      //         ))),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
       )
     );
   }
