@@ -42,9 +42,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Theme.of(context).scaffoldBackgroundColor,
+        // Android Status Bar Color
+        statusBarIconBrightness: Brightness.dark
+      )
+    );
     ScreenUtil.init(context, designSize: const Size(360, 800));
     return Scaffold(
-      backgroundColor: mainBackgroundColor,
       resizeToAvoidBottomInset: false,
       body: Container(
         margin: const EdgeInsets.all(20.0),
@@ -64,27 +69,28 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             ),
             Expanded(
-                child: Align(
-              alignment: FractionalOffset.bottomCenter,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 100.0),
-                child: MaterialButton(
-                  onPressed: () async {
-                    String? accessToken = await _loginController.loginToken();
-                    print('Access Token : $accessToken');
-                    String? userToken =
-                        await _loginController.postUserToken(accessToken!);
-                    print('User Token : $userToken');
-                    spfManager.setUserToken(userToken!);
-                    navigateToHome();
-                  },
-                  child: Image.asset(
-                    'assets/images/bg_kakao_login.png',
-                    fit: BoxFit.fill,
+              child: Align(
+                alignment: FractionalOffset.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 100.0),
+                  child: MaterialButton(
+                    onPressed: () async {
+                      String? accessToken = await _loginController.loginToken();
+                      print('Access Token : $accessToken');
+                      String? userToken =
+                          await _loginController.postUserToken(accessToken!);
+                      print('User Token : $userToken');
+                      spfManager.setUserToken(userToken!);
+                      navigateToHome();
+                    },
+                    child: Image.asset(
+                      'assets/images/bg_kakao_login.png',
+                      fit: BoxFit.fill,
+                    ),
                   ),
                 ),
-              ),
-            )),
+              )
+            ),
           ],
         ),
       ),

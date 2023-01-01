@@ -45,12 +45,12 @@ class BasicAppbar extends AppBar {
   @override
   Color? get backgroundColor => mainBackgroundColor;
 
-  @override
-  SystemUiOverlayStyle? get systemOverlayStyle => const SystemUiOverlayStyle(
-      statusBarBrightness: Brightness.light,
-      statusBarIconBrightness: Brightness.dark,
-      statusBarColor: mainBackgroundColor
-  );
+  // @override
+  // SystemUiOverlayStyle? get systemOverlayStyle => const SystemUiOverlayStyle(
+  //     statusBarBrightness: Brightness.light,
+  //     statusBarIconBrightness: Brightness.dark,
+  //     statusBarColor: mainBackgroundColor
+  // );
 
   @override
   List<Widget>? get actions => trailingList;
