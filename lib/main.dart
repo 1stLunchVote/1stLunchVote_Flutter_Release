@@ -1,9 +1,9 @@
 import 'dart:ffi';
-
 import 'package:flutter/scheduler.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:lunch_vote/model/group_id_notifier.dart';
@@ -29,16 +29,14 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
+  await dotenv.load(fileName: 'assets/config/.env');
   // runApp() 호출 전 Flutter SDK 초기화
   KakaoSdk.init(
-    nativeAppKey: '460927feb9d1b043b37bd492992f62b0',
-    javaScriptAppKey: 'c5e7ae17bbb1d4f127300c6c7038c8eb',
+    nativeAppKey: dotenv.get('kakao_native_app_key')
   );
 
   String? token = await FirebaseMessaging.instance.getToken();
   _spfManager.setFCMToken(token);
-
   await FirebaseMessaging.instance.getInitialMessage();
 
   print("FCM Token : $token");

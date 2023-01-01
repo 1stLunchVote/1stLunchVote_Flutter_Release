@@ -19,7 +19,7 @@ class DefaultFirebaseOptions {
     if (kIsWeb) {
       throw UnsupportedError(
         'DefaultFirebaseOptions have not been configured for web - '
-        'you can reconfigure this by running the FlutterFire CLI again.',
+            'you can reconfigure this by running the FlutterFire CLI again.',
       );
     }
     switch (defaultTargetPlatform) {
@@ -30,17 +30,17 @@ class DefaultFirebaseOptions {
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
+              'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
+              'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
+              'you can reconfigure this by running the FlutterFire CLI again.',
         );
       default:
         throw UnsupportedError(
@@ -50,8 +50,8 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCmM9khy_FSqbrT8lxV9zyDCSWAv3oxv3A',
-    appId: '1:865155786423:android:6b2cd2f2626b98aa594f32',
+    apiKey: 'AIzaSyDrOJ7atiaOpoXzIBl6MqeMW_Wq5QEIsAg',
+    appId: '1:865155786423:android:0e9db4f03cabdc04594f32',
     messagingSenderId: '865155786423',
     projectId: 'lunch-vote-ed5de',
     storageBucket: 'lunch-vote-ed5de.appspot.com',
@@ -59,7 +59,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyAf7mfLdj09gF_2nkQXyHJszZYK2vdww3Q',
-    appId: '1:865155786423:ios:78902c7c6a79505e594f32',
+    appId: '1:865155786423:ios:2ccd1fc74cbd4a25594f32',
     messagingSenderId: '865155786423',
     projectId: 'lunch-vote-ed5de',
     storageBucket: 'lunch-vote-ed5de.appspot.com',

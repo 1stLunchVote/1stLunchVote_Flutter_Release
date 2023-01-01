@@ -52,6 +52,7 @@ dependencies:
   flutter_local_notifications: ^12.0.4
   url_launcher: ^6.1.7
   awesome_dialog: ^3.0.2
+  flutter_dotenv: ^5.0.2
 
 dev_dependencies:
   flutter_test:
@@ -80,6 +81,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/config/.env
   fonts:
     - family: NanumSquareNeo
       fonts:
