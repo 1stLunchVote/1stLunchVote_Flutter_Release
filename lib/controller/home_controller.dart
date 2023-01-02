@@ -12,15 +12,23 @@ class HomeController{
     dio.options.headers["Content-Type"] = "application/json";
   }
 
-  Future<bool?> joinGroup(String groupId) async{
+  Future<String?> getNickname() async{
     dio.options.headers["Authorization"] = await _spfManager.getUserToken();
     dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
     _lunchVoteService = LunchVoteService(dio);
+    var res = await _lunchVoteService.getProfileInfo();
+    if (res.success){
+      return res.data.nickname;
+    }
+    return null;
+  }
 
+  Future<bool?> joinGroup(String groupId) async{
     var res = await _lunchVoteService.joinGroup(groupId);
     if (res.success){
       return true;
     }
     return null;
   }
+
 }

@@ -34,13 +34,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: BasicAppbar(
-        backVisible: true,
-        appbarTitle: "마이페이지",
-        isTitleCenter: true,
-        context: context,
-        trailingList: null,
-      ),
       body: Form(
         key: _formKey,
         child: SafeArea(
@@ -54,23 +47,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 _nickname = snapshot.data!.nickname;
                 return Stack(
                   children: [
-                    ClipPath(
-                      clipper: CustomClipPath(),
-                      child: Container(
-                        alignment: Alignment.bottomCenter,
-                        width: double.infinity,
-                        height: double.infinity,
-                        color: Theme
-                            .of(context)
-                            .colorScheme
-                            .surfaceVariant,
-                      ),
-                    ),
                     Center(
                       child: Column(
                         children: [
                           const SizedBox(
-                            height: 100,
+                            height: 120,
                           ),
                           SizedBox(
                             height: 200,
@@ -90,15 +71,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           height: 20,
                         ),
                         Text(
-                          _nickname,
-                          style: TextStyle(
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            color: Theme
-                                .of(context)
-                                .colorScheme
-                                .onSurfaceVariant,
-                          ),
+                          "$_nickname 님",
+                          style: Theme.of(context).textTheme.titleLarge
                         ),
                         Visibility(
                           visible: !_nicknameChange,
@@ -108,13 +82,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   _nicknameChange = !_nicknameChange;
                                 });
                               },
-                              child: const Text(
+                              child: Text(
                                 '닉네임 수정',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: textHintColor,
-                                    decoration: TextDecoration.underline),
+                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    decoration: TextDecoration.underline,
+                                    color: Theme.of(context).hintColor,
+                                ),
                               )),
                         ),
                         Visibility(
@@ -189,22 +162,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                              Theme
-                                  .of(context)
-                                  .colorScheme
-                                  .primary,
+                              backgroundColor: primary1,
                               padding: const EdgeInsets.fromLTRB(
                                   24, 10, 24, 10)),
                           child: Text(
                             '설정 완료',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Theme
-                                  .of(context)
-                                  .colorScheme
-                                  .onPrimary,
+                            style: Theme.of(context).textTheme.button?.copyWith(
+                              color: Colors.white
                             ),
                           ),
                         ),
@@ -228,8 +192,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 }
                               },
                               style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.fromLTRB(24, 10, 24, 10)),
-                              child: const Text("로그아웃")
+                                  backgroundColor: primary1,
+                                  padding: const EdgeInsets.fromLTRB(24, 10, 24, 10)),
+                              child: Text("로그아웃",
+                                style:  Theme.of(context).textTheme.button?.copyWith(
+                                  color: Colors.white)
+                                )
                               )
                             ),
                           ),
