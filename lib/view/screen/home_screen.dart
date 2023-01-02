@@ -6,8 +6,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:lunch_vote/controller/group_controller.dart';
 import 'package:lunch_vote/controller/home_controller.dart';
+import 'package:lunch_vote/controller/nickname_controller.dart';
 import 'package:lunch_vote/styles.dart';
 import 'package:lunch_vote/view/screen/group/group_screen.dart';
 import 'package:lunch_vote/model/group_id_notifier.dart';
@@ -82,10 +85,14 @@ void showFlutterNotification(RemoteMessage message) {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _controller = HomeController();
+  final nicknameController = Get.put(NicknameController());
 
   @override
   void initState() {
     super.initState();
+    _controller.getNickname().then((value) =>
+        nicknameController.setNickname(value!)
+    );
     initInfo();
   }
 
@@ -110,89 +117,45 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       // 앱바 기본 높이 56dp
       appBar: AppBar(),
-      body: FutureBuilder(
-        future: _controller.getNickname(),
-        builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
-          return SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(24, 44, 24, 100),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(24, 44, 24, 100),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.start,
+                    Row(
                       children: [
-                        Row(
-                          children: [
-                            Text(
-                              snapshot.data ?? "",
-                              style: Theme
+                        Obx(() => Text(
+                            "${nicknameController.nickname}",
+                            style: Theme
+                                .of(context)
+                                .textTheme
+                                .headlineMedium
+                                ?.copyWith(
+                              color: Theme
                                   .of(context)
-                                  .textTheme
-                                  .headlineMedium
-                                  ?.copyWith(
-                                color: Theme
-                                    .of(context)
-                                    .primaryColor,
-                              ),
+                                  .primaryColor,
                             ),
-                            Text(
-                              "님, 환영합니다!",
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .headlineMedium,
-                            ),
-                          ],
+                          ),
                         ),
-                        const SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Text(
-                              "저희 앱이 처음이신가요?",
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .titleMedium
-                                  ?.copyWith(
-                                color: Theme
-                                    .of(context)
-                                    .hintColor,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        FloatingActionButton.large(
-                          backgroundColor: primary1,
-                          onPressed: () {
-                            Navigator.of(context).push(
-                                MaterialPageRoute(builder: (context) =>
-                                    GroupScreen(isLeader: true, groupId: ""))
-                            );
-                          },
-                          child: Icon(Icons.add, color: Theme
-                              .of(context)
-                              .scaffoldBackgroundColor),
-                        ),
-                        const SizedBox(height: 12),
                         Text(
-                          '새로운 투표 생성하기',
+                          "님, 환영합니다!",
                           style: Theme
                               .of(context)
                               .textTheme
-                              .titleLarge,
+                              .headlineMedium,
                         ),
-                        const SizedBox(height: 4),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
                         Text(
-                          '버튼을 눌러 새로운 투표를 시작하세요!',
+                          "저희 앱이 처음이신가요?",
                           style: Theme
                               .of(context)
                               .textTheme
@@ -205,84 +168,124 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ],
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 22),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            children: [
-                              FloatingActionButton(onPressed: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => TemplateScreen()));
-                              },
-                                backgroundColor: primary1,
-                                heroTag: null,
-                                child: Icon(Icons.mode_edit, color: Theme
-                                    .of(context)
-                                    .scaffoldBackgroundColor),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                '템플릿 설정',
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .titleSmall,
-                              ),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              FloatingActionButton(onPressed: () {},
-                                backgroundColor: secondary1,
-                                heroTag: null,
-                                child: Icon(Icons.person_outline, color: Theme
-                                    .of(context)
-                                    .scaffoldBackgroundColor,),
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                '친구 관리',
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .titleSmall,
-                              ),
-                            ],
-                          ),
-                          Column(
-                            children: [
-                              FloatingActionButton(onPressed: () {
-                                Navigator.of(context).push(
-                                    MaterialPageRoute(builder: (
-                                        context) => const ProfileScreen()));
-                              },
-                                heroTag: null,
-                                backgroundColor: secondary1,
-                                child: Icon(Icons.settings, color: Theme
-                                    .of(context)
-                                    .scaffoldBackgroundColor),
-                              ),
-                              const SizedBox(height: 8),
-                              Text('마이페이지',
-                                style: Theme
-                                    .of(context)
-                                    .textTheme
-                                    .titleSmall,
-                              ),
-                            ],
-                          ),
-                        ],
-
-                      ),
-                    )
                   ],
                 ),
-              )
-          );
-        }
+
+                Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FloatingActionButton.large(
+                      backgroundColor: primary1,
+                      onPressed: () {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) =>
+                                GroupScreen(isLeader: true, groupId: ""))
+                        );
+                      },
+                      child: Icon(Icons.add, color: Theme
+                          .of(context)
+                          .scaffoldBackgroundColor),
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      '새로운 투표 생성하기',
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .titleLarge,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '버튼을 눌러 새로운 투표를 시작하세요!',
+                      style: Theme
+                          .of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(
+                        color: Theme
+                            .of(context)
+                            .hintColor,
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 22),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        children: [
+                          FloatingActionButton(onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => TemplateScreen()));
+                          },
+                            backgroundColor: primary1,
+                            heroTag: null,
+                            child: Icon(Icons.mode_edit, color: Theme
+                                .of(context)
+                                .scaffoldBackgroundColor),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            '템플릿 설정',
+                            style: Theme
+                                .of(context)
+                                .textTheme
+                                .titleSmall,
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          FloatingActionButton(onPressed: () {},
+                            backgroundColor: secondary1,
+                            heroTag: null,
+                            child: Icon(Icons.person_outline, color: Theme
+                                .of(context)
+                                .scaffoldBackgroundColor,),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            '친구 관리',
+                            style: Theme
+                                .of(context)
+                                .textTheme
+                                .titleSmall,
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          FloatingActionButton(onPressed: () {
+                            Navigator.of(context).push(
+                                MaterialPageRoute(builder: (
+                                    context) => const ProfileScreen()));
+                          },
+                            heroTag: null,
+                            backgroundColor: secondary1,
+                            child: Icon(Icons.settings, color: Theme
+                                .of(context)
+                                .scaffoldBackgroundColor),
+                          ),
+                          const SizedBox(height: 8),
+                          Text('마이페이지',
+                            style: Theme
+                                .of(context)
+                                .textTheme
+                                .titleSmall,
+                          ),
+                        ],
+                      ),
+                    ],
+
+                  ),
+                )
+              ],
+            ),
+          )
       )
     );
   }
