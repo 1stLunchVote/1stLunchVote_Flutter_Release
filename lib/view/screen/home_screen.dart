@@ -108,9 +108,11 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     ScreenUtil.init(context, designSize: const Size(360, 800));
     return Scaffold(
+      // 앱바 기본 높이 56dp
+      appBar: AppBar(),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 100, horizontal: 24),
+          padding: const EdgeInsets.fromLTRB(24, 44, 24, 100),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -185,6 +187,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => TemplateScreen()));},
                           backgroundColor: primary1,
+                          heroTag: null,
                           child: Icon(Icons.mode_edit, color: Theme.of(context).scaffoldBackgroundColor),
                         ),
                         const SizedBox(height: 8),
@@ -198,6 +201,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         FloatingActionButton(onPressed: (){},
                           backgroundColor: secondary1,
+                          heroTag: null,
                           child: Icon(Icons.person_outline, color: Theme.of(context).scaffoldBackgroundColor,),
                         ),
                         const SizedBox(height: 8),
@@ -213,6 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           Navigator.of(context).push(
                             MaterialPageRoute(builder: (context) => const ProfileScreen()));
                           },
+                          heroTag: null,
                           backgroundColor: secondary1,
                           child: Icon(Icons.settings, color: Theme.of(context).scaffoldBackgroundColor),
                         ),
@@ -229,112 +234,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         )
-      //   child: Stack(
-      //     children: [
-      //       Align(
-      //         alignment: FractionalOffset.bottomCenter,
-      //         child: ClipPath(
-      //           clipper: CustomClipPath(),
-      //           child: Container(
-      //             width: 360.w,
-      //             height: 400.h,
-      //             color: Theme.of(context).colorScheme.surfaceVariant,
-      //           ),
-      //         ),
-      //       ),
-      //       Center(
-      //         child: Column(
-      //           children: [
-      //             const SizedBox(
-      //               height: 100,
-      //             ),
-      //             Container(
-      //               height: 200.h,
-      //               width: 320.w,
-      //               decoration: BoxDecoration(
-      //                   color: Theme.of(context).colorScheme.primaryContainer,
-      //                   borderRadius: BorderRadius.circular(16), //모서리를 둥글게
-      //                   border: Border.all(
-      //                       width: 1,
-      //                       color: Theme.of(context).colorScheme.outline)),
-      //               child: Stack(
-      //                 children: [
-      //                   Padding(
-      //                     padding: const EdgeInsets.fromLTRB(30, 30, 30, 0),
-      //                     child: Text('투표 방 만들기',
-      //                         style: Theme.of(context)
-      //                             .textTheme
-      //                             .headlineSmall
-      //                             ?.copyWith(
-      //                                 color: Theme.of(context)
-      //                                     .colorScheme
-      //                                     .onPrimaryContainer)),
-      //                   ),
-      //                   Padding(
-      //                     padding: const EdgeInsets.fromLTRB(0, 0, 20, 20),
-      //                     child: Align(
-      //                         alignment: Alignment.bottomRight,
-      //                         child: Image.asset(
-      //                             'assets/images/ic_lunch_vote.png')),
-      //                   ),
-      //                   Positioned.fill(
-      //                       child: Material(
-      //                     color: Colors.transparent,
-      //                     child: InkWell(
-      //                       borderRadius: BorderRadius.circular(16),
-      //                       onTap: () {
-      //                         Navigator.of(context).push(MaterialPageRoute(
-      //                             builder: (context) => GroupScreen(
-      //                                   isLeader: true,
-      //                                   groupId: "",
-      //                                 )));
-      //                       },
-      //                     ),
-      //                   ))
-      //                 ],
-      //               ),
-      //             ),
-      //             const SizedBox(
-      //               height: 20,
-      //             ),
-      //             Container(
-      //               height: 200.h,
-      //               width: 320.w,
-      //               decoration: BoxDecoration(
-      //                   color: Theme.of(context).colorScheme.background,
-      //                   borderRadius: BorderRadius.circular(16), //모서리를 둥글게
-      //                   border: Border.all(
-      //                       width: 1,
-      //                       color: Theme.of(context).colorScheme.outline)),
-      //               child: Stack(
-      //                 children: [
-      //                   Padding(
-      //                     padding: const EdgeInsets.fromLTRB(30, 30, 30, 0),
-      //                     child: Text('템플릿 사전 설정하기',
-      //                         style:
-      //                             Theme.of(context).textTheme.headlineSmall),
-      //                   ),
-      //                   Positioned.fill(
-      //                       child: Material(
-      //                     color: Colors.transparent,
-      //                     child: InkWell(
-      //                       borderRadius: BorderRadius.circular(16),
-      //                       onTap: () {
-      //                         Navigator.of(context).push(MaterialPageRoute(
-      //                             builder: (context) => TemplateScreen()));
-      //                       },
-      //                     ),
-      //                   ))
-      //                 ],
-      //               ),
-      //             ),
-      //           ],
-      //         ),
-      //       )
-      //     ],
-      //   ),
-      // ),
-
       )
     );
   }

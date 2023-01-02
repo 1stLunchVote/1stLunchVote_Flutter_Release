@@ -80,10 +80,11 @@ ThemeData lightColorTheme = ThemeData(
   toggleableActiveColor: primary1,
   primarySwatch: generateMaterialColor(color: primary1),
   appBarTheme: const AppBarTheme(
+    color: backgroundLight1,
     systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: backgroundLight1,
+        statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.dark,
-        statusBarBrightness: Brightness.dark,
+        statusBarBrightness: Brightness.light,
     )
   )
 );
@@ -108,9 +109,10 @@ ThemeData darkColorTheme = ThemeData(
   toggleableActiveColor: primary1,
   primarySwatch: generateMaterialColor(color: primary1),
   appBarTheme: const AppBarTheme(
+    color: backgroundDark1,
     systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: backgroundDark1,
-        statusBarIconBrightness: Brightness.dark,
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
         statusBarBrightness: Brightness.dark
     )
   )

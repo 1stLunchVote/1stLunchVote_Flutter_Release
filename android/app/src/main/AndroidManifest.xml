@@ -9,7 +9,7 @@
     <application
         android:label="제1회점심메뉴총선거"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
 
         <activity
             android:name=".MainActivity"
