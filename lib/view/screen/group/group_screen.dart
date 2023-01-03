@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -12,9 +14,9 @@ import 'package:provider/provider.dart';
 import 'package:lunch_vote/controller/group_controller.dart';
 
 class GroupScreen extends StatelessWidget {
-  const GroupScreen({Key? key, required this.isLeader, required this.groupId}) : super(key: key);
+  const GroupScreen({Key? key, required this.isLeader, this.groupId}) : super(key: key);
   final bool isLeader;
-  final String groupId;
+  final String? groupId;
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +30,9 @@ class GroupScreen extends StatelessWidget {
 }
 
 class _GroupScreen extends StatefulWidget {
-  _GroupScreen({Key? key, required this.isLeader, required this.groupId}) : super(key: key);
+  const _GroupScreen({Key? key, required this.isLeader, this.groupId}) : super(key: key);
   final bool isLeader;
-  String groupId;
+  final String? groupId;
 
   @override
   State<_GroupScreen> createState() => _GroupScreenState();
@@ -38,7 +40,7 @@ class _GroupScreen extends StatefulWidget {
 
 class _GroupScreenState extends State<_GroupScreen> {
   final GroupController _groupController = GroupController();
-
+  late final String _groupId;
   bool isGroupCreated = false;
 
   // 3초 타이머
@@ -53,7 +55,7 @@ class _GroupScreenState extends State<_GroupScreen> {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
               content: Text('방 생성에 오류가 발생했습니다.')));
         } else {
-          widget.groupId = value;
+          _groupId = value;
           context.read<GroupNotifier>().setGroupId(value);
           _groupController.getMyProfile().then((value) {
             if (value != null) {
@@ -70,7 +72,8 @@ class _GroupScreenState extends State<_GroupScreen> {
         }
       });
     } else {
-      _groupController.getGroupInfo(widget.groupId).then((value){
+      _groupId = widget.groupId ?? "";
+      _groupController.getGroupInfo(_groupId).then((value){
         if (value != null) {
           for (int i = 0; i < value.members.length; i++) {
             context.read<GroupNotifier>().add(MemberInfo(
@@ -87,7 +90,7 @@ class _GroupScreenState extends State<_GroupScreen> {
     }
 
     _timer = Timer.periodic(const Duration(milliseconds: 3000), (timer) async {
-      _groupController.getGroupInfo(widget.groupId).then((value){
+      _groupController.getGroupInfo(_groupId).then((value){
         if (value != null) {
           context.read<GroupNotifier>().set(value.members);
         }
@@ -113,7 +116,7 @@ class _GroupScreenState extends State<_GroupScreen> {
           cancelText: "아니오",
         ).showDialog();
         if (res == true){
-          var message = await _groupController.withdrawalUser(widget.groupId);
+          var message = await _groupController.withdrawalUser(_groupId);
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
           Navigator.of(context).popUntil((route) => route.isFirst);
         }
@@ -135,8 +138,9 @@ class _GroupScreenState extends State<_GroupScreen> {
               cancelText: "아니오",
             ).showDialog();
             if (res == true){
-              var message = await _groupController.withdrawalUser(widget.groupId);
+              var message = await _groupController.withdrawalUser(_groupId);
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+
               Navigator.of(context).popUntil((route) => route.isFirst);
             }
             return res;
@@ -244,7 +248,7 @@ class _GroupScreenState extends State<_GroupScreen> {
                         pressedCallback: (){
                           _timer?.cancel();
                           Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => FirstVoteReadyScreen(groupId: widget.groupId))
+                              MaterialPageRoute(builder: (context) => FirstVoteReadyScreen(groupId: _groupId))
                           );
                         },
                         notifyText: "모든 참가자가 준비완료 상태여야 투표를 시작할 수 있습니다.",
