@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:dio/dio.dart';
@@ -90,6 +91,10 @@ class LoginController{
 
   Future<String?> postUserToken(String accessToken) async{
     String? fcmToken = await _spfManager.getFCMToken();
+    if (fcmToken == null){
+      fcmToken = await FirebaseMessaging.instance.getToken();
+      _spfManager.setFCMToken(fcmToken);
+    }
     final result = await _lunchVoteService.postUserToken(SocialToken(socialToken: accessToken, fcmToken: fcmToken));
     return result.data.accessToken;
   }

@@ -33,57 +33,6 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-late AndroidNotificationChannel channel;
-final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-    FlutterLocalNotificationsPlugin();
-
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  showFlutterNotification(message);
-}
-
-Future<void> setupFlutterNotifications() async {
-  var androidInitialize =
-      const AndroidInitializationSettings('@mipmap/ic_launcher');
-  var initializationsSettings =
-      InitializationSettings(android: androidInitialize);
-  channel = const AndroidNotificationChannel(
-    'high_importance_channel', // id
-    'High Importance Notifications', // title
-    description:
-        'This channel is used for important notifications.', // description
-    importance: Importance.max,
-  );
-  flutterLocalNotificationsPlugin.initialize(initializationsSettings);
-
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
-}
-
-void showFlutterNotification(RemoteMessage message) {
-  RemoteNotification? notification = message.notification;
-  AndroidNotification? android = message.notification?.android;
-  if (notification != null && android != null) {
-    flutterLocalNotificationsPlugin.show(
-      notification.hashCode,
-      notification.title,
-      notification.body,
-      NotificationDetails(
-        android: AndroidNotificationDetails(
-          channel.id,
-          channel.name,
-          channelDescription: channel.description,
-          // TODO add a proper drawable resource to android, for now using
-          //      one that already exists in example app.
-          icon: '@mipmap/ic_launcher',
-        ),
-      ),
-    );
-  }
-}
-
 class _HomeScreenState extends State<HomeScreen> {
   final _controller = HomeController();
   final nicknameController = Get.put(NicknameController());
