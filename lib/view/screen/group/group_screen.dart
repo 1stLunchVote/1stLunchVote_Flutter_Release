@@ -243,7 +243,8 @@ class _GroupScreenState extends State<_GroupScreen> {
                       LunchButton(
                         context: context,
                         isEnabled: context.watch<GroupNotifier>().isEnabled,
-                        text: "투표 시작하기",
+                        enabledText: "투표 시작하기",
+                        disabledText: "투표 시작하기",
                         pressedCallback: (){
                           _timer?.cancel();
                           Navigator.of(context).push(
