@@ -6,7 +6,7 @@ class LunchButton extends ElevatedButton {
   final bool isEnabled;
   final String text;
   final Function() pressedCallback;
-  final String? notifyText;
+  final String notifyText;
 
   const LunchButton({
     super.key,
@@ -16,7 +16,7 @@ class LunchButton extends ElevatedButton {
     required this.isEnabled,
     required this.text,
     required this.pressedCallback,
-    this.notifyText,
+    required this.notifyText,
   });
 
   @override
@@ -26,19 +26,13 @@ class LunchButton extends ElevatedButton {
   );
 
   @override
-  VoidCallback? get onPressed {
-    if (isEnabled) {
-      return pressedCallback;
-    } else {
-      return () {
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(text)));
-      };
-    }
-  }
+  VoidCallback? get onPressed => isEnabled ? pressedCallback : () {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(notifyText)));
+  };
 
   @override
   ButtonStyle? get style => ElevatedButton.styleFrom(
-    backgroundColor: primary1,
+    backgroundColor: isEnabled? primary1 : primary3,
     textStyle: Theme.of(context).textTheme.titleSmall?.copyWith(color: textDarkMain,),
   );
 }
