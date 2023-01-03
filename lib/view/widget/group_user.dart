@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lunch_vote/controller/group_controller.dart';
 import 'package:lunch_vote/model/group/group_notifier.dart';
+import 'package:lunch_vote/styles.dart';
 import 'package:provider/provider.dart';
 
 class GroupUser extends StatefulWidget {
@@ -34,26 +35,26 @@ class _GroupUserState extends State<GroupUser> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
-          width: 80.w,
-          height: 80.h,
+          width: 100.w,
+          height: 100.w,
           child: Stack(
             children: [
               (context.watch<GroupNotifier>().length < widget.userIdx + 1) ?
               CircleAvatar(
-                backgroundColor: Colors.transparent,
-                backgroundImage: const AssetImage('assets/images/profile_default.png'),
-                radius: 40.w,
+                backgroundColor: backgroundLight3,
+                radius: 50.w,
+                child: const Icon(Icons.add, color: textLightSecondary, size: 40,),
               ) :
               CircleAvatar(
                 backgroundColor: Colors.transparent,
                 backgroundImage: NetworkImage(context.watch<GroupNotifier>().members[widget.userIdx].memberInfo.profileImage),
-                radius: 40.w,
+                radius: 50.w,
               ),
               Material(
                 color: Colors.transparent,
                 child: InkWell(
                   splashColor: Theme.of(context).backgroundColor.withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(40),
+                  borderRadius: BorderRadius.circular(50.w),
                   onTap: () {
                     if (widget.leaderAuth) {
                       if (context.watch<GroupNotifier>().length < widget.userIdx + 1) {
@@ -79,7 +80,7 @@ class _GroupUserState extends State<GroupUser> {
           padding: const EdgeInsets.symmetric(vertical: 4.0),
           child: Text(
             (context.watch<GroupNotifier>().length < widget.userIdx + 1) ?
-            '참가자' :
+            '참가자 없음' :
             context.watch<GroupNotifier>().members[widget.userIdx].memberInfo.nickname,
             style: Theme.of(context).textTheme.labelLarge,
           ),
