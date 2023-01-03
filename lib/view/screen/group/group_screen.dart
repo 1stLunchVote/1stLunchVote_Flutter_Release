@@ -242,14 +242,15 @@ class _GroupScreenState extends State<_GroupScreen> {
                       ),
                       LunchButton(
                         context: context,
-                        isEnabled: true,
-                        text: "투표 시작!",
+                        isEnabled: context.watch<GroupNotifier>().isEnabled,
+                        text: "투표 시작하기",
                         pressedCallback: (){
                           _timer?.cancel();
                           Navigator.of(context).push(
                               MaterialPageRoute(builder: (context) => FirstVoteReadyScreen(groupId: widget.groupId))
                           );
                         },
+                        notifyText: "모든 참가자가 준비완료 상태여야 투표를 시작할 수 있습니다.",
                       ),
                       const Expanded(flex: 1, child: SizedBox()),
                     ],
