@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -90,8 +91,13 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _controller.getNickname().then((value) =>
-        nicknameController.setNickname(value!)
+    _controller.getNickname().then((value) {
+        nicknameController.setNickname(value!);
+        FlutterNativeSplash.remove();
+      },
+      onError: (e){
+        FlutterNativeSplash.remove();
+      }
     );
     initInfo();
   }

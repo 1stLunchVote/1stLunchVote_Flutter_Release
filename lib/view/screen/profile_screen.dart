@@ -35,6 +35,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: BasicAppbar(
+        backVisible: true,
+        appbarTitle: "마이페이지",
+        isTitleCenter: false,
+        context: context,
+        onPop: () {
+          Navigator.of(context).pop();
+        },
+      ),
       resizeToAvoidBottomInset: false,
       body: Form(
         key: _formKey,
@@ -52,7 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       child: Column(
                         children: [
                           const SizedBox(
-                            height: 120,
+                            height: 56,
                           ),
                           SizedBox(
                             height: 200,

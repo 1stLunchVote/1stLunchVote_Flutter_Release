@@ -41,12 +41,13 @@ Future<void> main() async {
     nativeAppKey: kakaoNativeAppKey
   );
 
-  String? token = await FirebaseMessaging.instance.getToken();
-  _spfManager.setFCMToken(token);
+  // Todo : 로그인 스크린에서만 하도록 로직 변경하기
+  // String? token = await FirebaseMessaging.instance.getToken();
+  // _spfManager.setFCMToken(token);
 
   await FirebaseMessaging.instance.getInitialMessage();
 
-  print("FCM Token : $token");
+  // print("FCM Token : $token");
 
 
   runApp(ChangeNotifierProvider(
@@ -82,7 +83,6 @@ class _MyAppState extends State<MyApp> {
       print('User Token : $token');
       setState(() {
         _autoLogin = true;
-        FlutterNativeSplash.remove();
       });
     }
   }
