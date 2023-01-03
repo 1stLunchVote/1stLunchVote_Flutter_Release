@@ -68,6 +68,7 @@ class _GroupScreenState extends State<_GroupScreen> {
             }
             setState(() {
               isGroupCreated = true;
+              context.read<GroupNotifier>().checkReady();
             });
           });
         }
@@ -96,6 +97,7 @@ class _GroupScreenState extends State<_GroupScreen> {
           context.read<GroupNotifier>().set(value.members);
         }
       });
+      context.read<GroupNotifier>().checkReady();
     });
   }
 
@@ -178,6 +180,9 @@ class _GroupScreenState extends State<_GroupScreen> {
                                 userIdx: index,
                                 isLeader: index == 0,
                                 leaderAuth: widget.isLeader,
+                                isReady: (context.watch<GroupNotifier>().length < index + 1) ?
+                                  false :
+                                  context.watch<GroupNotifier>().members[index].isReady,
                                 groupController: _groupController,
                               );
                             },
@@ -185,18 +190,29 @@ class _GroupScreenState extends State<_GroupScreen> {
                         ),
                       ),
                       const Expanded(flex: 1, child: SizedBox(),),
+                      widget.isLeader ?
                       LunchButton(
                         context: context,
-                        isEnabled: context.watch<GroupNotifier>().isEnabled,
+                        isEnabled: context.watch<GroupNotifier>().isAllReady,
                         enabledText: "투표 시작하기",
                         disabledText: "투표 시작하기",
-                        pressedCallback: (){
+                        pressedCallback: () {
                           _timer?.cancel();
                           Navigator.of(context).push(
                               MaterialPageRoute(builder: (context) => FirstVoteReadyScreen(groupId: _groupId))
                           );
                         },
                         notifyText: "모든 참가자가 준비완료 상태여야 투표를 시작할 수 있습니다.",
+                      ) :
+                      LunchButton(
+                        context: context,
+                        isEnabled: true,
+                        enabledText: "준비 완료하기",
+                        disabledText: "",
+                        pressedCallback: () {
+                          // TODO: 준비 상태 변경
+                        },
+                        notifyText: "",
                       ),
                       const Expanded(flex: 1, child: SizedBox(),),
                     ],
