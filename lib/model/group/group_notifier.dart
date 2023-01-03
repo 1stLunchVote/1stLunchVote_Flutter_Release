@@ -8,6 +8,14 @@ class GroupNotifier extends ChangeNotifier {
   late String _groupId = "";
   final List<MemberInfo> _members = [];
 
+  bool _isEnabled = false;
+
+  bool get isEnabled => _isEnabled;
+  void setEnable() {
+    _isEnabled = !_isEnabled;
+    notifyListeners();
+  }
+
   UnmodifiableListView<MemberInfo> get members => UnmodifiableListView(_members);
   String getMemberNickname(int memberIdx) {
     if (_members.length < memberIdx + 1) {
