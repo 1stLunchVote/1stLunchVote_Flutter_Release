@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:lunch_vote/model/group_id_notifier.dart';
 import 'package:lunch_vote/styles.dart';
 import 'package:lunch_vote/view/screen/home_screen.dart';
@@ -40,12 +41,13 @@ Future<void> main() async {
     nativeAppKey: kakaoNativeAppKey
   );
 
-  String? token = await FirebaseMessaging.instance.getToken();
-  _spfManager.setFCMToken(token);
+  // Todo : 로그인 스크린에서만 하도록 로직 변경하기
+  // String? token = await FirebaseMessaging.instance.getToken();
+  // _spfManager.setFCMToken(token);
 
   await FirebaseMessaging.instance.getInitialMessage();
 
-  print("FCM Token : $token");
+  // print("FCM Token : $token");
 
 
   runApp(ChangeNotifierProvider(
@@ -81,14 +83,13 @@ class _MyAppState extends State<MyApp> {
       print('User Token : $token');
       setState(() {
         _autoLogin = true;
-        FlutterNativeSplash.remove();
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
         debugShowCheckedModeBanner: false,
         title: "제 1회 점심메뉴 총선거",
         theme: lightColorTheme,
