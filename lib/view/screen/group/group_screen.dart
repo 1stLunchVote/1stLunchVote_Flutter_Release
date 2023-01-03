@@ -122,19 +122,15 @@ class _GroupScreenState extends State<_GroupScreen> {
           appbarTitle: "방 생성하기",
           isTitleCenter: true,
           context: context,
-          trailingList: [
-            IconButton(
-              onPressed: () {
-                // TODO: 방 상세 설정화면으로 이동
-                // Navigator.of(context).push(MaterialPageRoute(
-                //     builder: (context) => const GroupSettingScreen()));
-              },
-              icon: Icon(
-                Icons.more_vert,
-                color: Theme.of(context).colorScheme.onSurface,
-              ),
-            ),
-          ],
+          popFunction: () async{
+            var res = await _showDialog();
+            if (res == true){
+              var message = await _groupController.withdrawalUser(widget.groupId);
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+              Navigator.of(context).popUntil((route) => route.isFirst);
+            }
+            return res;
+          },
         ),
         body: SafeArea(
           child: Stack(
