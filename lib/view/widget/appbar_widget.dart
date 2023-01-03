@@ -9,6 +9,7 @@ class BasicAppbar extends AppBar {
   final bool isTitleCenter;
   final BuildContext context;
   final List<Widget>? trailingList;
+  final Function()? onPop;
 
   BasicAppbar(
       {super.key,
@@ -16,34 +17,51 @@ class BasicAppbar extends AppBar {
       required this.appbarTitle,
       required this.isTitleCenter,
       required this.context,
-      required this.trailingList});
+      this.trailingList,
+      this.onPop});
 
   @override
   double? get elevation => 0;
 
   @override
   Widget? get title => Text(appbarTitle,
-      style: const TextStyle(fontSize: 22, color: voteBlackColor));
+    style: Theme.of(context).textTheme.titleLarge,
+  );
 
   @override
   bool? get centerTitle => isTitleCenter;
 
   @override
-  Widget? get leading => Visibility(
+  Widget? get leading {
+    if (onPop == null) {
+      return Visibility(
         visible: backVisible,
         child: IconButton(
           icon: Icon(
             Icons.arrow_back,
-            color: Theme.of(context).colorScheme.onSurface,
+            color: Theme.of(context).brightness == Brightness.light ? textLightMain : textDarkMain,
           ),
           onPressed: () {
             Navigator.of(context).pop();
           },
         ),
       );
+    } else {
+      return Visibility(
+        visible: backVisible,
+        child: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+            color: Theme.of(context).brightness == Brightness.light ? textLightMain : textDarkMain,
+          ),
+          onPressed: onPop,
+        ),
+      );
+    }
+  }
 
   @override
-  Color? get backgroundColor => mainBackgroundColor;
+  Color? get backgroundColor => Theme.of(context).backgroundColor;
 
   // @override
   // SystemUiOverlayStyle? get systemOverlayStyle => const SystemUiOverlayStyle(
