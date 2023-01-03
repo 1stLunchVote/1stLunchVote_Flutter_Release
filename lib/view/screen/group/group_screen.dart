@@ -122,7 +122,7 @@ class _GroupScreenState extends State<_GroupScreen> {
           appbarTitle: "방 생성하기",
           isTitleCenter: true,
           context: context,
-          popFunction: () async{
+          popCallback: () async{
             var res = await _showDialog();
             if (res == true){
               var message = await _groupController.withdrawalUser(widget.groupId);

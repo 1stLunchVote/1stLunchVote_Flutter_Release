@@ -9,7 +9,7 @@ class BasicAppbar extends AppBar {
   final bool isTitleCenter;
   final BuildContext context;
   final List<Widget>? trailingList;
-  final Function()? popFunction;
+  final Function()? popCallback;
 
   BasicAppbar(
       {super.key,
@@ -18,7 +18,7 @@ class BasicAppbar extends AppBar {
       required this.isTitleCenter,
       required this.context,
       this.trailingList,
-      this.popFunction});
+      this.popCallback});
 
   @override
   double? get elevation => 0;
@@ -33,7 +33,7 @@ class BasicAppbar extends AppBar {
 
   @override
   Widget? get leading {
-    if (popFunction == null) {
+    if (popCallback == null) {
       return Visibility(
         visible: backVisible,
         child: IconButton(
@@ -54,7 +54,7 @@ class BasicAppbar extends AppBar {
             Icons.arrow_back,
             color: Theme.of(context).brightness == Brightness.light ? textLightMain : textDarkMain,
           ),
-          onPressed: popFunction,
+          onPressed: popCallback,
         ),
       );
     }
