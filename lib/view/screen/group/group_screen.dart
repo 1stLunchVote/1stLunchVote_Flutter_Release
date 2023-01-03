@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lunch_vote/model/group/group_info.dart';
 import 'package:lunch_vote/model/group/group_notifier.dart';
 import 'package:lunch_vote/view/screen/vote/first_vote_ready_screen.dart';
@@ -53,7 +54,7 @@ class _GroupScreenState extends State<_GroupScreen> {
       _groupController.createGroup().then((value) {
         if (value == null) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text('방 생성에 오류가 발생했습니다.')));
+            content: Text('방 생성에 오류가 발생했습니다.'),));
         } else {
           _groupId = value;
           context.read<GroupNotifier>().setGroupId(value);
@@ -159,87 +160,31 @@ class _GroupScreenState extends State<_GroupScreen> {
                 visible: isGroupCreated,
                 child: Center(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Expanded(flex: 1, child: SizedBox()),
+                      const Expanded(flex: 1, child: SizedBox(),),
                       Expanded(
-                        flex: 2,
-                        child: Row(
-                          children: [
-                            const Expanded(flex: 1, child: SizedBox()),
-                            Expanded(
-                              flex: 1,
-                              child: GroupUser(
-                                userIdx: 0,
-                                isLeader: true,
-                                groupController: _groupController,
-                              ),
+                        flex: 8,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 32.w),
+                          child: GridView.builder(
+                            itemCount: 6,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
                             ),
-                            const Expanded(flex: 1, child: SizedBox()),
-                            Expanded(
-                              flex: 1,
-                              child: GroupUser(
-                                userIdx: 1,
-                                isLeader: false,
+                            itemBuilder: (BuildContext context, int index) {
+                              return GroupUser(
+                                userIdx: index,
+                                isLeader: index == 0,
+                                leaderAuth: widget.isLeader,
                                 groupController: _groupController,
-                              ),
-                            ),
-                            const Expanded(flex: 1, child: SizedBox()),
-                          ],
+                              );
+                            },
+                          ),
                         ),
                       ),
-                      Expanded(
-                        flex: 2,
-                        child: Row(
-                          children: [
-                            const Expanded(flex: 1, child: SizedBox()),
-                            Expanded(
-                              flex: 1,
-                              child: GroupUser(
-                                userIdx: 2,
-                                isLeader: false,
-                                groupController: _groupController,
-                              ),
-                            ),
-                            const Expanded(flex: 1, child: SizedBox()),
-                            Expanded(
-                              flex: 1,
-                              child: GroupUser(
-                                userIdx: 3,
-                                isLeader: false,
-                                groupController: _groupController,
-                              ),
-                            ),
-                            const Expanded(flex: 1, child: SizedBox()),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Row(
-                          children: [
-                            const Expanded(flex: 1, child: SizedBox()),
-                            Expanded(
-                              flex: 1,
-                              child: GroupUser(
-                                userIdx: 4,
-                                isLeader: false,
-                                groupController: _groupController,
-                              ),
-                            ),
-                            const Expanded(flex: 1, child: SizedBox()),
-                            Expanded(
-                              flex: 1,
-                              child: GroupUser(
-                                userIdx: 6,
-                                isLeader: false,
-                                groupController: _groupController,
-                              ),
-                            ),
-                            const Expanded(flex: 1, child: SizedBox()),
-                          ],
-                        ),
-                      ),
+                      const Expanded(flex: 1, child: SizedBox(),),
                       LunchButton(
                         context: context,
                         isEnabled: context.watch<GroupNotifier>().isEnabled,
@@ -253,7 +198,7 @@ class _GroupScreenState extends State<_GroupScreen> {
                         },
                         notifyText: "모든 참가자가 준비완료 상태여야 투표를 시작할 수 있습니다.",
                       ),
-                      const Expanded(flex: 1, child: SizedBox()),
+                      const Expanded(flex: 1, child: SizedBox(),),
                     ],
                   ),
                 ),
