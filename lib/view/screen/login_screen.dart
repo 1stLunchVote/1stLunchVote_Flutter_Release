@@ -67,16 +67,20 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 100.0),
                 child: MaterialButton(
-                  onPressed: () async {
-                    String? accessToken = await _loginController.loginToken();
-                    print('Access Token : $accessToken');
-                    String? userToken =
-                        await _loginController.postUserToken(accessToken!);
-                    print('User Token : $userToken');
-                    spfManager.setUserToken(userToken!);
-                    navigateToHome();
-                  },
-                  child: Image.asset(
+                onPressed: () async {
+                  _loginController.loginToken().then((value) {
+                    if (value != null) {
+                      _loginController.postUserToken(value).then((token) {
+                        if (token != null) {
+                          spfManager.setUserToken(token);
+                          print('User Token : $token');
+                          navigateToHome();
+                        }
+                      });
+                    }
+                  });
+                },
+                child: Image.asset(
                     'assets/images/bg_kakao_login.png',
                     fit: BoxFit.fill,
                   ),
