@@ -1,24 +1,20 @@
 import 'dart:async';
 
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:lunch_vote/model/group/group_info.dart';
 import 'package:lunch_vote/model/group/group_notifier.dart';
-import 'package:lunch_vote/styles.dart';
 import 'package:lunch_vote/view/screen/vote/first_vote_ready_screen.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
-import 'package:lunch_vote/view/widget/awsome_dialog.dart';
-import 'package:lunch_vote/view/widget/custom_clip_path.dart';
+import 'package:lunch_vote/view/widget/awesome_dialog.dart';
 import 'package:lunch_vote/view/widget/group_user.dart';
 import 'package:lunch_vote/view/widget/lunch_button.dart';
 import 'package:provider/provider.dart';
-
 import 'package:lunch_vote/controller/group_controller.dart';
 
 class GroupScreen extends StatelessWidget {
-  GroupScreen({Key? key, required this.isLeader, required this.groupId}) : super(key: key);
+  const GroupScreen({Key? key, required this.isLeader, required this.groupId}) : super(key: key);
   final bool isLeader;
-  String groupId;
+  final String groupId;
 
   @override
   Widget build(BuildContext context) {
