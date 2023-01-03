@@ -26,8 +26,13 @@ import 'package:url_launcher/url_launcher.dart';
 import 'firebase_options.dart';
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
 
+late AndroidNotificationChannel channel;
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
+@pragma("vm:entry-point")
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // showNotification(message);
 }
 
 Future<void> main() async {
@@ -59,27 +64,23 @@ Future initializeNotification() async{
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   // 로컬 알림 플러그인
-  var flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   // IOS 권한 체크
   if (Platform.isIOS){
     await requestPermission(messaging);
   }
-  // Android channel 설정
-  var channel = const AndroidNotificationChannel(
-    'high_importance_channel', // id
-    'High Importance Notifications', // name
-    description: 'This channel is used for important notifications.', // description
-    importance: Importance.high,
-  );
 
-  await flutterLocalNotificationsPlugin
-      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-      ?.createNotificationChannel(channel);
 
   const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings(
       '@mipmap/launcher_icon'
   );
+
+  await messaging.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+
   const DarwinInitializationSettings initializationSettingsIOS = DarwinInitializationSettings();
   const InitializationSettings initializationSettings =
   InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
@@ -92,26 +93,11 @@ Future initializeNotification() async{
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     if (message.notification != null) {
-      flutterLocalNotificationsPlugin.show(
-          message.hashCode,
-          message.notification?.title,
-          message.notification?.body,
-          NotificationDetails(
-              android: AndroidNotificationDetails(
-                channel.id,
-                channel.name,
-                channelDescription: channel.description,
-                icon: '@mipmap/launcher_icon',
-              ),
-              iOS: const DarwinNotificationDetails(
-                badgeNumber: 1,
-                subtitle: 'the subtitle',
-                sound: 'slow_spring_board.aiff',
-              )));
+      showNotification(message);
     }
   });
 
-  await setupInteractedMessage();
+  FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
   // FCM Token Refresh
   messaging.onTokenRefresh.listen((fcmToken) {
     // TODO: If necessary send token to application server.
@@ -119,6 +105,37 @@ Future initializeNotification() async{
   }).onError((err){
     print(err);
   });
+}
+
+void showNotification(RemoteMessage message) async{
+  // Android channel 설정
+  channel = const AndroidNotificationChannel(
+    'lunch_vote_channel', // id
+    'High Importance Notifications', // name
+    description: 'This channel is used for important notifications.', // description
+    importance: Importance.high,
+  );
+
+  await flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
+
+  flutterLocalNotificationsPlugin.show(
+      message.hashCode,
+      message.notification?.title,
+      message.notification?.body,
+      NotificationDetails(
+          android: AndroidNotificationDetails(
+            channel.id,
+            channel.name,
+            channelDescription: channel.description,
+            icon: '@mipmap/launcher_icon',
+          ),
+          iOS: const DarwinNotificationDetails(
+            badgeNumber: 1,
+            subtitle: 'the subtitle',
+            sound: 'slow_spring_board.aiff',
+          )));
 }
 
 Future requestPermission(FirebaseMessaging messaging) async{
@@ -131,16 +148,6 @@ Future requestPermission(FirebaseMessaging messaging) async{
     provisional: false,
     sound: true,
   );
-}
-
-Future<void> setupInteractedMessage() async {
-  RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
-
-  // 종료상태에서 클릭한 푸시 알림 메세지 핸들링
-  if (initialMessage != null) _handleMessage(initialMessage);
-
-  // 앱이 백그라운드 상태에서 푸시 알림 클릭 하여 열릴 경우 메세지 스트림을 통해 처리
-  FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
 }
 
 void _handleMessage(RemoteMessage message) {
