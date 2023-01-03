@@ -26,6 +26,10 @@
                  while the Flutter UI initializes. After that, this theme continues
                  to determine the Window background behind the Flutter UI. -->
             <meta-data
+                android:name="com.google.firebase.messaging.default_notification_icon"
+                android:value="@mipmap/launcher_icon"
+                />
+            <meta-data
                 android:name="com.google.firebase.messaging.default_notification_channel_id"
                 android:value="high_importance_channel" />
             <meta-data

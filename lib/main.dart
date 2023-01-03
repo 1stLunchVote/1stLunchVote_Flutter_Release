@@ -26,13 +26,17 @@ import 'package:url_launcher/url_launcher.dart';
 import 'firebase_options.dart';
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp();
+}
+
 Future<void> main() async {
   // 웹 환경에서 카카오 로그인을 정상적으로 완료하려면 runApp() 호출 전 아래 메서드 호출 필요
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  await initializeNotification();
+  // await initializeNotification();
 
   await dotenv.load(fileName: 'assets/config/.env');
   // runApp() 호출 전 Flutter SDK 초기화
@@ -51,6 +55,8 @@ Future initializeNotification() async{
 
   final FirebaseMessaging messaging = FirebaseMessaging.instance;
   print('FCM Token : ${await messaging.getToken()}');
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   // 로컬 알림 플러그인
   var flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -72,7 +78,7 @@ Future initializeNotification() async{
       ?.createNotificationChannel(channel);
 
   const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings(
-      '@mipmap/ic_launcher'
+      '@mipmap/launcher_icon'
   );
   const DarwinInitializationSettings initializationSettingsIOS = DarwinInitializationSettings();
   const InitializationSettings initializationSettings =
@@ -95,7 +101,7 @@ Future initializeNotification() async{
                 channel.id,
                 channel.name,
                 channelDescription: channel.description,
-                icon: '@mipmap/ic_launcher',
+                icon: '@mipmap/launcher_icon',
               ),
               iOS: const DarwinNotificationDetails(
                 badgeNumber: 1,
@@ -104,8 +110,6 @@ Future initializeNotification() async{
               )));
     }
   });
-
-  FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
 
   await setupInteractedMessage();
   // FCM Token Refresh
@@ -136,13 +140,14 @@ Future<void> setupInteractedMessage() async {
   if (initialMessage != null) _handleMessage(initialMessage);
 
   // 앱이 백그라운드 상태에서 푸시 알림 클릭 하여 열릴 경우 메세지 스트림을 통해 처리
-  FirebaseMessaging.onBackgroundMessage(_handleMessage);
+  FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
 }
 
-Future<void> _handleMessage(RemoteMessage message) async {
-  // Todo : 임시로 프로필 화면으로 이동
+void _handleMessage(RemoteMessage message) {
   Get.to(() => const ProfileScreen());
 }
+
+
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -177,6 +182,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    initializeNotification();
     return GetMaterialApp(
         debugShowCheckedModeBanner: false,
         title: "제 1회 점심메뉴 총선거",
