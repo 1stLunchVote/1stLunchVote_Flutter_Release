@@ -4,7 +4,8 @@ import 'package:lunch_vote/styles.dart';
 class LunchButton extends ElevatedButton {
   final BuildContext context;
   final bool isEnabled;
-  final String text;
+  final String enabledText;
+  final String disabledText;
   final Function() pressedCallback;
   final String notifyText;
 
@@ -14,14 +15,15 @@ class LunchButton extends ElevatedButton {
     super.onPressed,
     required this.context,
     required this.isEnabled,
-    required this.text,
+    required this.enabledText,
+    required this.disabledText,
     required this.pressedCallback,
     required this.notifyText,
   });
 
   @override
   Widget? get child => Text(
-    text,
+    isEnabled ? enabledText : disabledText,
     style: Theme.of(context).textTheme.titleSmall?.copyWith(color: textDarkMain,),
   );
 

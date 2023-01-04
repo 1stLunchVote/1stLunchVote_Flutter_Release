@@ -1,24 +1,23 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lunch_vote/model/group/group_info.dart';
 import 'package:lunch_vote/model/group/group_notifier.dart';
-import 'package:lunch_vote/styles.dart';
 import 'package:lunch_vote/view/screen/vote/first_vote_ready_screen.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
-import 'package:lunch_vote/view/widget/awsome_dialog.dart';
-import 'package:lunch_vote/view/widget/custom_clip_path.dart';
+import 'package:lunch_vote/view/widget/awesome_dialog.dart';
 import 'package:lunch_vote/view/widget/group_user.dart';
 import 'package:lunch_vote/view/widget/lunch_button.dart';
 import 'package:provider/provider.dart';
-
 import 'package:lunch_vote/controller/group_controller.dart';
 
 class GroupScreen extends StatelessWidget {
-  GroupScreen({Key? key, required this.isLeader, required this.groupId}) : super(key: key);
+  const GroupScreen({Key? key, required this.isLeader, this.groupId}) : super(key: key);
   final bool isLeader;
-  String groupId;
+  final String? groupId;
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +31,9 @@ class GroupScreen extends StatelessWidget {
 }
 
 class _GroupScreen extends StatefulWidget {
-  _GroupScreen({Key? key, required this.isLeader, required this.groupId}) : super(key: key);
+  const _GroupScreen({Key? key, required this.isLeader, this.groupId}) : super(key: key);
   final bool isLeader;
-  String groupId;
+  final String? groupId;
 
   @override
   State<_GroupScreen> createState() => _GroupScreenState();
@@ -42,7 +41,7 @@ class _GroupScreen extends StatefulWidget {
 
 class _GroupScreenState extends State<_GroupScreen> {
   final GroupController _groupController = GroupController();
-
+  late final String _groupId;
   bool isGroupCreated = false;
 
   // 3초 타이머
@@ -55,9 +54,9 @@ class _GroupScreenState extends State<_GroupScreen> {
       _groupController.createGroup().then((value) {
         if (value == null) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text('방 생성에 오류가 발생했습니다.')));
+            content: Text('방 생성에 오류가 발생했습니다.'),));
         } else {
-          widget.groupId = value;
+          _groupId = value;
           context.read<GroupNotifier>().setGroupId(value);
           _groupController.getMyProfile().then((value) {
             if (value != null) {
@@ -69,12 +68,14 @@ class _GroupScreenState extends State<_GroupScreen> {
             }
             setState(() {
               isGroupCreated = true;
+              context.read<GroupNotifier>().checkReady();
             });
           });
         }
       });
     } else {
-      _groupController.getGroupInfo(widget.groupId).then((value){
+      _groupId = widget.groupId ?? "";
+      _groupController.getGroupInfo(_groupId).then((value){
         if (value != null) {
           for (int i = 0; i < value.members.length; i++) {
             context.read<GroupNotifier>().add(MemberInfo(
@@ -91,11 +92,12 @@ class _GroupScreenState extends State<_GroupScreen> {
     }
 
     _timer = Timer.periodic(const Duration(milliseconds: 3000), (timer) async {
-      _groupController.getGroupInfo(widget.groupId).then((value){
+      _groupController.getGroupInfo(_groupId).then((value){
         if (value != null) {
           context.read<GroupNotifier>().set(value.members);
         }
       });
+      context.read<GroupNotifier>().checkReady();
     });
   }
 
@@ -117,7 +119,7 @@ class _GroupScreenState extends State<_GroupScreen> {
           cancelText: "아니오",
         ).showDialog();
         if (res == true){
-          var message = await _groupController.withdrawalUser(widget.groupId);
+          var message = await _groupController.withdrawalUser(_groupId);
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
           Navigator.of(context).popUntil((route) => route.isFirst);
         }
@@ -139,8 +141,9 @@ class _GroupScreenState extends State<_GroupScreen> {
               cancelText: "아니오",
             ).showDialog();
             if (res == true){
-              var message = await _groupController.withdrawalUser(widget.groupId);
+              var message = await _groupController.withdrawalUser(_groupId);
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+
               Navigator.of(context).popUntil((route) => route.isFirst);
             }
             return res;
@@ -159,100 +162,59 @@ class _GroupScreenState extends State<_GroupScreen> {
                 visible: isGroupCreated,
                 child: Center(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Expanded(flex: 1, child: SizedBox()),
+                      const Expanded(flex: 1, child: SizedBox(),),
                       Expanded(
-                        flex: 2,
-                        child: Row(
-                          children: [
-                            const Expanded(flex: 1, child: SizedBox()),
-                            Expanded(
-                              flex: 1,
-                              child: GroupUser(
-                                userIdx: 0,
-                                isLeader: true,
-                                groupController: _groupController,
-                              ),
+                        flex: 8,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 32.w),
+                          child: GridView.builder(
+                            itemCount: 6,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
                             ),
-                            const Expanded(flex: 1, child: SizedBox()),
-                            Expanded(
-                              flex: 1,
-                              child: GroupUser(
-                                userIdx: 1,
-                                isLeader: false,
+                            itemBuilder: (BuildContext context, int index) {
+                              return GroupUser(
+                                userIdx: index,
+                                isLeader: index == 0,
+                                leaderAuth: widget.isLeader,
+                                isReady: (context.watch<GroupNotifier>().length < index + 1) ?
+                                  false :
+                                  context.watch<GroupNotifier>().members[index].isReady,
                                 groupController: _groupController,
-                              ),
-                            ),
-                            const Expanded(flex: 1, child: SizedBox()),
-                          ],
+                              );
+                            },
+                          ),
                         ),
                       ),
-                      Expanded(
-                        flex: 2,
-                        child: Row(
-                          children: [
-                            const Expanded(flex: 1, child: SizedBox()),
-                            Expanded(
-                              flex: 1,
-                              child: GroupUser(
-                                userIdx: 2,
-                                isLeader: false,
-                                groupController: _groupController,
-                              ),
-                            ),
-                            const Expanded(flex: 1, child: SizedBox()),
-                            Expanded(
-                              flex: 1,
-                              child: GroupUser(
-                                userIdx: 3,
-                                isLeader: false,
-                                groupController: _groupController,
-                              ),
-                            ),
-                            const Expanded(flex: 1, child: SizedBox()),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Row(
-                          children: [
-                            const Expanded(flex: 1, child: SizedBox()),
-                            Expanded(
-                              flex: 1,
-                              child: GroupUser(
-                                userIdx: 4,
-                                isLeader: false,
-                                groupController: _groupController,
-                              ),
-                            ),
-                            const Expanded(flex: 1, child: SizedBox()),
-                            Expanded(
-                              flex: 1,
-                              child: GroupUser(
-                                userIdx: 6,
-                                isLeader: false,
-                                groupController: _groupController,
-                              ),
-                            ),
-                            const Expanded(flex: 1, child: SizedBox()),
-                          ],
-                        ),
-                      ),
+                      const Expanded(flex: 1, child: SizedBox(),),
+                      widget.isLeader ?
                       LunchButton(
                         context: context,
-                        isEnabled: context.watch<GroupNotifier>().isEnabled,
-                        text: "투표 시작하기",
-                        pressedCallback: (){
+                        isEnabled: context.watch<GroupNotifier>().isAllReady,
+                        enabledText: "투표 시작하기",
+                        disabledText: "투표 시작하기",
+                        pressedCallback: () {
                           _timer?.cancel();
                           Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => FirstVoteReadyScreen(groupId: widget.groupId))
+                              MaterialPageRoute(builder: (context) => FirstVoteReadyScreen(groupId: _groupId))
                           );
                         },
                         notifyText: "모든 참가자가 준비완료 상태여야 투표를 시작할 수 있습니다.",
+                      ) :
+                      LunchButton(
+                        context: context,
+                        isEnabled: true,
+                        enabledText: "준비 완료하기",
+                        disabledText: "",
+                        pressedCallback: () {
+                          // TODO: 준비 상태 변경
+                        },
+                        notifyText: "",
                       ),
-                      const Expanded(flex: 1, child: SizedBox()),
+                      const Expanded(flex: 1, child: SizedBox(),),
                     ],
                   ),
                 ),
