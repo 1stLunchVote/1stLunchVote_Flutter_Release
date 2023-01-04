@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:lunch_vote/styles.dart';
 import 'package:lunch_vote/view/screen/home_screen.dart';
 import 'package:lunch_vote/controller/login_controller.dart';
@@ -19,26 +20,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final LoginController _loginController = LoginController();
   SharedPrefManager spfManager = SharedPrefManager();
-
-  // @override
-  // void initState() {
-  //   setLoginVisibility();
-  //   super.initState();
-  // }
-  //
-  // void setLoginVisibility() async {
-  //   var token = await spfManager.getUserToken();
-  //   if (token == null) {
-  //     setState(() {
-  //       _isLoginVisible = true;
-  //       FlutterNativeSplash.remove();
-  //     });
-  //   } else {
-  //     print('User Token : $token');
-  //     navigateToHome();
-  //     FlutterNativeSplash.remove();
-  //   }
-  // }
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -67,25 +49,35 @@ class _LoginScreenState extends State<LoginScreen> {
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 100.0),
                 child: MaterialButton(
-                onPressed: () async {
-                  _loginController.loginToken().then((value) {
-                    if (value != null) {
-                      _loginController.postUserToken(value).then((token) {
-                        if (token != null) {
-                          spfManager.setUserToken(token);
-                          print('User Token : $token');
-                          navigateToHome();
+                    onPressed: () async {
+                    if (!isLoading) {
+                      _loginController.loginToken().then((value) {
+                        if (value != null) {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          _loginController.postUserToken(value).then((token) {
+                            if (token != null) {
+                              spfManager.setUserToken(token);
+                              print('User Token : $token');
+                              navigateToHome();
+                              setState(() {
+                                isLoading = false;
+                              });
+                            }
+                          }).onError((error, stackTrace) {
+                            setState(() {
+                              isLoading = false;
+                            });
+                          });
                         }
                       });
                     }
-                  });
-                },
-                child: Image.asset(
-                    'assets/images/bg_kakao_login.png',
-                    fit: BoxFit.fill,
-                  ),
-                ),
-              ),
+                  },
+                  child: isLoading
+                      ? const CircularProgressIndicator()
+                      : Image.asset('assets/images/bg_kakao_login.png', fit: BoxFit.fill,)),
+            ),
             )
           ),
         ],
@@ -95,7 +87,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void navigateToHome() {
     Navigator.of(context).pop();
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => HomeScreen()));
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const HomeScreen())
+    );
   }
 }

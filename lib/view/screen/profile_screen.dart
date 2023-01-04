@@ -7,6 +7,7 @@ import 'package:lunch_vote/controller/nickname_controller.dart';
 import 'package:lunch_vote/styles.dart';
 import 'package:lunch_vote/view/screen/login_screen.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
+import 'package:lunch_vote/view/widget/awesome_dialog.dart';
 import 'package:lunch_vote/view/widget/custom_clip_path.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -220,22 +221,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<bool> _showDialog() async{
-    bool? canExit;
-    AwesomeDialog dlg = AwesomeDialog(
+    var res = await LunchAwesomeDialog(
       context: context,
-      dialogType: DialogType.warning,
-      animType: AnimType.scale,
-      title: "로그아웃",
-      desc: "정말로 로그아웃 하시겠습니까?",
-      dismissOnTouchOutside: true,
-      btnCancelOnPress: () => canExit = false,
-      btnOkOnPress: () => canExit = true,
-      btnOkText: "예",
-      btnCancelText: "아니요",
+      title: "방 나가기",
+      body: "정말로 로그아웃 하시겠습니까?",
+      okText: '예',
+      cancelText: '아니오',
+    ).showDialog();
 
-    );
-    await dlg.show();
-
-    return Future.value(canExit);
+    return Future.value(res);
   }
 }
