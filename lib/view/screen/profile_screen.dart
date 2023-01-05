@@ -104,12 +104,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Visibility(
                             visible: _nicknameChange,
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0),
+                              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                               child: TextFormField(
                                 controller: _nickNameEditingController,
                                 decoration: InputDecoration(
-                                    labelText: '변경할 닉네임을 입력하세요.',
+                                    labelText: '닉네임 변경',
                                     suffixIcon: IconButton(
                                         onPressed: () {
                                           setState(() {
@@ -121,11 +120,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             }
                                           });
                                         },
-                                        icon: Icon(Icons.close,
-                                          color: Theme
-                                              .of(context)
-                                              .colorScheme
-                                              .primary,))
+                                        icon: const Icon(Icons.close)
+                                    )
                                 ),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
