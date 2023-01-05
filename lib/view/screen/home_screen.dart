@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lunch_vote/controller/group_controller.dart';
 import 'package:lunch_vote/controller/home_controller.dart';
 import 'package:lunch_vote/styles.dart';
+import 'package:lunch_vote/view/screen/friend/friendlist_screen.dart';
 import 'package:lunch_vote/view/screen/group/group_screen.dart';
 import 'package:lunch_vote/model/group_id_notifier.dart';
 import 'package:lunch_vote/view/screen/profile_screen.dart';
@@ -235,7 +236,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           Column(
                             children: [
-                              FloatingActionButton(onPressed: () {},
+                              FloatingActionButton(onPressed: () {
+                                Navigator.of(context).push(
+                                    MaterialPageRoute(builder: (
+                                        context) => const FriendlistScreen()));
+                              },
                                 backgroundColor: secondary1,
                                 heroTag: null,
                                 child: Icon(Icons.person_outline, color: Theme
