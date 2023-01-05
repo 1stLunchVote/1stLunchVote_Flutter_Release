@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lunch_vote/styles.dart';
 import 'package:lunch_vote/view/screen/home_screen.dart';
 import 'package:lunch_vote/controller/login_controller.dart';
 import 'package:lunch_vote/view/widget/utils/shared_pref_manager.dart';
@@ -16,26 +15,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final LoginController _loginController = LoginController();
   SharedPrefManager spfManager = SharedPrefManager();
-
-  // @override
-  // void initState() {
-  //   setLoginVisibility();
-  //   super.initState();
-  // }
-  //
-  // void setLoginVisibility() async {
-  //   var token = await spfManager.getUserToken();
-  //   if (token == null) {
-  //     setState(() {
-  //       _isLoginVisible = true;
-  //       FlutterNativeSplash.remove();
-  //     });
-  //   } else {
-  //     print('User Token : $token');
-  //     navigateToHome();
-  //     FlutterNativeSplash.remove();
-  //   }
-  // }
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +85,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void navigateToHome() {
     Navigator.of(context).pop();
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => HomeScreen()));
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const HomeScreen())
+    );
   }
 }
