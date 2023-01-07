@@ -39,3 +39,21 @@ class TemplateInfoResponse {
 
   Map<String, dynamic> toJson() => _$TemplateInfoResponseToJson(this);
 }
+
+@JsonSerializable()
+class TemplateDeleteResponse {
+  final int status;
+  final bool success;
+  final String message;
+
+  TemplateDeleteResponse({
+    required this.status,
+    required this.success,
+    required this.message,
+  });
+
+  factory TemplateDeleteResponse.fromJson(Map<String, dynamic> json) =>
+      _$TemplateDeleteResponseFromJson(json);
+
+  Map<String, dynamic> toJson() => _$TemplateDeleteResponseToJson(this);
+}

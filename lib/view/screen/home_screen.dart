@@ -16,6 +16,7 @@ import 'package:lunch_vote/styles.dart';
 import 'package:lunch_vote/view/screen/group/group_screen.dart';
 import 'package:lunch_vote/model/group_id_notifier.dart';
 import 'package:lunch_vote/view/screen/profile_screen.dart';
+import 'package:lunch_vote/view/screen/template/template_list_screen.dart';
 import 'package:lunch_vote/view/screen/template/template_screen.dart';
 import 'package:lunch_vote/view/screen/vote/first_vote_ready_screen.dart';
 import 'package:lunch_vote/view/screen/vote/second_vote_screen.dart';
@@ -173,10 +174,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Column(
                         children: [
-                          FloatingActionButton(onPressed: () {
+                          FloatingActionButton(
+                            onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => TemplateScreen()));
-                          },
+                                builder: (context) => const TemplateListScreen()));
+                            },
                             backgroundColor: primary1,
                             heroTag: null,
                             child: Icon(Icons.mode_edit, color: Theme
