@@ -1,22 +1,18 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
+import 'package:retrofit/retrofit.dart';
 import 'package:lunch_vote/model/profile/profile_info.dart';
 import 'package:lunch_vote/model/template/template_info.dart';
 import 'package:lunch_vote/model/vote/second_vote.dart';
 import 'package:lunch_vote/model/vote/vote_state.dart';
-import 'package:retrofit/retrofit.dart';
 import 'package:lunch_vote/model/login/user_info.dart';
-
+import 'package:lunch_vote/model/group/group_info.dart';
+import 'package:lunch_vote/model/group/user_manage.dart';
+import 'package:lunch_vote/model/group/group_join_response.dart';
+import 'package:lunch_vote/model/template/all_template_info.dart';
+import 'package:lunch_vote/model/vote/final_result.dart';
+import 'package:lunch_vote/model/vote/first_vote.dart';
+import 'package:lunch_vote/model/vote/first_vote_result.dart';
 import 'package:lunch_vote/model/menu/menu_info.dart';
-
-import '../model/group/group_info.dart';
-import '../model/group/user_manage.dart';
-import '../model/group/group_join_response.dart';
-import '../model/template/all_template_info.dart';
-import '../model/vote/final_result.dart';
-import '../model/vote/first_vote.dart';
-import '../model/vote/first_vote_result.dart';
 
 part 'lunch_vote_service.g.dart';
 
@@ -68,6 +64,17 @@ abstract class LunchVoteService{
   @GET('/lunchTemplate/{lunchTemplateId}')
   Future<OneTemplateResponse> getOneTemplateInfo(@Path() String lunchTemplateId);
 
+  // 템플릿 생성
+  @POST('/lunchTemplate')
+  Future<TemplateInfoResponse> createTemplate(@Body() TemplateInfo templateInfo);
+
+  // 템플릿 수정
+  @PUT('/lunchTemplate/{lunchTemplateId}')
+  Future<TemplateInfoResponse> modifyTemplate(@Path() String lunchTemplateId, @Body() TemplateInfo templateInfo);
+
+  @DELETE('/lunchTemplate/{lunchTemplateId}')
+  Future<TemplateDeleteResponse> deleteTemplate(@Path() String lunchTemplateId);
+
   // 1차 투표 상태 조회
   @GET('/group/{groupId}/vote/first/status')
   Future<VoteStateResponse> getFirstVoteState(@Path() String groupId);
@@ -90,7 +97,4 @@ abstract class LunchVoteService{
 
   @PATCH('/group/{groupId}/join')
   Future<GroupJoinResponse> joinGroup(@Path() String groupId);
-
-  @POST('/lunchTemplate')
-  Future<TemplateInfoResponse> createTemplate(@Body() TemplateInfo templateInfo);
 }
