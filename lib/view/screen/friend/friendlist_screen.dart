@@ -1,6 +1,8 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:lunch_vote/styles.dart';
+import 'package:lunch_vote/view/widget/lunch_dialog.dart';
+
 
 class FriendlistScreen extends StatefulWidget {
   const FriendlistScreen({Key? key}) : super(key: key);
@@ -59,59 +61,11 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                               barrierDismissible: false,
                               context: context,
                               builder: (BuildContext context) {
-                                var visibilityBtn = true;
-                                return AlertDialog(
-                                  titlePadding: EdgeInsets.all(24), //24
-                                  contentPadding: EdgeInsets.all(24), // 24 0 24 0
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  ),
-                                  backgroundColor: primary4, // TODO 색상 하드코딩으로 되어 있음. 고치자!
-                                  title: Text("친구 추가하기",
-                                    style: Theme
-                                        .of(context)
-                                        .textTheme
-                                        .titleLarge,
-                                  ),
-                                  content: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Form(
-                                        key: _formKey,
-                                        child: TextFormField(
-                                          controller: _emailController,
-                                          decoration: InputDecoration(
-                                            border: const OutlineInputBorder(),
-                                            labelText: '이메일',
-                                            helperText: '',
-                                            suffixIcon: IconButton(
-                                                onPressed: _emailController.clear,
-                                                icon: const Icon(Icons.highlight_remove),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Row(
-                                        mainAxisSize: MainAxisSize.max,
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          TextButton(
-                                            onPressed: (){
-                                              Navigator.pop(context);
-                                            },
-                                            style: TextButton.styleFrom(),
-                                            child: Text('취소',
-                                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                                color: Theme.of(context).primaryColor,
-                                              ),
-                                            ),
-                                          ),
-
-
-                                        ],
-                                      )
-                                    ],
-                                  ),
+                                return LunchDialog(
+                                    title: '친구 추가하기',
+                                    textfield_label_text: '이메일',
+                                    disabled_button_text: '취소',
+                                    enabled_button_text: '친구 추가'
                                 );
                               }
                           );
