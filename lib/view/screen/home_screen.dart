@@ -197,7 +197,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       Column(
                         children: [
-                          FloatingActionButton(onPressed: () {},
+                          // Todo : 제원이가 만들면 바꿀게 임시로 쓴다~
+                          FloatingActionButton(onPressed: () {
+                            Get.to(const SecondVotePage(groupId: "63bb9e42bb63c8c408880e9f"));},
                             backgroundColor: secondary1,
                             heroTag: null,
                             child: Icon(Icons.person_outline, color: Theme
