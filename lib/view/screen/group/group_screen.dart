@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:lunch_vote/model/group/group_info.dart';
 import 'package:lunch_vote/model/group/group_notifier.dart';
 import 'package:lunch_vote/view/screen/vote/first_vote_ready_screen.dart';
@@ -21,12 +22,7 @@ class GroupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => GroupNotifier(),
-      builder: (context, child) {
-        return _GroupScreen(isLeader: isLeader, groupId: groupId,);
-      }
-    );
+    return _GroupScreen(isLeader: isLeader, groupId: groupId,);
   }
 }
 
@@ -40,7 +36,7 @@ class _GroupScreen extends StatefulWidget {
 }
 
 class _GroupScreenState extends State<_GroupScreen> {
-  final GroupController _groupController = GroupController();
+  final _groupController = Get.put(GroupController());
   late final String _groupId;
   bool isGroupCreated = false;
 
@@ -57,10 +53,10 @@ class _GroupScreenState extends State<_GroupScreen> {
             content: Text('방 생성에 오류가 발생했습니다.'),));
         } else {
           _groupId = value;
-          context.read<GroupNotifier>().setGroupId(value);
+          _groupController.setGroupId(value);
           _groupController.getMyProfile().then((value) {
             if (value != null) {
-              context.read<GroupNotifier>().add(MemberInfo(
+              _groupController.add(MemberInfo(
                 email: value.email,
                 nickname: value.nickname,
                 profileImage: value.profileImage,
@@ -68,7 +64,7 @@ class _GroupScreenState extends State<_GroupScreen> {
             }
             setState(() {
               isGroupCreated = true;
-              context.read<GroupNotifier>().checkReady();
+              _groupController.checkReady();
             });
           });
         }
@@ -78,7 +74,7 @@ class _GroupScreenState extends State<_GroupScreen> {
       _groupController.getGroupInfo(_groupId).then((value){
         if (value != null) {
           for (int i = 0; i < value.members.length; i++) {
-            context.read<GroupNotifier>().add(MemberInfo(
+            _groupController.add(MemberInfo(
               email: value.members[i].email,
               nickname: value.members[i].nickname,
               profileImage: value.members[i].profileImage,
@@ -94,10 +90,10 @@ class _GroupScreenState extends State<_GroupScreen> {
     _timer = Timer.periodic(const Duration(milliseconds: 3000), (timer) async {
       _groupController.getGroupInfo(_groupId).then((value){
         if (value != null) {
-          context.read<GroupNotifier>().set(value.members);
+          _groupController.set(value.members);
         }
       });
-      context.read<GroupNotifier>().checkReady();
+      _groupController.checkReady();
     });
   }
 
@@ -176,24 +172,24 @@ class _GroupScreenState extends State<_GroupScreen> {
                               crossAxisCount: 2,
                             ),
                             itemBuilder: (BuildContext context, int index) {
-                              return GroupUser(
+                              return Obx(() => GroupUser(
                                 userIdx: index,
                                 isLeader: index == 0,
                                 leaderAuth: widget.isLeader,
-                                isReady: (context.watch<GroupNotifier>().length < index + 1) ?
-                                  false :
-                                  context.watch<GroupNotifier>().members[index].isReady,
+                                isReady: (_groupController.members.length < index + 1) ?
+                                false :
+                                _groupController.members[index].isReady,
                                 groupController: _groupController,
-                              );
+                              ));
                             },
                           ),
                         ),
                       ),
                       const Expanded(flex: 1, child: SizedBox(),),
                       widget.isLeader ?
-                      LunchButton(
+                      Obx(() => LunchButton(
                         context: context,
-                        isEnabled: context.watch<GroupNotifier>().isAllReady,
+                        isEnabled: _groupController.isAllReady,
                         enabledText: "투표 시작하기",
                         disabledText: "투표 시작하기",
                         pressedCallback: () {
@@ -203,7 +199,7 @@ class _GroupScreenState extends State<_GroupScreen> {
                           );
                         },
                         notifyText: "모든 참가자가 준비완료 상태여야 투표를 시작할 수 있습니다.",
-                      ) :
+                      )) :
                       LunchButton(
                         context: context,
                         isEnabled: true,

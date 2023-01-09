@@ -16,9 +16,9 @@ class LunchButton extends ElevatedButton {
     required this.context,
     required this.isEnabled,
     required this.enabledText,
-    required this.disabledText,
+    this.disabledText = "",
     required this.pressedCallback,
-    required this.notifyText,
+    this.notifyText = "",
   });
 
   @override
