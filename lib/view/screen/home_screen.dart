@@ -198,7 +198,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       Column(
                         children: [
-                          FloatingActionButton(onPressed: () {},
+                          FloatingActionButton(onPressed: () {
+                            Navigator.of(context).push(
+                                MaterialPageRoute(builder: (
+                                    context) => const FriendlistScreen()));
+                          },
                             backgroundColor: secondary1,
                             heroTag: null,
                             child: Icon(Icons.person_outline, color: Theme

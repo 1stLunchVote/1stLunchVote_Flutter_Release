@@ -6,15 +6,21 @@ class LunchDialog extends StatefulWidget {
     Key? key,
     required this.title,
     required this.labelText,
-    required this.disabledText,
+    required this.textButtonText,
     required this.enabledText,
+    required this.disabledText,
+    required this.notifyText,
+    required this.pressedCallback,
 
   }) : super(key: key);
 
   final String title;
   final String labelText;
-  final String disabledText;
+  final String textButtonText;
   final String enabledText;
+  final String disabledText;
+  final String notifyText;
+  final VoidCallback pressedCallback;
 
 
   @override
@@ -23,15 +29,20 @@ class LunchDialog extends StatefulWidget {
 
 class _LunchDialogState extends State<LunchDialog> {
 
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _textController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool enabled = false;
 
   @override
   Widget build(BuildContext context) {
     String title = widget.title;
     String labelText = widget.labelText;
+    String textButtonText = widget.textButtonText;
     String disabledText = widget.disabledText;
     String enabledText = widget.enabledText;
+    String notifyText = widget.notifyText;
+    VoidCallback pressedCallback = widget.pressedCallback;
+
     return AlertDialog(
       titlePadding: EdgeInsets.all(24), //24
       contentPadding: EdgeInsets.all(24), // 24 0 24 0
@@ -51,13 +62,23 @@ class _LunchDialogState extends State<LunchDialog> {
           Form(
             key: _formKey,
             child: TextFormField(
-              controller: _emailController,
+              controller: _textController,
+              onChanged: (value){
+                setState(() {
+                  if(value.isEmpty){
+                    enabled = false;
+                  }
+                  else {
+                    enabled = true;
+                  }
+                });
+              },
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
                 labelText: labelText,
                 helperText: '',
                 suffixIcon: IconButton(
-                  onPressed: _emailController.clear,
+                  onPressed: _textController.clear,
                   icon: const Icon(Icons.highlight_remove),
                 ),
               ),
@@ -72,7 +93,7 @@ class _LunchDialogState extends State<LunchDialog> {
                   Navigator.pop(context);
                 },
                 style: TextButton.styleFrom(),
-                child: Text(disabledText,
+                child: Text(textButtonText,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Theme.of(context).primaryColor,
                   ),
@@ -80,14 +101,11 @@ class _LunchDialogState extends State<LunchDialog> {
               ),
               LunchButton(
                   context: context,
-                  isEnabled: true,
+                  isEnabled: enabled,
                   enabledText: enabledText,
-                  disabledText: 'disabledText',
-                  pressedCallback: () {
-                    Navigator.pop(context);
-                    // TODO 서버로 친구 추가 요청 보내는 작업 처리해야 함!
-                    },
-                  notifyText: 'notifyText'
+                  disabledText: disabledText,
+                  notifyText: notifyText,
+                  pressedCallback: pressedCallback,
               ),
             ],
           )
