@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "865155786423",
+    "project_id": "lunch-vote-ed5de",
+    "storage_bucket": "lunch-vote-ed5de.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:865155786423:android:0e9db4f03cabdc04594f32",
+        "android_client_info": {
+          "package_name": "com.flutter_project.lunch_vote.lunch_vote"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "865155786423-u5f314fbe0oug6iaeosnid0d3curdi3k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrOJ7atiaOpoXzIBl6MqeMW_Wq5QEIsAg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "865155786423-u5f314fbe0oug6iaeosnid0d3curdi3k.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "865155786423-hf6jqhv1d9n8b64tjqjsaarfnk3vs207.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.flutterproject.lunchvote.lunchVote"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

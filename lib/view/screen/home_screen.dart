@@ -13,6 +13,7 @@ import 'package:lunch_vote/controller/group_controller.dart';
 import 'package:lunch_vote/controller/home_controller.dart';
 import 'package:lunch_vote/controller/nickname_controller.dart';
 import 'package:lunch_vote/styles.dart';
+import 'package:lunch_vote/view/screen/friend/friendlist_screen.dart';
 import 'package:lunch_vote/view/screen/group/group_screen.dart';
 import 'package:lunch_vote/model/group_id_notifier.dart';
 import 'package:lunch_vote/view/screen/profile_screen.dart';
