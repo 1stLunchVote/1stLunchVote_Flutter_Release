@@ -1,19 +1,23 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:lunch_vote/model/vote/vote_item_notifier.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+
+import '../../controller/second_vote_controller.dart';
 
 class SecondVoteTile extends StatefulWidget {
   String foodName = '';
   String? imgUrl;
   int index;
   String menuId;
+  SecondVoteController controller;
 
   SecondVoteTile({super.key,
     required this.foodName,
     required this.imgUrl,
     required this.index,
-    required this.menuId
+    required this.menuId,
+    required this.controller
   });
 
   @override
@@ -36,9 +40,9 @@ class _SecondVoteTileState extends State<SecondVoteTile> {
             onTap: (){
               setState(() {
                 if (!isVoted) {
-                  context.read<VoteItemNotifier>().setIndex(widget.index, widget.menuId);
+                  widget.controller.setVotedId(widget.menuId);
                 } else {
-                  context.read<VoteItemNotifier>().clearIndex();
+                  widget.controller.clearVotedId();
                 }
                 isVoted = !isVoted;
               });
@@ -85,9 +89,10 @@ class _SecondVoteTileState extends State<SecondVoteTile> {
                     flex: 8,
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),
-                      child: Visibility(
-                        visible: context.watch<VoteItemNotifier>().index == widget.index,
-                        child: Image.asset("assets/images/ic_launcher.png"),
+                      child: Obx(() => Visibility(
+                          visible: widget.controller.selectedId == widget.menuId,
+                          child: Image.asset("assets/images/ic_launcher.png"),
+                        ),
                       ),
                     )
                 ),
