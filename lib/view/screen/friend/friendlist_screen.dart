@@ -63,9 +63,9 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                               builder: (BuildContext context) {
                                 return LunchDialog(
                                     title: '친구 추가하기',
-                                    textfield_label_text: '이메일',
-                                    disabled_button_text: '취소',
-                                    enabled_button_text: '친구 추가'
+                                    labelText: '이메일',
+                                    disabledText: '취소',
+                                    enabledText: '친구 추가'
                                 );
                               }
                           );
