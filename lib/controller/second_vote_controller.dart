@@ -13,18 +13,19 @@ class SecondVoteController extends GetxController{
   late LunchVoteService _lunchVoteService;
   final SharedPrefManager _spfManager = SharedPrefManager();
 
-  var selectedId = "".obs;
+  final RxString _selectedId = "".obs;
+  String get selectedId => _selectedId.value;
 
   SecondVoteController(){
     dio.options.headers["Content-Type"] = "application/json";
   }
 
   void setVotedId(String menuId){
-    selectedId.value = menuId;
+    _selectedId.value = menuId;
   }
 
   void clearVotedId(){
-    selectedId.value = "";
+    _selectedId.value = "";
   }
 
   Future<List<MenuInfo>?> getMenuInfo(String groupId) async {
@@ -41,7 +42,7 @@ class SecondVoteController extends GetxController{
   }
 
   Future<int?> voteItem() async{
-    var res = await _lunchVoteService.secondVoteItem(groupId, SecondVoteItem(menuId: selectedId.value));
+    var res = await _lunchVoteService.secondVoteItem(groupId, SecondVoteItem(menuId: _selectedId.value));
     if (res.success){
       return res.data.count;
     }

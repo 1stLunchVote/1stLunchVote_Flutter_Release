@@ -107,7 +107,7 @@ class _SecondVotePageState extends State<SecondVotePage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(_nicknameController.nickname.value,
+                              Text(_nicknameController.nickname,
                                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: primary1)),
                               Text(" 님의 투표", style: Theme.of(context).textTheme.headlineMedium)
                             ],
@@ -198,7 +198,7 @@ class _SecondVotePageState extends State<SecondVotePage> {
             child: LunchButton(
                 enabledText: "선택 완료",
                 context: context,
-                isEnabled: !_voteCompleted && _secondVoteController.selectedId.value.isNotEmpty,
+                isEnabled: !_voteCompleted && _secondVoteController.selectedId.isNotEmpty,
                 disabledText: '선택 대기',
                 pressedCallback: () async{
                   // 투표

@@ -87,7 +87,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Row(
                       children: [
                         Obx(() => Text(
-                            "${nicknameController.nickname}",
+                            nicknameController.nickname,
                             style: Theme
                                 .of(context)
                                 .textTheme
