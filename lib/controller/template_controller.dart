@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:lunch_vote/model/menu/menu_info.dart';
 import 'package:lunch_vote/model/template/template_info.dart';
 import 'package:lunch_vote/model/template/all_template_info.dart';
@@ -17,7 +18,7 @@ class TemplateController{
   Future<List<MenuInfo>?> getMenuInfo() async{
     dio.options.headers["Authorization"] = await _spfManager.getUserToken();
     dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
-    _lunchVoteService = LunchVoteService(dio);
+    _lunchVoteService = LunchVoteService(dio, baseUrl: dotenv.get('BASE_URL'));
 
     var res = await _lunchVoteService.getMenuInfo();
     if (res.success){
@@ -53,7 +54,7 @@ class TemplateController{
   Future<List<AllTemplateInfo>?> getAllTemplateInfo ()async{
     dio.options.headers["Authorization"] = await _spfManager.getUserToken();
     dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
-    _lunchVoteService = LunchVoteService(dio);
+    _lunchVoteService = LunchVoteService(dio, baseUrl: dotenv.get('BASE_URL'));
 
     var res = await _lunchVoteService.getAllTemplateInfo();
     if (res.success){
@@ -65,7 +66,7 @@ class TemplateController{
   Future<List<Menu>?> getOneTemplateInfo(String lunchTemplateId) async {
     dio.options.headers["Authorization"] = await _spfManager.getUserToken();
     dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
-    _lunchVoteService = LunchVoteService(dio);
+    _lunchVoteService = LunchVoteService(dio, baseUrl: dotenv.get('BASE_URL'));
 
     var res = await _lunchVoteService.getOneTemplateInfo(lunchTemplateId);
     if (res.success){

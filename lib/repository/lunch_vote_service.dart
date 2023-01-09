@@ -16,9 +16,9 @@ import 'package:lunch_vote/model/menu/menu_info.dart';
 
 part 'lunch_vote_service.g.dart';
 
-@RestApi(baseUrl: "http://54.173.224.149:8000")
+@RestApi(baseUrl: "this url will be ignored if baseUrl is passed")
 abstract class LunchVoteService{
-  factory LunchVoteService(Dio dio) = _LunchVoteService;
+  factory LunchVoteService(Dio dio, {String baseUrl}) = _LunchVoteService;
 
   // 카카오 로그인 및 토큰 생성
   @POST('/auth/login/KAKAO')

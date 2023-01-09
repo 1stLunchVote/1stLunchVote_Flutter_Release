@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:lunch_vote/model/vote/first_vote.dart';
 import 'package:lunch_vote/model/template/all_template_info.dart';
 
@@ -18,7 +19,8 @@ class FirstVoteController{
   Future<String?> submitFirstVote(String groupId, List<String> likesMenu, List<String> dislikesMenu) async{
     dio.options.headers["Authorization"] = await _spfManager.getUserToken();
     dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
-    _lunchVoteService = LunchVoteService(dio);
+    _lunchVoteService = LunchVoteService(dio, baseUrl: dotenv.get('BASE_URL'));
+
     var res = await _lunchVoteService.submitFirstVote(groupId, FirstVoteItem(likesMenu: likesMenu, dislikesMenu: dislikesMenu));
 
     return res.message;

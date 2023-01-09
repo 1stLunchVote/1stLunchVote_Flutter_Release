@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:lunch_vote/model/vote/second_vote.dart';
 
 import '../model/vote/first_vote_result.dart';
@@ -19,7 +20,7 @@ class SecondVoteController{
     this.groupId = groupId;
     dio.options.headers["Authorization"] = await _spfManager.getUserToken();
     dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
-    _lunchVoteService = LunchVoteService(dio);
+    _lunchVoteService = LunchVoteService(dio, baseUrl: dotenv.get('BASE_URL'));
 
     var res = await _lunchVoteService.getFirstVoteResult(groupId);
     if (res.success){
