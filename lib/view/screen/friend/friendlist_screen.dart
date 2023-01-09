@@ -1,6 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:lunch_vote/styles.dart';
+import 'package:lunch_vote/view/widget/friend_tile.dart';
 import 'package:lunch_vote/view/widget/lunch_dialog.dart';
 
 
@@ -30,7 +31,13 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text('친구 목록'),
+        title: Text(
+            '친구 관리',
+          style: Theme
+              .of(context)
+              .textTheme
+              .titleLarge,
+        ),
         centerTitle: false,
         leading: IconButton(
             onPressed: (){
@@ -79,6 +86,19 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                         icon: const Icon(Icons.add),
                     ),
                   ],
+                ),
+                SizedBox(height: 24,),
+                Expanded(
+                    child: ListView.separated(
+                      itemCount: 3, // TODO 서버로부터 친구 수 만큼 받아와야 함!
+                      itemBuilder: (BuildContext context, int index){
+                        return FriendTile();
+                      },
+                      separatorBuilder: (BuildContext context, int index) => const Divider(
+                        height: 8.0,
+                        color: textLightHint,
+                      ),
+                    )
                 ),
               ],
             ),

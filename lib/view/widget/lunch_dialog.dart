@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:lunch_vote/view/widget/lunch_button.dart';
 
 class LunchDialog extends StatefulWidget {
@@ -78,7 +79,9 @@ class _LunchDialogState extends State<LunchDialog> {
                 labelText: labelText,
                 helperText: '',
                 suffixIcon: IconButton(
-                  onPressed: _textController.clear,
+                  onPressed: (){
+                    _textController.clear();
+                  },
                   icon: const Icon(Icons.highlight_remove),
                 ),
               ),
