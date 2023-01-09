@@ -11,14 +11,15 @@ class BasicAppbar extends AppBar {
   final List<Widget>? trailingList;
   final Function()? onPop;
 
-  BasicAppbar(
-      {super.key,
-      required this.backVisible,
-      required this.appbarTitle,
-      required this.isTitleCenter,
-      required this.context,
-      this.trailingList,
-      this.onPop});
+  BasicAppbar({
+    super.key,
+    required this.backVisible,
+    required this.appbarTitle,
+    required this.isTitleCenter,
+    required this.context,
+    this.trailingList,
+    this.onPop,
+  });
 
   @override
   double? get elevation => 0;

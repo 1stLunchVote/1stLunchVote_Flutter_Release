@@ -1,4 +1,6 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:dio/dio.dart';
 import 'package:lunch_vote/model/login/user_info.dart';
@@ -13,7 +15,7 @@ class LoginController{
     final dio = Dio();
     dio.options.headers["Content-Type"] = "application/json";
     dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
-    _lunchVoteService = LunchVoteService(dio);
+    _lunchVoteService = LunchVoteService(dio, baseUrl: dotenv.get('BASE_URL'));
   }
 
 
@@ -90,6 +92,10 @@ class LoginController{
 
   Future<String?> postUserToken(String accessToken) async{
     String? fcmToken = await _spfManager.getFCMToken();
+    if (fcmToken == null){
+      fcmToken = await FirebaseMessaging.instance.getToken();
+      _spfManager.setFCMToken(fcmToken);
+    }
     final result = await _lunchVoteService.postUserToken(SocialToken(socialToken: accessToken, fcmToken: fcmToken));
     return result.data.accessToken;
   }

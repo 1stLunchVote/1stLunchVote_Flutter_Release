@@ -1,13 +1,39 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
-import '../menu/menu_info.dart';
+import 'package:lunch_vote/model/menu/menu_info.dart';
+import 'package:lunch_vote/model/template/all_template_info.dart';
 
 class TemplateNotifier extends ChangeNotifier {
+  String _templateId = "";
+  String _templateName = "";
   final List<MenuStatus> _menus = [];
+
+  void setTemplateId(String id) {
+    _templateId = id;
+  }
+
+  void setTemplateName(String name) {
+    _templateName = name;
+  }
 
   void addList(MenuInfo menuInfo) {
     _menus.add(MenuStatus(menuInfo: menuInfo, status: 0,));
+    notifyListeners();
+  }
+
+  void addListWithStatus(Menu menu) {
+    int status = -1;
+    if (menu.likesAndDislikes == "NORMAL") {
+      status = 0;
+    } else if (menu.likesAndDislikes == "LIKES") {
+      status = 1;
+    } else {
+      status = 2;
+    }
+    _menus.add(MenuStatus(menuInfo: MenuInfo(
+      menuId: menu.menuId,
+      menuName: menu.menuName,
+      image: menu.image,
+    ), status: status,));
     notifyListeners();
   }
 
@@ -21,8 +47,9 @@ class TemplateNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  String get templateId => _templateId;
+  String get templateName => _templateName;
   int get length => _menus.length;
-
   bool get visibility {
     for (int i = 0; i < _menus.length; i++) {
       if (_menus[i].status != 0) {
@@ -47,6 +74,16 @@ class TemplateNotifier extends ChangeNotifier {
       return Colors.green;
     } else {
       return Colors.red;
+    }
+  }
+
+  double getWidth(int menuIdx){
+    if (_menus[menuIdx].status == 0) {
+      return 1.0;
+    } else if (_menus[menuIdx].status == 1) {
+      return 2.0;
+    } else {
+      return 2.0;
     }
   }
 

@@ -28,7 +28,8 @@ class SharedPrefManager{
     final spf = await SharedPreferences.getInstance();
     try{
       return spf.getString('fcmToken');
-    } catch (e){  }
-    return null;
+    } catch (e){
+      return null;
+    }
   }
 }

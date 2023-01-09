@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:lunch_vote/repository/lunch_vote_service.dart';
 import 'package:lunch_vote/view/widget/utils/shared_pref_manager.dart';
 
@@ -17,7 +18,7 @@ class GroupController{
   Future<String?> createGroup() async{
     dio.options.headers["Authorization"] = await _spfManager.getUserToken();
     dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
-    _lunchVoteService = LunchVoteService(dio);
+    _lunchVoteService = LunchVoteService(dio, baseUrl: dotenv.get('BASE_URL'));
 
     var res = await _lunchVoteService.createGroup();
     if (res.success){
@@ -29,7 +30,7 @@ class GroupController{
   Future<GroupInfo?> getGroupInfo(String groupId) async{
     dio.options.headers["Authorization"] = await _spfManager.getUserToken();
     dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
-    _lunchVoteService = LunchVoteService(dio);
+    _lunchVoteService = LunchVoteService(dio, baseUrl: dotenv.get('BASE_URL'));
 
     var res = await _lunchVoteService.getGroupInfo(groupId);
     if (res.success){

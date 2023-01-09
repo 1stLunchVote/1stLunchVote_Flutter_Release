@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../repository/lunch_vote_service.dart';
 import '../view/widget/utils/shared_pref_manager.dart';
@@ -15,7 +16,7 @@ class HomeController{
   Future<String?> getNickname() async{
     dio.options.headers["Authorization"] = await _spfManager.getUserToken();
     dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
-    _lunchVoteService = LunchVoteService(dio);
+    _lunchVoteService = LunchVoteService(dio, baseUrl: dotenv.get('BASE_URL'));
     var res = await _lunchVoteService.getProfileInfo();
     if (res.success){
       return res.data.nickname;

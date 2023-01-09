@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lunch_vote/model/group/group_info.dart';
 import 'package:lunch_vote/model/group/group_notifier.dart';
 import 'package:lunch_vote/view/screen/vote/first_vote_ready_screen.dart';
@@ -53,7 +54,7 @@ class _GroupScreenState extends State<_GroupScreen> {
       _groupController.createGroup().then((value) {
         if (value == null) {
           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text('방 생성에 오류가 발생했습니다.')));
+            content: Text('방 생성에 오류가 발생했습니다.'),));
         } else {
           _groupId = value;
           context.read<GroupNotifier>().setGroupId(value);
@@ -67,6 +68,7 @@ class _GroupScreenState extends State<_GroupScreen> {
             }
             setState(() {
               isGroupCreated = true;
+              context.read<GroupNotifier>().checkReady();
             });
           });
         }
@@ -95,6 +97,7 @@ class _GroupScreenState extends State<_GroupScreen> {
           context.read<GroupNotifier>().set(value.members);
         }
       });
+      context.read<GroupNotifier>().checkReady();
     });
   }
 
@@ -159,101 +162,59 @@ class _GroupScreenState extends State<_GroupScreen> {
                 visible: isGroupCreated,
                 child: Center(
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Expanded(flex: 1, child: SizedBox()),
+                      const Expanded(flex: 1, child: SizedBox(),),
                       Expanded(
-                        flex: 2,
-                        child: Row(
-                          children: [
-                            const Expanded(flex: 1, child: SizedBox()),
-                            Expanded(
-                              flex: 1,
-                              child: GroupUser(
-                                userIdx: 0,
-                                isLeader: true,
-                                groupController: _groupController,
-                              ),
+                        flex: 8,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 32.w),
+                          child: GridView.builder(
+                            itemCount: 6,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
                             ),
-                            const Expanded(flex: 1, child: SizedBox()),
-                            Expanded(
-                              flex: 1,
-                              child: GroupUser(
-                                userIdx: 1,
-                                isLeader: false,
+                            itemBuilder: (BuildContext context, int index) {
+                              return GroupUser(
+                                userIdx: index,
+                                isLeader: index == 0,
+                                leaderAuth: widget.isLeader,
+                                isReady: (context.watch<GroupNotifier>().length < index + 1) ?
+                                  false :
+                                  context.watch<GroupNotifier>().members[index].isReady,
                                 groupController: _groupController,
-                              ),
-                            ),
-                            const Expanded(flex: 1, child: SizedBox()),
-                          ],
+                              );
+                            },
+                          ),
                         ),
                       ),
-                      Expanded(
-                        flex: 2,
-                        child: Row(
-                          children: [
-                            const Expanded(flex: 1, child: SizedBox()),
-                            Expanded(
-                              flex: 1,
-                              child: GroupUser(
-                                userIdx: 2,
-                                isLeader: false,
-                                groupController: _groupController,
-                              ),
-                            ),
-                            const Expanded(flex: 1, child: SizedBox()),
-                            Expanded(
-                              flex: 1,
-                              child: GroupUser(
-                                userIdx: 3,
-                                isLeader: false,
-                                groupController: _groupController,
-                              ),
-                            ),
-                            const Expanded(flex: 1, child: SizedBox()),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: Row(
-                          children: [
-                            const Expanded(flex: 1, child: SizedBox()),
-                            Expanded(
-                              flex: 1,
-                              child: GroupUser(
-                                userIdx: 4,
-                                isLeader: false,
-                                groupController: _groupController,
-                              ),
-                            ),
-                            const Expanded(flex: 1, child: SizedBox()),
-                            Expanded(
-                              flex: 1,
-                              child: GroupUser(
-                                userIdx: 6,
-                                isLeader: false,
-                                groupController: _groupController,
-                              ),
-                            ),
-                            const Expanded(flex: 1, child: SizedBox()),
-                          ],
-                        ),
-                      ),
+                      const Expanded(flex: 1, child: SizedBox(),),
+                      widget.isLeader ?
                       LunchButton(
                         context: context,
-                        isEnabled: context.watch<GroupNotifier>().isEnabled,
+                        isEnabled: context.watch<GroupNotifier>().isAllReady,
                         enabledText: "투표 시작하기",
                         disabledText: "투표 시작하기",
-                        pressedCallback: (){
+                        pressedCallback: () {
                           _timer?.cancel();
                           Navigator.of(context).push(
                               MaterialPageRoute(builder: (context) => FirstVoteReadyScreen(groupId: _groupId))
                           );
                         },
                         notifyText: "모든 참가자가 준비완료 상태여야 투표를 시작할 수 있습니다.",
+                      ) :
+                      LunchButton(
+                        context: context,
+                        isEnabled: true,
+                        enabledText: "준비 완료하기",
+                        disabledText: "",
+                        pressedCallback: () {
+                          // TODO: 준비 상태 변경
+                        },
+                        notifyText: "",
                       ),
-                      const Expanded(flex: 1, child: SizedBox()),
+                      const Expanded(flex: 1, child: SizedBox(),),
                     ],
                   ),
                 ),

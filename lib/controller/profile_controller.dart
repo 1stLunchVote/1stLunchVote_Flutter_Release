@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:lunch_vote/model/profile/profile_info.dart';
 import 'package:lunch_vote/repository/lunch_vote_service.dart';
@@ -25,7 +26,7 @@ class ProfileController{
   Future<ProfileInfo?> getProfileInfo() async{
     dio.options.headers["Authorization"] = await _spfManager.getUserToken();
     dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
-    _lunchVoteService = LunchVoteService(dio);
+    _lunchVoteService = LunchVoteService(dio, baseUrl: dotenv.get('BASE_URL'));
 
     var res = await _lunchVoteService.getProfileInfo();
     if (res.success){

@@ -1,10 +1,13 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:lunch_vote/controller/profile_controller.dart';
+import 'package:lunch_vote/controller/nickname_controller.dart';
 import 'package:lunch_vote/styles.dart';
 import 'package:lunch_vote/view/screen/login_screen.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
+import 'package:lunch_vote/view/widget/awesome_dialog.dart';
 import 'package:lunch_vote/view/widget/custom_clip_path.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -16,10 +19,10 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   final ProfileController _profileController = ProfileController();
+  final nicknameController = Get.put(NicknameController());
   bool _nicknameChange = false;
 
-  final TextEditingController _nickNameController = TextEditingController();
-  String _nickname = "";
+  final TextEditingController _nickNameEditingController = TextEditingController();
 
   final _formKey = GlobalKey<FormState>();
 
@@ -33,6 +36,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: BasicAppbar(
+        backVisible: true,
+        appbarTitle: "마이페이지",
+        isTitleCenter: false,
+        context: context,
+        onPop: () {
+          Navigator.of(context).pop();
+        },
+      ),
       resizeToAvoidBottomInset: false,
       body: Form(
         key: _formKey,
@@ -44,14 +56,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 return const Center(child: CircularProgressIndicator());
               }
               else {
-                _nickname = snapshot.data!.nickname;
                 return Stack(
                   children: [
                     Center(
                       child: Column(
                         children: [
                           const SizedBox(
-                            height: 120,
+                            height: 56,
                           ),
                           SizedBox(
                             height: 200,
@@ -70,9 +81,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         const SizedBox(
                           height: 20,
                         ),
-                        Text(
-                          "$_nickname 님",
-                          style: Theme.of(context).textTheme.titleLarge
+                        Obx(() =>
+                            Text("${nicknameController.nickname} 님",
+                                style: Theme.of(context).textTheme.titleLarge)
                         ),
                         Visibility(
                           visible: !_nicknameChange,
@@ -93,28 +104,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         Visibility(
                             visible: _nicknameChange,
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0),
+                              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                               child: TextFormField(
-                                controller: _nickNameController,
+                                controller: _nickNameEditingController,
                                 decoration: InputDecoration(
-                                    labelText: '변경할 닉네임을 입력하세요.',
+                                    labelText: '닉네임 변경',
                                     suffixIcon: IconButton(
                                         onPressed: () {
                                           setState(() {
-                                            if (_nickNameController.text
+                                            if (_nickNameEditingController.text
                                                 .isEmpty) {
                                               _nicknameChange = false;
                                             } else {
-                                              _nickNameController.text = '';
+                                              _nickNameEditingController.text = '';
                                             }
                                           });
                                         },
-                                        icon: Icon(Icons.close,
-                                          color: Theme
-                                              .of(context)
-                                              .colorScheme
-                                              .primary,))
+                                        icon: const Icon(Icons.close)
+                                    )
                                 ),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
@@ -124,11 +131,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     return '닉네임 길이를 2~8로 해주세요.';
                                   }
                                   return null;
-                                },
-                                onSaved: (value){
-                                  setState(() {
-                                    _nickname = value!;
-                                  });
                                 },
                               ),
                             ))
@@ -146,7 +148,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             if (_formKey.currentState!.validate()) {
                               _formKey.currentState!.save();
                               _profileController
-                                  .changeNickname(_nickname)
+                                  .changeNickname(_nickNameEditingController.text)
                                   .then((value) {
                                 String complete = value != null ? '성공' : '실패';
                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -156,7 +158,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 setState(() {
                                   _nicknameChange = false;
                                   // future 재선언 하여 프로필 정보 리로드
+
                                   future = _profileController.getProfileInfo();
+                                  nicknameController.setNickname(_nickNameEditingController.text);
                                 });
                               });
                             }
@@ -213,22 +217,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<bool> _showDialog() async{
-    bool? canExit;
-    AwesomeDialog dlg = AwesomeDialog(
+    var res = await LunchAwesomeDialog(
       context: context,
-      dialogType: DialogType.warning,
-      animType: AnimType.scale,
-      title: "로그아웃",
-      desc: "정말로 로그아웃 하시겠습니까?",
-      dismissOnTouchOutside: true,
-      btnCancelOnPress: () => canExit = false,
-      btnOkOnPress: () => canExit = true,
-      btnOkText: "예",
-      btnCancelText: "아니요",
+      title: "방 나가기",
+      body: "정말로 로그아웃 하시겠습니까?",
+      okText: '예',
+      cancelText: '아니오',
+    ).showDialog();
 
-    );
-    await dlg.show();
-
-    return Future.value(canExit);
+    return Future.value(res);
   }
 }

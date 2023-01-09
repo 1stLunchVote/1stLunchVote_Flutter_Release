@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../model/vote/final_result.dart';
 import '../repository/lunch_vote_service.dart';
@@ -18,7 +19,7 @@ class ResultController{
     this.groupId = groupId;
     dio.options.headers["Authorization"] = await _spfManager.getUserToken();
     dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
-    _lunchVoteService = LunchVoteService(dio);
+    _lunchVoteService = LunchVoteService(dio, baseUrl: dotenv.get('BASE_URL'));
 
     var res = await _lunchVoteService.getFinalResult(groupId);
     if (res.success){
