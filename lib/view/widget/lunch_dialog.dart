@@ -5,16 +5,16 @@ class LunchDialog extends StatefulWidget {
   const LunchDialog({
     Key? key,
     required this.title,
-    required this.textfield_label_text,
-    required this.disabled_button_text,
-    required this.enabled_button_text,
+    required this.labelText,
+    required this.disabledText,
+    required this.enabledText,
 
   }) : super(key: key);
 
   final String title;
-  final String textfield_label_text;
-  final String disabled_button_text;
-  final String enabled_button_text;
+  final String labelText;
+  final String disabledText;
+  final String enabledText;
 
 
   @override
@@ -29,9 +29,9 @@ class _LunchDialogState extends State<LunchDialog> {
   @override
   Widget build(BuildContext context) {
     String title = widget.title;
-    String textfield_label_text = widget.textfield_label_text;
-    String disabled_button_text = widget.disabled_button_text;
-    String enabled_button_text = widget.enabled_button_text;
+    String labelText = widget.labelText;
+    String disabledText = widget.disabledText;
+    String enabledText = widget.enabledText;
     return AlertDialog(
       titlePadding: EdgeInsets.all(24), //24
       contentPadding: EdgeInsets.all(24), // 24 0 24 0
@@ -54,7 +54,7 @@ class _LunchDialogState extends State<LunchDialog> {
               controller: _emailController,
               decoration: InputDecoration(
                 border: const OutlineInputBorder(),
-                labelText: textfield_label_text,
+                labelText: labelText,
                 helperText: '',
                 suffixIcon: IconButton(
                   onPressed: _emailController.clear,
@@ -72,7 +72,7 @@ class _LunchDialogState extends State<LunchDialog> {
                   Navigator.pop(context);
                 },
                 style: TextButton.styleFrom(),
-                child: Text(disabled_button_text,
+                child: Text(disabledText,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Theme.of(context).primaryColor,
                   ),
@@ -81,7 +81,7 @@ class _LunchDialogState extends State<LunchDialog> {
               LunchButton(
                   context: context,
                   isEnabled: true,
-                  enabledText: enabled_button_text,
+                  enabledText: enabledText,
                   disabledText: 'disabledText',
                   pressedCallback: () {
                     Navigator.pop(context);
