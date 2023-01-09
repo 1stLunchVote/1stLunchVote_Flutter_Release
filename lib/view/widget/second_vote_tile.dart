@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lunch_vote/styles.dart';
 import 'package:provider/provider.dart';
 
 import '../../controller/second_vote_controller.dart';
@@ -33,7 +34,7 @@ class _SecondVoteTileState extends State<SecondVoteTile> {
         Divider(
           height: 1,
           thickness: 1,
-          color: Theme.of(context).colorScheme.outline,
+          color: Theme.of(context).brightness == Brightness.light ? textLightSecondary : textDarkSecondary,
         ),
         IntrinsicHeight(
           child: InkWell(
@@ -52,7 +53,7 @@ class _SecondVoteTileState extends State<SecondVoteTile> {
                 VerticalDivider(
                   thickness: 1,
                   width: 1,
-                  color: Theme.of(context).colorScheme.outline,
+                  color: Theme.of(context).brightness == Brightness.light ? textLightSecondary : textDarkSecondary,
                 ),
                 Expanded(
                   flex: 8,
@@ -64,7 +65,7 @@ class _SecondVoteTileState extends State<SecondVoteTile> {
                 VerticalDivider(
                   thickness: 1,
                   width: 1,
-                  color: Theme.of(context).colorScheme.outline,
+                  color: Theme.of(context).brightness == Brightness.light ? textLightSecondary : textDarkSecondary,
                 ),
                 Expanded(
                   flex: 17,
@@ -83,7 +84,7 @@ class _SecondVoteTileState extends State<SecondVoteTile> {
                 VerticalDivider(
                   thickness: 1,
                   width: 1,
-                  color: Theme.of(context).colorScheme.outline,
+                  color: Theme.of(context).brightness == Brightness.light ? textLightSecondary : textDarkSecondary,
                 ),
                 Expanded(
                     flex: 8,
@@ -91,7 +92,7 @@ class _SecondVoteTileState extends State<SecondVoteTile> {
                       padding: const EdgeInsets.all(5.0),
                       child: Obx(() => Visibility(
                           visible: widget.controller.selectedId == widget.menuId,
-                          child: Image.asset("assets/images/ic_launcher.png"),
+                          child: Image.asset("assets/images/lunch_vote_splash.png"),
                         ),
                       ),
                     )
@@ -99,7 +100,7 @@ class _SecondVoteTileState extends State<SecondVoteTile> {
                 VerticalDivider(
                   thickness: 1,
                   width: 1,
-                  color: Theme.of(context).colorScheme.outline,
+                  color: Theme.of(context).brightness == Brightness.light ? textLightSecondary : textDarkSecondary,
                 ),
               ],
             ),
@@ -108,7 +109,7 @@ class _SecondVoteTileState extends State<SecondVoteTile> {
         Divider(
           height: 1,
           thickness: 1,
-          color: Theme.of(context).colorScheme.outline,
+          color: Theme.of(context).brightness == Brightness.light ? textLightSecondary : textDarkSecondary,
         ),
       ],
     );

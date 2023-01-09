@@ -4,13 +4,17 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:lunch_vote/controller/nickname_controller.dart';
 import 'package:lunch_vote/controller/second_vote_controller.dart';
 import 'package:lunch_vote/controller/vote_state_controller.dart';
 import 'package:lunch_vote/styles.dart';
 import 'package:lunch_vote/view/screen/vote/result_screen.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
 import 'package:lunch_vote/view/widget/custom_clip_path.dart';
+import 'package:lunch_vote/view/widget/lunch_button.dart';
 import 'package:lunch_vote/view/widget/second_vote_tile.dart';
+
+import '../../widget/awesome_dialog.dart';
 
 class SecondVoteScreen extends StatelessWidget {
   final String groupId;
@@ -32,6 +36,8 @@ class SecondVotePage extends StatefulWidget {
 
 class _SecondVotePageState extends State<SecondVotePage> {
   final _secondVoteController = Get.put(SecondVoteController());
+  // Todo : 닉네임 컨트롤러로 사용자 님의 투표 출력할 지 고민
+  final _nicknameController = Get.put(NicknameController());
   final _voteStateController = VoteStateController();
   late Future future;
   
@@ -64,47 +70,32 @@ class _SecondVotePageState extends State<SecondVotePage> {
         return res;
       },
       child: Scaffold(
-        backgroundColor: mainBackgroundColor,
         appBar: BasicAppbar(
           backVisible: false,
-          appbarTitle: "투표 2단계 - 최종 투표",
-          isTitleCenter: false,
+          appbarTitle: "2차 투표",
+          isTitleCenter: true,
           context: context,
-          trailingList: [
-            IconButton(
-                onPressed: (){},
-                icon: const Icon(Icons.more_vert))
-          ],
         ),
         body: Stack(
           children: [
-            ClipPath(
-              clipper: CustomClipPath(),
-              child: Container(
-                alignment: Alignment.bottomCenter,
-                width: double.infinity,
-                height: double.infinity,
-                color: Theme.of(context).colorScheme.surfaceVariant,
-              ),
-            ),
             Center(
               child: Padding(
                 padding: const EdgeInsets.all(20.0),
                 child: Container(
-                  width: 320.w,
+                  width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                       border: Border.all(
-                          color: Theme.of(context).colorScheme.outline,
+                          color: Theme.of(context).brightness == Brightness.light ? textLightSecondary : textDarkSecondary,
                           width: 1.0),
                       color: Theme.of(context).colorScheme.background,
-                      boxShadow: [
-                        BoxShadow(
+                      boxShadow:  Theme.of(context).brightness == Brightness.light ? [
+                       BoxShadow(
                           color: Colors.grey.withOpacity(0.5),
                           blurRadius: 4,
                           offset:
                               const Offset(4, -4), // changes position of shadow
                         ),
-                      ]),
+                      ] : []),
                   child: ListView(
                     scrollDirection: Axis.vertical,
                     children: [
@@ -113,10 +104,13 @@ class _SecondVotePageState extends State<SecondVotePage> {
                           const SizedBox(
                             height: 30,
                           ),
-                          const Text(
-                            "투표 용지",
-                            style: TextStyle(
-                                fontSize: 36, fontWeight: FontWeight.w800),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(_nicknameController.nickname.value,
+                                style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: primary1)),
+                              Text(" 님의 투표", style: Theme.of(context).textTheme.headlineMedium)
+                            ],
                           ),
                           const SizedBox(
                             height: 30,
@@ -196,18 +190,22 @@ class _SecondVotePageState extends State<SecondVotePage> {
             )
           ],
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: Obx(() => Visibility(
-          visible:
-              !_voteCompleted && _secondVoteController.selectedId.value.isNotEmpty,
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 50),
-            child: ElevatedButton(
-                onPressed: () async {
+        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+        floatingActionButton: Obx(() => Padding(
+          padding: const EdgeInsets.fromLTRB(0, 0, 20, 60),
+          child: Visibility(
+            visible: !_voteCompleted,
+            child: LunchButton(
+                enabledText: "선택 완료",
+                context: context,
+                isEnabled: !_voteCompleted && _secondVoteController.selectedId.value.isNotEmpty,
+                disabledText: '선택 대기',
+                pressedCallback: () async{
                   // 투표
                   await _secondVoteController.voteItem();
                   var temp = await _voteStateController
                       .fetchSecondVoteResult(widget.groupId);
+
                   setState(() {
                     _voteCompleted = true;
                   });
@@ -227,11 +225,7 @@ class _SecondVotePageState extends State<SecondVotePage> {
                         MaterialPageRoute(builder: (context) => ResultScreen(groupId: widget.groupId))
                     );
                   }
-                },
-                child: const Padding(
-                  padding: EdgeInsets.fromLTRB(12, 8, 12, 8),
-                  child: Text("투표 완료"),
-                )
+                }, notifyText: '최소 1가지의 아이템을 투표해야 합니다.',
             ),
           ),
         ),
@@ -240,22 +234,13 @@ class _SecondVotePageState extends State<SecondVotePage> {
     );
   }
   Future<bool> _showDialog() async{
-    bool? canExit;
-    AwesomeDialog dlg = AwesomeDialog(
-        context: context,
-        dialogType: DialogType.warning,
-        animType: AnimType.scale,
-        title: "투표 종료",
-        desc: "정말로 투표를 종료하시겠습니까? 투표가 모두 종료됩니다.",
-        dismissOnTouchOutside: true,
-        btnCancelOnPress: () => canExit = false,
-        btnOkOnPress: () => canExit = true,
-        btnOkText: "예",
-        btnCancelText: "아니요",
-
-    );
-    await dlg.show();
-
-    return Future.value(canExit);
+    var res = await LunchAwesomeDialog(
+      context: context,
+      title: "투표 종료",
+      body: "정말로 투표를 종료하시겠습니까? 투표가 모두 종료됩니다.",
+      okText: '예',
+      cancelText: '아니오',
+    ).showDialog();
+    return Future.value(res);
   }
 }
