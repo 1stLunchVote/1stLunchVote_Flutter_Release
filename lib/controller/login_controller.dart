@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:dio/dio.dart';
 import 'package:lunch_vote/model/login/user_info.dart';
@@ -14,7 +15,7 @@ class LoginController{
     final dio = Dio();
     dio.options.headers["Content-Type"] = "application/json";
     dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
-    _lunchVoteService = LunchVoteService(dio);
+    _lunchVoteService = LunchVoteService(dio, baseUrl: dotenv.get('BASE_URL'));
   }
 
 
