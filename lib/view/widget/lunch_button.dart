@@ -22,9 +22,12 @@ class LunchButton extends ElevatedButton {
   });
 
   @override
-  Widget? get child => Text(
-    isEnabled ? enabledText : disabledText,
-    style: Theme.of(context).textTheme.titleSmall?.copyWith(color: textDarkMain,),
+  Widget? get child => Padding(
+    padding: const EdgeInsets.all(8),
+    child: Text(
+      isEnabled ? enabledText : disabledText,
+      style: Theme.of(context).textTheme.titleSmall?.copyWith(color: textDarkMain,),
+    ),
   );
 
   @override
