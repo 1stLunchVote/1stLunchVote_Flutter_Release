@@ -6,13 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lunch_vote/model/group/group_info.dart';
-import 'package:lunch_vote/model/group/group_notifier.dart';
-import 'package:lunch_vote/view/screen/vote/first_vote_ready_screen.dart';
+import 'package:lunch_vote/view/screen/vote/first_vote_screen.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
 import 'package:lunch_vote/view/widget/awesome_dialog.dart';
 import 'package:lunch_vote/view/widget/group_user.dart';
 import 'package:lunch_vote/view/widget/lunch_button.dart';
-import 'package:provider/provider.dart';
 import 'package:lunch_vote/controller/group_controller.dart';
 
 class GroupScreen extends StatelessWidget {
@@ -139,7 +137,6 @@ class _GroupScreenState extends State<_GroupScreen> {
             if (res == true){
               var message = await _groupController.withdrawalUser(_groupId);
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
-
               Navigator.of(context).popUntil((route) => route.isFirst);
             }
             return res;
@@ -194,8 +191,13 @@ class _GroupScreenState extends State<_GroupScreen> {
                         disabledText: "투표 시작하기",
                         pressedCallback: () {
                           _timer?.cancel();
+                          Navigator.of(context).pop();
                           Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => FirstVoteReadyScreen(groupId: _groupId))
+                            MaterialPageRoute(
+                              builder: (context) => FirstVoteScreen(
+                                groupId: _groupId,
+                              ),
+                            ),
                           );
                         },
                         notifyText: "모든 참가자가 준비완료 상태여야 투표를 시작할 수 있습니다.",
