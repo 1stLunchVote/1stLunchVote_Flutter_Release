@@ -12,12 +12,7 @@ class FriendlistScreen extends StatefulWidget {
 }
 
 class _FriendlistScreenState extends State<FriendlistScreen> {
-
-  final TextEditingController _emailController = TextEditingController();
   String email = "";
-
-  final _formKey = GlobalKey<FormState>();
-
   late Future future;
 
   @override
@@ -62,10 +57,25 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                               context: context,
                               builder: (BuildContext context) {
                                 return LunchDialog(
-                                    title: '친구 추가하기',
-                                    textfield_label_text: '이메일',
-                                    disabled_button_text: '취소',
-                                    enabled_button_text: '친구 추가'
+                                  context: context,
+                                  titleText: '친구 추가하기',
+                                  labelText: '이메일',
+                                  okBtnText: '친구 추가',
+                                  onSaved: (value) {
+                                    email = value!;
+                                  },
+                                  validator: (value) {
+                                    if (value == null) {
+                                      return "이메일을 입력해주세요.";
+                                    } else if (value.isEmpty) {
+                                      return "이메일을 입력해주세요.";
+                                    }
+                                    return null;
+                                  },
+                                  okOnPressed: () {
+                                    Navigator.pop(context);
+                                    // TODO 서버로 친구 추가 요청 보내는 작업 처리해야 함!
+                                  },
                                 );
                               }
                           );

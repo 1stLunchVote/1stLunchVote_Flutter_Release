@@ -6,7 +6,7 @@ class LunchButton extends ElevatedButton {
   final bool isEnabled;
   final String enabledText;
   final String disabledText;
-  final Function() pressedCallback;
+  final VoidCallback? pressedCallback;
   final String notifyText;
 
   const LunchButton({
@@ -16,9 +16,9 @@ class LunchButton extends ElevatedButton {
     required this.context,
     required this.isEnabled,
     required this.enabledText,
-    required this.disabledText,
+    this.disabledText = "",
     required this.pressedCallback,
-    required this.notifyText,
+    this.notifyText = "",
   });
 
   @override
