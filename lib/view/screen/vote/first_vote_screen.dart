@@ -15,7 +15,6 @@ import 'package:lunch_vote/controller/menu_controller.dart';
 import 'package:provider/provider.dart';
 import '../../../model/menu/menu_info.dart';
 import '../../../model/vote/first_vote_notifier.dart';
-import '../../../model/vote/vote_item_notifier.dart';
 
 class FirstVoteScreen extends StatelessWidget {
 
