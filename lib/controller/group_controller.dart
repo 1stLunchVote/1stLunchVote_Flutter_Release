@@ -53,6 +53,9 @@ class GroupController extends GetxController {
   }
 
   Future<String> withdrawalUser(String groupId) async {
+    dio.options.headers["Authorization"] = await _spfManager.getUserToken();
+    dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
+    _lunchVoteService = LunchVoteService(dio, baseUrl: dotenv.get('BASE_URL'));
     var res = await _lunchVoteService.withdrawalUser(groupId);
     return res.message;
   }

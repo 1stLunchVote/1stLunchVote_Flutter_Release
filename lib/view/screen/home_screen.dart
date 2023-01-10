@@ -19,7 +19,6 @@ import 'package:lunch_vote/model/group_id_notifier.dart';
 import 'package:lunch_vote/view/screen/profile_screen.dart';
 import 'package:lunch_vote/view/screen/template/template_list_screen.dart';
 import 'package:lunch_vote/view/screen/template/template_screen.dart';
-import 'package:lunch_vote/view/screen/vote/first_vote_ready_screen.dart';
 import 'package:lunch_vote/view/screen/vote/second_vote_screen.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
 import 'package:lunch_vote/view/widget/custom_clip_path.dart';
