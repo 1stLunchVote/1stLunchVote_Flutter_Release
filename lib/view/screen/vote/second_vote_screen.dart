@@ -13,6 +13,7 @@ import 'package:lunch_vote/view/widget/appbar_widget.dart';
 import 'package:lunch_vote/view/widget/custom_clip_path.dart';
 import 'package:lunch_vote/view/widget/lunch_button.dart';
 import 'package:lunch_vote/view/widget/second_vote_tile.dart';
+import 'package:step_progress_indicator/step_progress_indicator.dart';
 
 import '../../widget/awesome_dialog.dart';
 
@@ -76,11 +77,65 @@ class _SecondVotePageState extends State<SecondVotePage> {
           isTitleCenter: true,
           context: context,
         ),
-        body: Stack(
-          children: [
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      CircularStepProgressIndicator(
+                        totalSteps: 60,
+                        currentStep: 15,
+                        stepSize: 8,
+                        selectedColor: Colors.transparent,
+                        unselectedColor: primary1,
+                        padding: 0,
+                        width: 88.w,
+                        height: 88.h,
+                        selectedStepSize: 8,
+                        roundedCap: (_, __) => true,
+                      ),
+                      Center(
+                        child: Text('45', textScaleFactor: 1.0, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 30,
+                            color: Theme.of(context).brightness == Brightness.light ? textLightSecondary : textDarkSecondary)),
+                      )
+                    ],
+                  ),
+                  SizedBox(width: 28.w),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      StepProgressIndicator(
+                        totalSteps: 6,
+                        currentStep: 2,
+                        padding: 6.w,
+                        roundedEdges: const Radius.circular(4),
+                        fallbackLength: 256.w,
+                        size: 12.h,
+                        selectedColor: primary1,
+                        unselectedColor: Theme.of(context).brightness == Brightness.light ? textLightHint : textDarkHint,
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Text("현재 ", textScaleFactor: 1.0, style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: Theme.of(context).brightness == Brightness.light ? textLightSecondary : textDarkSecondary)
+                          ),
+                          Text("2", textScaleFactor: 1.0, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: primary1),),
+                          Text("명이 투표를 완료했습니다! ", textScaleFactor: 1.0, style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              color: Theme.of(context).brightness == Brightness.light ? textLightSecondary : textDarkSecondary)
+                          ),
+                        ],
+                      )
+                    ],
+                  )
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
@@ -98,6 +153,7 @@ class _SecondVotePageState extends State<SecondVotePage> {
                       ] : []),
                   child: ListView(
                     scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
                     children: [
                       Column(
                         children: [
@@ -187,8 +243,8 @@ class _SecondVotePageState extends State<SecondVotePage> {
                   ),
                 ),
               ),
-            )
-          ],
+            ],
+          ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         floatingActionButton: Obx(() => Padding(

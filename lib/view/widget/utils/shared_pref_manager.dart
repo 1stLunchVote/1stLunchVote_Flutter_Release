@@ -32,4 +32,22 @@ class SharedPrefManager{
       return null;
     }
   }
+
+  void setGroupId(String groupId) async{
+    final spf = await SharedPreferences.getInstance();
+    spf.setString('groupId', groupId);
+  }
+
+  Future<String?> getGroupId() async{
+    final spf = await SharedPreferences.getInstance();
+    try{
+      return spf.getString('groupId');
+    } catch (e){  }
+    return null;
+  }
+
+  void clearGroupId() async{
+    final spf = await SharedPreferences.getInstance();
+    spf.remove('groupId');
+  }
 }
