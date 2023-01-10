@@ -134,8 +134,8 @@ class _SecondVotePageState extends State<SecondVotePage> {
                   )
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
+              const SizedBox(height: 20),
+              Expanded(
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
@@ -151,98 +151,99 @@ class _SecondVotePageState extends State<SecondVotePage> {
                               const Offset(4, -4), // changes position of shadow
                         ),
                       ] : []),
-                  child: ListView(
-                    scrollDirection: Axis.vertical,
-                    shrinkWrap: true,
-                    children: [
-                      Column(
-                        children: [
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(_nicknameController.nickname,
-                                style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: primary1)),
-                              Text(" 님의 투표", style: Theme.of(context).textTheme.headlineMedium)
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                          FutureBuilder(
-                              future: future,
-                              builder: (context, snapshot) {
-                                //해당 부분은 data를 아직 받아 오지 못했을때 실행되는 부분을 의미한다.
-                                if (!_voteCompleted && snapshot.data == null) {
-                                  return const Center(
-                                      child: CircularProgressIndicator());
-                                }
-                                //error가 발생하게 될 경우 반환하게 되는 부분
-                                else if (snapshot.hasError) {
-                                  return Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      'Error: ${snapshot.error}',
-                                      style: TextStyle(fontSize: 15),
-                                    ),
-                                  );
-                                } else if (_voteCompleted) {
-                                  return Center(
-                                      child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      const SizedBox(
-                                        height: 100,
+                  child: CustomScrollView(
+                    slivers: [
+                      SliverFillRemaining(
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 30,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(_nicknameController.nickname,
+                                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: primary1)),
+                                Text(" 님의 투표", style: Theme.of(context).textTheme.headlineMedium)
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 30,
+                            ),
+                            FutureBuilder(
+                                future: future,
+                                builder: (context, snapshot) {
+                                  //해당 부분은 data를 아직 받아 오지 못했을때 실행되는 부분을 의미한다.
+                                  if (!_voteCompleted && snapshot.data == null) {
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  }
+                                  //error가 발생하게 될 경우 반환하게 되는 부분
+                                  else if (snapshot.hasError) {
+                                    return Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        'Error: ${snapshot.error}',
+                                        style: TextStyle(fontSize: 15),
                                       ),
-                                      const CircularProgressIndicator(),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Text(
-                                        "다른 참가자들이 투표중입니다.\n잠시만 기다려주세요...",
-                                        textAlign: TextAlign.center,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleLarge
-                                            ?.copyWith(
-                                                color: Theme.of(context)
-                                                    .colorScheme
-                                                    .outline),
-                                      )
-                                    ],
-                                  ));
-                                }
-                                // 데이터를 정상적으로 받아오게 되면 다음 부분을 실행하게 되는 것이다.
-                                else {
-                                  return ListView.builder(
-                                      itemCount: snapshot.data!.length,
-                                      shrinkWrap: true,
-                                      physics: const ClampingScrollPhysics(),
-                                      itemBuilder: (context, index) {
-                                        return Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                20, 0, 20, 20),
-                                            child: SecondVoteTile(
-                                              foodName: snapshot
-                                                  .data![index].menuName,
-                                              imgUrl:
-                                                  snapshot.data![index].image,
-                                              index: index,
-                                              menuId:
-                                                  snapshot.data![index].menuId,
-                                              controller: _secondVoteController,
-                                            ));
-                                      });
-                                }
-                              }),
-                        ],
-                      )
+                                    );
+                                  } else if (_voteCompleted) {
+                                    return Center(
+                                        child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        const SizedBox(
+                                          height: 100,
+                                        ),
+                                        const CircularProgressIndicator(),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text(
+                                          "다른 참가자들이 투표중입니다.\n잠시만 기다려주세요...",
+                                          textAlign: TextAlign.center,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleLarge
+                                              ?.copyWith(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .outline),
+                                        )
+                                      ],
+                                    ));
+                                  }
+                                  // 데이터를 정상적으로 받아오게 되면 다음 부분을 실행하게 되는 것이다.
+                                  else {
+                                    return ListView.builder(
+                                        itemCount: snapshot.data!.length,
+                                        shrinkWrap: true,
+                                        physics: const ClampingScrollPhysics(),
+                                        itemBuilder: (context, index) {
+                                          return Padding(
+                                              padding: const EdgeInsets.fromLTRB(
+                                                  20, 0, 20, 20),
+                                              child: SecondVoteTile(
+                                                foodName: snapshot
+                                                    .data![index].menuName,
+                                                imgUrl:
+                                                    snapshot.data![index].image,
+                                                index: index,
+                                                menuId:
+                                                    snapshot.data![index].menuId,
+                                                controller: _secondVoteController,
+                                              ));
+                                        });
+                                  }
+                                }),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
               ),
+              const SizedBox(height: 20),
             ],
           ),
         ),
