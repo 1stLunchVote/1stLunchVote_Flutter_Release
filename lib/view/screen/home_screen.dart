@@ -49,27 +49,11 @@ class _HomeScreenState extends State<HomeScreen> {
         FlutterNativeSplash.remove();
       }
     );
-    initInfo();
-  }
-
-  initInfo() async {
-    // await setupFlutterNotifications();
-    // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    // FirebaseMessaging.onMessage.listen((message) {
-    //   if (message.data.containsKey('groupId')){
-    //     print(message.data['groupId']);
-    //
-    //     context.read<GroupIdNotifier>().setIndex(message.data['groupId']);
-    //   }
-    //   showFlutterNotification(message);
-    // });
-    // FirebaseMessaging.onMessageOpenedApp.listen((event) {
-    // });
   }
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context, designSize: const Size(360, 800));
+    ScreenUtil.init(context, designSize: const Size(412, 812));
     return Scaffold(
       // 앱바 기본 높이 56dp
       appBar: AppBar(),

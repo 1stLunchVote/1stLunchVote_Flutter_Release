@@ -8,11 +8,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:lunch_vote/controller/notification_controller.dart';
 import 'package:lunch_vote/model/group_id_notifier.dart';
 import 'package:lunch_vote/styles.dart';
+import 'package:lunch_vote/view/screen/group/group_screen.dart';
 import 'package:lunch_vote/view/screen/home_screen.dart';
 import 'package:lunch_vote/view/screen/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -21,17 +24,25 @@ import 'package:lunch_vote/view/screen/profile_screen.dart';
 import 'package:lunch_vote/view/screen/vote/second_vote_screen.dart';
 import 'package:lunch_vote/view/widget/utils/shared_pref_manager.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'firebase_options.dart';
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
 
 late AndroidNotificationChannel channel;
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+final NotificationController notificationController = Get.put(NotificationController());
+final SharedPrefManager spfManager = SharedPrefManager();
 
 @pragma("vm:entry-point")
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  if (message.data.containsKey('groupId')){
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('groupId', message.data['groupId']);
+  }
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  // showNotification(message);
+  print('background 호출됨');
 }
 
 Future<void> main() async {
@@ -83,14 +94,29 @@ Future initializeNotification() async{
   const InitializationSettings initializationSettings =
   InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
 
-  flutterLocalNotificationsPlugin.initialize(initializationSettings, onDidReceiveNotificationResponse: (response){
-    // Todo : 그룹 초대 화면으로 넘어가기
-    print("payload : ${response.payload}");
-    Get.to(() => const ProfileScreen());
+  flutterLocalNotificationsPlugin.initialize(initializationSettings, onDidReceiveNotificationResponse: (response) async {
+    var groupId = await spfManager.getGroupId();
+    print("response groupId : $groupId");
+    if(groupId != null){
+      notificationController.joinGroup(groupId).then((value) {
+        value != null ? Get.to(() => GroupScreen(isLeader: false, groupId: groupId))
+            : Get.to(() => const ProfileScreen());
+        spfManager.clearGroupId();
+      }
+      );
+    }
   });
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     if (message.notification != null) {
+      print("message : $message");
+      // Todo : 친구 초대 알림이 온 경우 따로 빼기
+      if (message.data.containsKey('groupId')) {
+        spfManager.setGroupId(message.data['groupId']);
+      }
+        // if (message.data.containsKey('groupId')){
+      //   notificationController.setGroupId(message.data['groupId']);
+      // }
       showNotification(message);
     }
   });
@@ -148,11 +174,18 @@ Future requestPermission(FirebaseMessaging messaging) async{
   );
 }
 
-void _handleMessage(RemoteMessage message) {
-  Get.to(() => const ProfileScreen());
+void _handleMessage(RemoteMessage message) async{
+  var groupId = await spfManager.getGroupId();
+  print("groupId : ${groupId}");
+  if (groupId != null){
+    notificationController.joinGroup(groupId).then((value) {
+      value != null ? Get.to(() => GroupScreen(isLeader: false, groupId: groupId))
+          : Get.to(() => const ProfileScreen());
+      spfManager.clearGroupId();
+    }
+    );
+  }
 }
-
-
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);

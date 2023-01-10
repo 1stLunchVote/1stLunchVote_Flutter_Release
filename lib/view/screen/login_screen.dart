@@ -28,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context, designSize: const Size(360, 800));
+    ScreenUtil.init(context, designSize: const Size(412, 812));
     return Form(
       key: _formKey,
       child: Scaffold(
