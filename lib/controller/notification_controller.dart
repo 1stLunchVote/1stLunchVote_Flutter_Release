@@ -7,19 +7,9 @@ import '../view/widget/utils/shared_pref_manager.dart';
 
 class NotificationController extends GetxController{
   final dio = Dio();
+  bool firstCalled = true;
   late LunchVoteService _lunchVoteService;
   final SharedPrefManager _spfManager = SharedPrefManager();
-
-  RxString _groupId = ''.obs;
-  String get groupId => _groupId.value;
-
-  void setGroupId(String id){
-    _groupId.value = id;
-  }
-
-  void clearGroupId(){
-    _groupId.value = "";
-  }
 
   NotificationController() {
     dio.options.headers["Content-Type"] = "application/json";
