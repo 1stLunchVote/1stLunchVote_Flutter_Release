@@ -66,6 +66,7 @@ class LunchDialog extends AlertDialog {
         style: Theme.of(context).textTheme.titleSmall?.copyWith(color: primary1),
       ),
     ),
+    const Spacer(),
     LunchButton(
       context: context,
       isEnabled: true,
