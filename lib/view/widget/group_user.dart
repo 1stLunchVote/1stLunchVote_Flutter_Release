@@ -4,10 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:lunch_vote/controller/group_controller.dart';
-import 'package:lunch_vote/model/group/group_notifier.dart';
 import 'package:lunch_vote/styles.dart';
 import 'package:lunch_vote/view/widget/lunch_dialog.dart';
-import 'package:provider/provider.dart';
 
 class GroupUser extends StatefulWidget {
   final int userIdx;
@@ -58,7 +56,7 @@ class _GroupUserState extends State<GroupUser> {
                   onTap: () {
                     if (widget.leaderAuth) {
                       if (widget.groupController.members.length < widget.userIdx + 1) {
-                        // TODO: 유저 초대 화면
+                        // TODO: 유저 초대 화면, 현재는 임시적으로 다이얼로그로 초대
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
