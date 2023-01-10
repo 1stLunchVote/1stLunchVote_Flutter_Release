@@ -1,15 +1,14 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:lunch_vote/controller/template_controller.dart';
 import 'package:lunch_vote/model/template/template_info.dart';
-import 'package:lunch_vote/model/template/template_notifier.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
 import 'package:lunch_vote/view/widget/lunch_button.dart';
 import 'package:lunch_vote/view/widget/template_tile.dart';
-import 'package:provider/provider.dart';
 
-class TemplateScreen extends StatelessWidget {
+class TemplateScreen extends StatefulWidget {
   final String templateId;
   final String templateName;
 
@@ -20,62 +19,50 @@ class TemplateScreen extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => TemplateNotifier(),
-      builder: (context, child) {
-        context.read<TemplateNotifier>().setTemplateId(templateId);
-        context.read<TemplateNotifier>().setTemplateName(templateName);
-        return const _TemplateScreen();
-      }
-    );
-  }
+  State<TemplateScreen> createState() => TemplateScreenState();
 }
 
-class _TemplateScreen extends StatefulWidget {
-  const _TemplateScreen({Key? key}) : super(key: key);
-
-  @override
-  State<_TemplateScreen> createState() => _TemplateScreenState();
-}
-
-class _TemplateScreenState extends State<_TemplateScreen> {
-  final TemplateController _templateController = TemplateController();
+class TemplateScreenState extends State<TemplateScreen> {
+  final _templateController = Get.put(TemplateController());
   final _formKey = GlobalKey<FormState>();
 
   bool _isMenuLoaded = false;
   bool _isTemplateLoaded = false;
 
   @override
-  void initState(){
+  void initState()  {
     super.initState();
-    _templateController.getMenuInfo().then((value) {
-      if (value != null) {
-        for (int i = 0; i < value.length; i++) {
-          context.read<TemplateNotifier>().addList(value[i]);
-        }
-      }
-      setState(() {
-        _isMenuLoaded = true;
-      });
-    });
-    if (context.read<TemplateNotifier>().templateId != "") {
-      _templateController.getOneTemplateInfo(context.read<TemplateNotifier>().templateId).then((value) {
+    _templateController.initController().then((value) {
+      _templateController.setTemplateId(widget.templateId);
+      _templateController.setTemplateName(widget.templateName);
+      _templateController.getMenuInfo().then((value) {
         if (value != null) {
-          context.read<TemplateNotifier>().clearList();
           for (int i = 0; i < value.length; i++) {
-            context.read<TemplateNotifier>().addListWithStatus(value[i]);
+            _templateController.addList(value[i]);
           }
         }
         setState(() {
-          _isTemplateLoaded = true;
+          _isMenuLoaded = true;
         });
       });
-    } else {
-      setState(() {
-        _isTemplateLoaded = true;
-      });
-    }
+      if (_templateController.templateId != "") {
+        _templateController.getOneTemplateInfo(_templateController.templateId).then((value) {
+          if (value != null) {
+            _templateController.clearList();
+            for (int i = 0; i < value.length; i++) {
+              _templateController.addListWithStatus(value[i]);
+            }
+          }
+          setState(() {
+            _isTemplateLoaded = true;
+          });
+        });
+      } else {
+        setState(() {
+          _isTemplateLoaded = true;
+        });
+      }
+    });
   }
 
   @override
@@ -83,7 +70,7 @@ class _TemplateScreenState extends State<_TemplateScreen> {
     return Scaffold(
       appBar: BasicAppbar(
         backVisible: true,
-        appbarTitle: (context.read<TemplateNotifier>().templateId == "") ? "템플릿 생성하기" : "템플릿 수정하기",
+        appbarTitle: (_templateController.templateId == "") ? "템플릿 생성하기" : "템플릿 수정하기",
         isTitleCenter: false,
         context: context,
         trailingList: [
@@ -104,31 +91,40 @@ class _TemplateScreenState extends State<_TemplateScreen> {
             ),
             Visibility(
               visible: _isMenuLoaded && _isTemplateLoaded,
-              child: GridView.builder(
-                cacheExtent: 999999999999999,
-                physics: const ScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: context.read<TemplateNotifier>().length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  mainAxisSpacing: 4,
-                  crossAxisSpacing: 4,
-                ),
-                itemBuilder: (BuildContext context, int index){
-                  return TemplateTile(menuIdx: index);
-                },
+              child: ListView(
+                children: [
+                  const SizedBox(height: 24,),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: GridView.builder(
+                      cacheExtent: 999999999999999,
+                      physics: const ScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: _templateController.length,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        childAspectRatio: 9/10,
+                        mainAxisSpacing: 4,
+                        crossAxisSpacing: 4,
+                      ),
+                      itemBuilder: (BuildContext context, int index){
+                        return TemplateTile(templateController: _templateController, menuIdx: index);
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
         ),
       ),
-      floatingActionButton: LunchButton(
+      floatingActionButton: Obx(() => LunchButton(
         context: context,
-        isEnabled: context.watch<TemplateNotifier>().visibility,
+        isEnabled: _templateController.visibility,
         enabledText: '저장하기',
         disabledText: '저장 불가',
         pressedCallback: () async {
-          if (context.read<TemplateNotifier>().templateId == "") {
+          if (_templateController.templateId == "") {
             showDialog(
               context: context,
               builder: (BuildContext context1) {
@@ -147,7 +143,7 @@ class _TemplateScreenState extends State<_TemplateScreen> {
                         helperText: '',
                       ),
                       onSaved: (value) {
-                        context.read<TemplateNotifier>().setTemplateName(value!);
+                        _templateController.setTemplateName(value!);
                       },
                       validator: (value) {
                         if (value == null) {
@@ -168,9 +164,9 @@ class _TemplateScreenState extends State<_TemplateScreen> {
                         if (_formKey.currentState!.validate()) {
                           _formKey.currentState!.save();
                           final message = await _templateController.createTemplate(TemplateInfo(
-                            templateName: context.read<TemplateNotifier>().templateName,
-                            likesMenu: context.read<TemplateNotifier>().getLikeMenu(),
-                            dislikesMenu: context.read<TemplateNotifier>().getDislikeMenu(),
+                            templateName: _templateController.templateName,
+                            likesMenu: _templateController.getLikeMenu(),
+                            dislikesMenu: _templateController.getDislikeMenu(),
                           ));
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message!)));
                           Navigator.pop(context1);
@@ -184,11 +180,11 @@ class _TemplateScreenState extends State<_TemplateScreen> {
             );
           } else {
             final message = await _templateController.modifyTemplate(
-              context.read<TemplateNotifier>().templateId,
+              _templateController.templateId,
               TemplateInfo(
-                templateName: context.read<TemplateNotifier>().templateName,
-                likesMenu: context.read<TemplateNotifier>().getLikeMenu(),
-                dislikesMenu: context.read<TemplateNotifier>().getDislikeMenu(),
+                templateName: _templateController.templateName,
+                likesMenu: _templateController.getLikeMenu(),
+                dislikesMenu: _templateController.getDislikeMenu(),
               ),
             );
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message!)));
@@ -196,7 +192,7 @@ class _TemplateScreenState extends State<_TemplateScreen> {
           }
         },
         notifyText: '최소 1가지의 아이템을 선택해야 저장할 수 있습니다.',
-      ),
+      ),)
     );
   }
 }

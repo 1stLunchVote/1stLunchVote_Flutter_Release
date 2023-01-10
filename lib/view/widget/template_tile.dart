@@ -1,12 +1,17 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lunch_vote/model/template/template_notifier.dart';
-import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:get/get.dart';
+import 'package:lunch_vote/controller/template_controller.dart';
 
 class TemplateTile extends StatefulWidget {
+  final TemplateController templateController;
   final int menuIdx;
-  const TemplateTile({super.key, required this.menuIdx});
+  const TemplateTile({
+    super.key,
+    required this.templateController,
+    required this.menuIdx,
+  });
 
   @override
   State<TemplateTile> createState() => _TemplateTileState();
@@ -15,7 +20,7 @@ class TemplateTile extends StatefulWidget {
 class _TemplateTileState extends State<TemplateTile> {
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Obx(() =>Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
@@ -25,14 +30,14 @@ class _TemplateTileState extends State<TemplateTile> {
             borderRadius: const BorderRadius.all(Radius.circular(16.0)),
             border: Border.all(
               width: 2.0,
-              color: context.watch<TemplateNotifier>().getColor(widget.menuIdx),
+              color: widget.templateController.getColor(widget.menuIdx),
             ),
           ),
           child: Stack(
             children: [
               ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(16.0)),
-                child: CachedNetworkImage(imageUrl: context.read<TemplateNotifier>().getImg(widget.menuIdx),),
+                child: CachedNetworkImage(imageUrl: widget.templateController.getImg(widget.menuIdx),),
               ),
               ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(16.0)),
@@ -42,7 +47,7 @@ class _TemplateTileState extends State<TemplateTile> {
                     child: InkWell(
                       onTap: () {
                         setState(() {
-                          context.read<TemplateNotifier>().updateStatus(widget.menuIdx);
+                          widget.templateController.updateStatus(widget.menuIdx);
                         });
                       },
                     ),
@@ -55,11 +60,11 @@ class _TemplateTileState extends State<TemplateTile> {
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 4.0),
           child: Text(
-            context.read<TemplateNotifier>().getName(widget.menuIdx),
+            widget.templateController.getName(widget.menuIdx),
             style: Theme.of(context).textTheme.labelLarge,
           ),
         ),
       ],
-    );
+    ));
   }
 }
