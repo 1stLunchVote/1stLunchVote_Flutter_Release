@@ -6,6 +6,7 @@ import 'package:lunch_vote/controller/template_controller.dart';
 import 'package:lunch_vote/model/template/template_info.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
 import 'package:lunch_vote/view/widget/lunch_button.dart';
+import 'package:lunch_vote/view/widget/lunch_dialog.dart';
 import 'package:lunch_vote/view/widget/template_tile.dart';
 
 class TemplateScreen extends StatefulWidget {
@@ -128,53 +129,34 @@ class TemplateScreenState extends State<TemplateScreen> {
             showDialog(
               context: context,
               builder: (BuildContext context1) {
-                return AlertDialog(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  title: const Text("템플릿 이름 설정"),
-                  content: Form(
-                    key: _formKey,
-                    child: TextFormField(
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: '템플릿명',
-                        hintText: '2~10 자로 입력해주세요.',
-                        helperText: '',
-                      ),
-                      onSaved: (value) {
-                        _templateController.setTemplateName(value!);
-                      },
-                      validator: (value) {
-                        if (value == null) {
-                          return "이름을 입력해주세요.";
-                        } else if (value.isEmpty) {
-                          return "이름을 입력해주세요.";
-                        } else if (value.length < 2 || value.length > 10) {
-                          return "2~10 자로 입력해주세요.";
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  actions: [
-                    TextButton(
-                      child: const Text("확인"),
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          _formKey.currentState!.save();
-                          final message = await _templateController.createTemplate(TemplateInfo(
-                            templateName: _templateController.templateName,
-                            likesMenu: _templateController.getLikeMenu(),
-                            dislikesMenu: _templateController.getDislikeMenu(),
-                          ));
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message!)));
-                          Navigator.pop(context1);
-                          Navigator.pop(context);
-                        }
-                      },
-                    ),
-                  ],
+                return LunchDialog(
+                  context: context,
+                  titleText: "템플릿 이름 설정",
+                  labelText: "템플릿명",
+                  okBtnText: "저장",
+                  onSaved: (value) {
+                    _templateController.setTemplateName(value!);
+                  },
+                  validator: (value) {
+                    if (value == null) {
+                      return "이름을 입력해주세요.";
+                    } else if (value.isEmpty) {
+                      return "이름을 입력해주세요.";
+                    } else if (value.length < 2 || value.length > 10) {
+                      return "2~10 자로 입력해주세요.";
+                    }
+                    return null;
+                  },
+                  okOnPressed: () async {
+                    final message = await _templateController.createTemplate(TemplateInfo(
+                      templateName: _templateController.templateName,
+                      likesMenu: _templateController.getLikeMenu(),
+                      dislikesMenu: _templateController.getDislikeMenu(),
+                    ));
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message!)));
+                    Navigator.pop(context1);
+                    Navigator.pop(context);
+                  },
                 );
               },
             );

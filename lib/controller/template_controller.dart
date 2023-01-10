@@ -74,6 +74,17 @@ class TemplateController extends GetxController {
   final _templateId = "".obs;
   final _templateName = "".obs;
   final _menus = [].obs;
+  final _visibility = false.obs;
+
+  void updateVisibility() {
+    for (int i = 0; i < _menus.length; i++) {
+      if (_menus[i].status != 0) {
+        _visibility.value = true;
+        return;
+      }
+    }
+    _visibility.value = false;
+  }
 
   void setTemplateId(String id) {
     _templateId.value = id;
@@ -85,6 +96,7 @@ class TemplateController extends GetxController {
 
   void addList(MenuInfo menuInfo) {
     _menus.add(MenuStatus(menuInfo: menuInfo, status: 0,));
+    updateVisibility();
   }
 
   void addListWithStatus(Menu menu) {
@@ -101,27 +113,23 @@ class TemplateController extends GetxController {
       menuName: menu.menuName,
       image: menu.image,
     ), status: status,));
+    updateVisibility();
   }
 
   void clearList() {
     _menus.clear();
+    updateVisibility();
   }
 
   void updateStatus(int menuIdx) {
     _menus[menuIdx].status = (_menus[menuIdx].status + 1) % 3;
+    updateVisibility();
   }
 
   String get templateId => _templateId.value;
   String get templateName => _templateName.value;
   int get length => _menus.length;
-  bool get visibility {
-    for (int i = 0; i < _menus.length; i++) {
-      if (_menus[i].status != 0) {
-        return true;
-      }
-    }
-    return false;
-  }
+  bool get visibility => _visibility.value;
 
   String getName(int menuIdx) => _menus[menuIdx].menuInfo.menuName;
   String getImg(int menuIdx) => _menus[menuIdx].menuInfo.image;

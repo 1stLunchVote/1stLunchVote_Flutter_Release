@@ -29,7 +29,7 @@ class _TemplateTileState extends State<TemplateTile> {
           decoration: BoxDecoration(
             borderRadius: const BorderRadius.all(Radius.circular(16.0)),
             border: Border.all(
-              width: 2.0,
+              width: widget.templateController.getWidth(widget.menuIdx),
               color: widget.templateController.getColor(widget.menuIdx),
             ),
           ),
@@ -45,6 +45,7 @@ class _TemplateTileState extends State<TemplateTile> {
                   child: Material(
                     color: Colors.transparent,
                     child: InkWell(
+                      splashColor: Theme.of(context).backgroundColor.withOpacity(0.5),
                       onTap: () {
                         setState(() {
                           widget.templateController.updateStatus(widget.menuIdx);
