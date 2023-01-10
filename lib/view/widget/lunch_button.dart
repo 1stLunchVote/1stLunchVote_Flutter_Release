@@ -6,7 +6,7 @@ class LunchButton extends ElevatedButton {
   final bool isEnabled;
   final String enabledText;
   final String disabledText;
-  final Function() pressedCallback;
+  final VoidCallback? pressedCallback;
   final String notifyText;
 
   const LunchButton({

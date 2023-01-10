@@ -60,58 +60,33 @@ class _GroupUserState extends State<GroupUser> {
                       if (widget.groupController.members.length < widget.userIdx + 1) {
                         // TODO: 유저 초대 화면
                         showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              var visibilityBtn = true;
-                              var formKey = GlobalKey<FormState>();
-                              var email = "";
-                              return AlertDialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                title: const Text("이메일로 초대"),
-                                content: Form(
-                                  key: formKey,
-                                  child: TextFormField(
-                                    decoration: const InputDecoration(
-                                      border: OutlineInputBorder(),
-                                      labelText: 'Email',
-                                      helperText: '',
-                                    ),
-                                    onSaved: (value) {
-                                      email = value!;
-                                    },
-                                    validator: (value) {
-                                      if (value == null) {
-                                        return "Please enter an email.";
-                                      } else if (value.isEmpty) {
-                                        return "Please enter an email";
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ),
-                                actions: [
-                                  Visibility(
-                                    visible: visibilityBtn,
-                                    child: TextButton(
-                                      child: const Text("확인"),
-                                      onPressed: () async {
-                                        if (formKey.currentState!.validate()) {
-                                          formKey.currentState!.save();
-                                          setState((){
-                                            visibilityBtn = false;
-                                          });
-                                          var message = await widget.groupController.inviteUser(widget.groupController.groupId, email);
-                                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
-                                          Navigator.pop(context);
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }
+                          context: context,
+                          builder: (BuildContext context) {
+                            var email = "";
+                            return LunchDialog(
+                              context: context,
+                              titleText: '친구 초대하기',
+                              labelText: '이메일',
+                              okBtnText: '초대하기',
+                              removable: true,
+                              onSaved: (value) {
+                                email = value!;
+                              },
+                              validator: (value) {
+                                if (value == null) {
+                                  return "이메일을 입력해주세요.";
+                                } else if (value.isEmpty) {
+                                  return "이메일을 입력해주세요.";
+                                }
+                                return null;
+                              },
+                              okOnPressed: () async {
+                                var message = await widget.groupController.inviteUser(widget.groupController.groupId, email);
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+                                Navigator.pop(context);
+                              },
+                            );
+                          },
                         );
                       } else {
                         // TODO: 유저 추방 기능
