@@ -8,11 +8,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:lunch_vote/controller/notification_controller.dart';
 import 'package:lunch_vote/model/group_id_notifier.dart';
 import 'package:lunch_vote/styles.dart';
+import 'package:lunch_vote/view/screen/group/group_screen.dart';
 import 'package:lunch_vote/view/screen/home_screen.dart';
 import 'package:lunch_vote/view/screen/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -27,6 +30,7 @@ import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
 
 late AndroidNotificationChannel channel;
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+final NotificationController notificationController = Get.put(NotificationController());
 
 @pragma("vm:entry-point")
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -84,13 +88,21 @@ Future initializeNotification() async{
   InitializationSettings(android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
 
   flutterLocalNotificationsPlugin.initialize(initializationSettings, onDidReceiveNotificationResponse: (response){
-    // Todo : 그룹 초대 화면으로 넘어가기
-    print("payload : ${response.payload}");
-    Get.to(() => const ProfileScreen());
+    var groupId = notificationController.groupId;
+    print("groupId : $groupId");
+    notificationController.joinGroup(groupId).then((value) {
+      value != null ? Get.to(() => GroupScreen(isLeader: false, groupId: groupId))
+          : Get.to(() => const ProfileScreen());
+      notificationController.clearGroupId();
+     }
+    );
   });
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     if (message.notification != null) {
+      print("message : $message");
+      // Todo : 친구 초대 알림이 온 경우 따로 빼기
+      notificationController.setGroupId(message.data['groupId']);
       showNotification(message);
     }
   });
@@ -149,10 +161,15 @@ Future requestPermission(FirebaseMessaging messaging) async{
 }
 
 void _handleMessage(RemoteMessage message) {
-  Get.to(() => const ProfileScreen());
+  var groupId = notificationController.groupId;
+  print("groupId : $groupId");
+  notificationController.joinGroup(groupId).then((value) {
+    value != null ? Get.to(() => GroupScreen(isLeader: false, groupId: groupId))
+        : Get.to(() => const ProfileScreen());
+    notificationController.clearGroupId();
+    }
+  );
 }
-
-
 
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
