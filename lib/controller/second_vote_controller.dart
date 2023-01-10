@@ -1,19 +1,31 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get/get.dart';
 import 'package:lunch_vote/model/vote/second_vote.dart';
 
 import '../model/vote/first_vote_result.dart';
 import '../repository/lunch_vote_service.dart';
 import '../view/widget/utils/shared_pref_manager.dart';
 
-class SecondVoteController{
+class SecondVoteController extends GetxController{
   final dio = Dio();
   late String groupId;
   late LunchVoteService _lunchVoteService;
   final SharedPrefManager _spfManager = SharedPrefManager();
 
+  final RxString _selectedId = "".obs;
+  String get selectedId => _selectedId.value;
+
   SecondVoteController(){
     dio.options.headers["Content-Type"] = "application/json";
+  }
+
+  void setVotedId(String menuId){
+    _selectedId.value = menuId;
+  }
+
+  void clearVotedId(){
+    _selectedId.value = "";
   }
 
   Future<List<MenuInfo>?> getMenuInfo(String groupId) async {
@@ -29,8 +41,8 @@ class SecondVoteController{
     return null;
   }
 
-  Future<int?> voteItem(String menuId) async{
-    var res = await _lunchVoteService.secondVoteItem(groupId, SecondVoteItem(menuId: menuId));
+  Future<int?> voteItem() async{
+    var res = await _lunchVoteService.secondVoteItem(groupId, SecondVoteItem(menuId: _selectedId.value));
     if (res.success){
       return res.data.count;
     }

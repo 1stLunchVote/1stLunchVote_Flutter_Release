@@ -1,9 +1,10 @@
 import 'package:get/get.dart';
 
 class NicknameController extends GetxController{
-  var nickname = ''.obs;
+  final RxString _nickname = ''.obs;
+  String get nickname => _nickname.value;
 
   void setNickname(String name){
-    nickname.value = name;
+    _nickname.value = name;
   }
 }
