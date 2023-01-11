@@ -328,7 +328,7 @@ class _SecondVotePageState extends State<SecondVotePage> {
             )),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         floatingActionButton: Visibility(
-          visible: _voteCompleted,
+          visible: !_voteCompleted,
           child: Obx(() => Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 20, 60),
             child: Visibility(
