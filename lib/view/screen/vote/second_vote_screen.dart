@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -10,7 +9,6 @@ import 'package:lunch_vote/controller/vote_state_controller.dart';
 import 'package:lunch_vote/styles.dart';
 import 'package:lunch_vote/view/screen/vote/result_screen.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
-import 'package:lunch_vote/view/widget/custom_clip_path.dart';
 import 'package:lunch_vote/view/widget/lunch_button.dart';
 import 'package:lunch_vote/view/widget/second_vote_tile.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
@@ -77,32 +75,48 @@ class _SecondVotePageState extends State<SecondVotePage> {
           isTitleCenter: true,
           context: context,
         ),
-        body: Padding(
+        body: !_voteCompleted ? Padding(
           padding: EdgeInsets.symmetric(horizontal: 20.w),
           child: Column(
             children: [
               Row(
                 children: [
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      CircularStepProgressIndicator(
-                        totalSteps: 60,
-                        currentStep: 15,
-                        stepSize: 8,
-                        selectedColor: Colors.transparent,
-                        unselectedColor: primary1,
-                        padding: 0,
-                        width: 88.w,
-                        height: 88.h,
-                        selectedStepSize: 8,
-                        roundedCap: (_, __) => true,
-                      ),
-                      Center(
-                        child: Text('45', textScaleFactor: 1.0, style: TextStyle(fontWeight: FontWeight.w800, fontSize: 30,
-                            color: Theme.of(context).brightness == Brightness.light ? textLightSecondary : textDarkSecondary)),
+                  Obx(() =>
+                      Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          CircularStepProgressIndicator(
+                            totalSteps: 60,
+                            currentStep: 60 - _secondVoteController.timeCount,
+                            stepSize: 8,
+                            selectedColor: Colors.transparent,
+                            unselectedColor: primary1,
+                            padding: 0,
+                            width: 88.w,
+                            height: 88.h,
+                            selectedStepSize: 8,
+                            roundedCap: (_, __) => true,
+                          ),
+                          Center(
+                            child: _secondVoteController.timeCount <= 10
+                                  ? Text('${_secondVoteController.timeCount}',
+                                      textScaleFactor: 1.0,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 30,
+                                          color: negative))
+                                  : Text('${_secondVoteController.timeCount}',
+                                      textScaleFactor: 1.0,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w800,
+                                          fontSize: 30,
+                                          color: Theme.of(context).brightness ==
+                                                  Brightness.light
+                                              ? textLightSecondary
+                                              : textDarkSecondary)),
+                          )
+                        ],
                       )
-                    ],
                   ),
                   SizedBox(width: 28.w),
                   Column(
@@ -187,31 +201,6 @@ class _SecondVotePageState extends State<SecondVotePage> {
                                         style: TextStyle(fontSize: 15),
                                       ),
                                     );
-                                  } else if (_voteCompleted) {
-                                    return Center(
-                                        child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        const SizedBox(
-                                          height: 100,
-                                        ),
-                                        const CircularProgressIndicator(),
-                                        const SizedBox(
-                                          height: 10,
-                                        ),
-                                        Text(
-                                          "다른 참가자들이 투표중입니다.\n잠시만 기다려주세요...",
-                                          textAlign: TextAlign.center,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleLarge
-                                              ?.copyWith(
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .outline),
-                                        )
-                                      ],
-                                    ));
                                   }
                                   // 데이터를 정상적으로 받아오게 되면 다음 부분을 실행하게 되는 것이다.
                                   else {
@@ -246,47 +235,140 @@ class _SecondVotePageState extends State<SecondVotePage> {
               const SizedBox(height: 20),
             ],
           ),
-        ),
+        ) : Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('다른 참가자 대기중...',
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge),
+                const SizedBox(
+                  height: 48,
+                ),
+                Obx(() => Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    CircularStepProgressIndicator(
+                      totalSteps: 60,
+                      currentStep: 60 -
+                          _secondVoteController
+                              .timeCount,
+                      stepSize: 8,
+                      selectedColor:
+                      Colors.transparent,
+                      unselectedColor: primary1,
+                      padding: 0,
+                      width: 88.w,
+                      height: 88.h,
+                      selectedStepSize: 8,
+                      roundedCap: (_, __) => true,
+                    ),
+                    Center(
+                      child: _secondVoteController.timeCount <= 10 ? Text(
+                            '${_secondVoteController.timeCount}', textScaleFactor: 1.0,
+                          style: const TextStyle(
+                              fontWeight:
+                              FontWeight
+                                  .w800,
+                              fontSize: 30,
+                              color:
+                              negative))
+                          : Text(
+                          '${_secondVoteController.timeCount}',
+                          textScaleFactor: 1.0,
+                          style: TextStyle(
+                              fontWeight:
+                              FontWeight
+                                  .w800,
+                              fontSize: 30,
+                              color: Theme.of(context)
+                                  .brightness ==
+                                  Brightness
+                                      .light
+                                  ? textLightSecondary
+                                  : textDarkSecondary)),
+                    )
+                  ],
+                )),
+                const SizedBox(height: 28),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 66.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      StepProgressIndicator(
+                        totalSteps: 6,
+                        currentStep: 2,
+                        padding: 6.w,
+                        roundedEdges: const Radius.circular(4),
+                        fallbackLength: 240.w,
+                        size: 12.h,
+                        selectedColor: primary1,
+                        unselectedColor: Theme.of(context).brightness == Brightness.light ? textLightHint : textDarkHint,
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("현재 ", textScaleFactor: 1.0, style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              color: Theme.of(context).brightness == Brightness.light ? textLightSecondary : textDarkSecondary)
+                          ),
+                          Text("2", textScaleFactor: 1.0, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: primary1),),
+                          Text("명이 투표를 완료했습니다! ", textScaleFactor: 1.0, style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              color: Theme.of(context).brightness == Brightness.light ? textLightSecondary : textDarkSecondary)
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                )
+
+              ],
+            )),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-        floatingActionButton: Obx(() => Padding(
-          padding: const EdgeInsets.fromLTRB(0, 0, 20, 60),
-          child: Visibility(
-            visible: !_voteCompleted,
-            child: LunchButton(
-                enabledText: "선택 완료",
-                context: context,
-                isEnabled: !_voteCompleted && _secondVoteController.selectedId.isNotEmpty,
-                disabledText: '선택 대기',
-                pressedCallback: () async{
-                  // 투표
-                  await _secondVoteController.voteItem();
-                  var temp = await _voteStateController
-                      .fetchSecondVoteResult(widget.groupId);
+        floatingActionButton: Visibility(
+          visible: !_voteCompleted,
+          child: Obx(() => Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 20, 60),
+            child: Visibility(
+              visible: !_voteCompleted,
+              child: LunchButton(
+                  enabledText: "선택 완료",
+                  context: context,
+                  isEnabled: !_voteCompleted && _secondVoteController.selectedId.isNotEmpty,
+                  disabledText: '선택 대기',
+                  pressedCallback: () async{
+                    // 투표
+                    await _secondVoteController.voteItem();
+                    var temp = await _voteStateController
+                        .fetchSecondVoteResult(widget.groupId);
 
-                  setState(() {
-                    _voteCompleted = true;
-                  });
-
-                  if (temp != true){
-                    _timer = Timer.periodic( const Duration(milliseconds: 3000), (timer) async {
-                      var temp = await _voteStateController.fetchSecondVoteResult(widget.groupId);
-                      if (temp == true){
-                        _timer?.cancel();
-                        Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => ResultScreen(groupId: widget.groupId))
-                        );
-                      }
+                    setState(() {
+                      _voteCompleted = true;
                     });
-                  } else{
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => ResultScreen(groupId: widget.groupId))
-                    );
-                  }
-                }, notifyText: '최소 1가지의 아이템을 투표해야 합니다.',
+
+                    if (temp != true){
+                      _timer = Timer.periodic( const Duration(milliseconds: 3000), (timer) async {
+                        var temp = await _voteStateController.fetchSecondVoteResult(widget.groupId);
+                        if (temp == true){
+                          _timer?.cancel();
+                          Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) => ResultScreen(groupId: widget.groupId))
+                          );
+                        }
+                      });
+                    } else{
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => ResultScreen(groupId: widget.groupId))
+                      );
+                    }
+                  }, notifyText: '최소 1가지의 아이템을 투표해야 합니다.',
+              ),
             ),
           ),
-        ),
       ),
+        ),
       )
     );
   }

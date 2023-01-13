@@ -20,10 +20,15 @@ class NotificationController extends GetxController{
     dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
     _lunchVoteService = LunchVoteService(dio, baseUrl: dotenv.get('BASE_URL'));
 
-    var res = await _lunchVoteService.joinGroup(groupId);
-    if (res.success){
-      return true;
+    if (firstCalled){
+      firstCalled = false;
+      var res = await _lunchVoteService.joinGroup(groupId);
+      firstCalled = true;
+      if (res.success){
+        return true;
+      }
+      return null;
     }
-    return null;
+
   }
 }

@@ -36,11 +36,6 @@ final SharedPrefManager spfManager = SharedPrefManager();
 
 @pragma("vm:entry-point")
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  if (message.data.containsKey('groupId')){
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('groupId', message.data['groupId']);
-  }
-
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   print('background 호출됨');
 }
@@ -99,8 +94,7 @@ Future initializeNotification() async{
     print("response groupId : $groupId");
     if(groupId != null){
       notificationController.joinGroup(groupId).then((value) {
-        value != null ? Get.to(() => GroupScreen(isLeader: false, groupId: groupId))
-            : Get.to(() => const ProfileScreen());
+        Get.to(() => GroupScreen(isLeader: false, groupId: groupId));
         spfManager.clearGroupId();
       }
       );
@@ -175,15 +169,16 @@ Future requestPermission(FirebaseMessaging messaging) async{
 }
 
 void _handleMessage(RemoteMessage message) async{
-  var groupId = await spfManager.getGroupId();
-  print("groupId : ${groupId}");
-  if (groupId != null){
+  if (message.data.containsKey('groupId')){
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('groupId', message.data['groupId']);
+    var groupId = message.data['groupId'];
     notificationController.joinGroup(groupId).then((value) {
-      value != null ? Get.to(() => GroupScreen(isLeader: false, groupId: groupId))
-          : Get.to(() => const ProfileScreen());
-      spfManager.clearGroupId();
-    }
-    );
+      if (value != null){
+        Get.to(() => GroupScreen(isLeader: false, groupId: groupId));
+        spfManager.clearGroupId();
+      }
+    });
   }
 }
 
