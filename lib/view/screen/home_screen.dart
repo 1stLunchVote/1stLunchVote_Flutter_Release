@@ -19,6 +19,7 @@ import 'package:lunch_vote/model/group_id_notifier.dart';
 import 'package:lunch_vote/view/screen/profile_screen.dart';
 import 'package:lunch_vote/view/screen/template/template_list_screen.dart';
 import 'package:lunch_vote/view/screen/template/template_screen.dart';
+import 'package:lunch_vote/view/screen/vote/first_vote_screen.dart';
 import 'package:lunch_vote/view/screen/vote/second_vote_screen.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
 import 'package:lunch_vote/view/widget/custom_clip_path.dart';
@@ -183,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           // Todo : 제원이가 만들면 바꿀게 임시로 쓴다~
                           FloatingActionButton(onPressed: () {
-                            Get.to(const SecondVotePage(groupId: "63bb9e42bb63c8c408880e9f"));},
+                            Get.to(const FriendlistScreen());},
                             backgroundColor: secondary1,
                             heroTag: null,
                             child: Icon(Icons.person_outline, color: Theme

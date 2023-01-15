@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:lunch_vote/styles.dart';
 
 class FriendTile extends StatefulWidget {
-  const FriendTile({Key? key}) : super(key: key);
+  final String name;
+  final String profileImage; // TODO 서버로부터 요청 받은 걸로 받을 수 있게 수정해야 함 (현재 임시)
+
+  const FriendTile({
+    Key? key,
+    required this.name,
+    required this.profileImage,
+  }) : super(key: key);
 
   @override
   State<FriendTile> createState() => _FriendTileState();
@@ -14,10 +21,10 @@ class _FriendTileState extends State<FriendTile> {
     return ListTile(
       leading: CircleAvatar(
         radius: 24,
-        backgroundImage: AssetImage("assets/images/friend_profile_default.png"),
+        backgroundImage: AssetImage(widget.profileImage), // TODO 서버로부터 친구 프로필 사진 가져오기
       ),
       title: Text(
-        '이동건',
+        widget.name,
         style: Theme
             .of(context)
             .textTheme
