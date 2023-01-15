@@ -19,7 +19,6 @@ import 'package:lunch_vote/model/group_id_notifier.dart';
 import 'package:lunch_vote/view/screen/profile_screen.dart';
 import 'package:lunch_vote/view/screen/template/template_list_screen.dart';
 import 'package:lunch_vote/view/screen/template/template_screen.dart';
-import 'package:lunch_vote/view/screen/vote/first_vote_ready_screen.dart';
 import 'package:lunch_vote/view/screen/vote/second_vote_screen.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
 import 'package:lunch_vote/view/widget/custom_clip_path.dart';
@@ -50,27 +49,11 @@ class _HomeScreenState extends State<HomeScreen> {
         FlutterNativeSplash.remove();
       }
     );
-    initInfo();
-  }
-
-  initInfo() async {
-    // await setupFlutterNotifications();
-    // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    // FirebaseMessaging.onMessage.listen((message) {
-    //   if (message.data.containsKey('groupId')){
-    //     print(message.data['groupId']);
-    //
-    //     context.read<GroupIdNotifier>().setIndex(message.data['groupId']);
-    //   }
-    //   showFlutterNotification(message);
-    // });
-    // FirebaseMessaging.onMessageOpenedApp.listen((event) {
-    // });
   }
 
   @override
   Widget build(BuildContext context) {
-    ScreenUtil.init(context, designSize: const Size(360, 800));
+    ScreenUtil.init(context, designSize: const Size(412, 812));
     return Scaffold(
       // 앱바 기본 높이 56dp
       appBar: AppBar(),
@@ -87,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Row(
                       children: [
                         Obx(() => Text(
-                            "${nicknameController.nickname}",
+                            nicknameController.nickname,
                             style: Theme
                                 .of(context)
                                 .textTheme
@@ -198,11 +181,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       Column(
                         children: [
+                          // Todo : 제원이가 만들면 바꿀게 임시로 쓴다~
                           FloatingActionButton(onPressed: () {
-                            Navigator.of(context).push(
-                                MaterialPageRoute(builder: (
-                                    context) => const FriendlistScreen()));
-                          },
+                            Get.to(const SecondVotePage(groupId: "63bb9e42bb63c8c408880e9f"));},
                             backgroundColor: secondary1,
                             heroTag: null,
                             child: Icon(Icons.person_outline, color: Theme

@@ -6,7 +6,7 @@ class LunchButton extends ElevatedButton {
   final bool isEnabled;
   final String enabledText;
   final String disabledText;
-  final Function() pressedCallback;
+  final VoidCallback? pressedCallback;
   final String notifyText;
 
   const LunchButton({
@@ -16,15 +16,18 @@ class LunchButton extends ElevatedButton {
     required this.context,
     required this.isEnabled,
     required this.enabledText,
-    required this.disabledText,
+    this.disabledText = "",
     required this.pressedCallback,
-    required this.notifyText,
+    this.notifyText = "",
   });
 
   @override
-  Widget? get child => Text(
-    isEnabled ? enabledText : disabledText,
-    style: Theme.of(context).textTheme.titleSmall?.copyWith(color: textDarkMain,),
+  Widget? get child => Padding(
+    padding: const EdgeInsets.all(8),
+    child: Text(
+      isEnabled ? enabledText : disabledText,
+      style: Theme.of(context).textTheme.titleSmall?.copyWith(color: textDarkMain,),
+    ),
   );
 
   @override

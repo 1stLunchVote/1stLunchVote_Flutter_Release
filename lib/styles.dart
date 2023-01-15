@@ -85,7 +85,8 @@ ThemeData lightColorTheme = ThemeData(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.dark,
         statusBarBrightness: Brightness.light,
-    )
+    ),
+    surfaceTintColor: Colors.transparent
   ),
   inputDecorationTheme: const InputDecorationTheme(border: OutlineInputBorder())
 );
@@ -115,7 +116,8 @@ ThemeData darkColorTheme = ThemeData(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.light,
         statusBarBrightness: Brightness.dark
-    )
+    ),
+    surfaceTintColor: Colors.transparent
   ),
   inputDecorationTheme: const InputDecorationTheme(border: OutlineInputBorder())
 );

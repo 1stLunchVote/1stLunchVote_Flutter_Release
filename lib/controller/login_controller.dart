@@ -1,15 +1,19 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:dio/dio.dart';
 import 'package:lunch_vote/model/login/user_info.dart';
 import 'package:lunch_vote/repository/lunch_vote_service.dart';
 import 'package:lunch_vote/view/widget/utils/shared_pref_manager.dart';
 
-class LoginController{
+class LoginController extends GetxController{
   final SharedPrefManager _spfManager = SharedPrefManager();
   late LunchVoteService _lunchVoteService;
+
+  final RxBool _isLoading = false.obs;
+  bool get isLoading => _isLoading.value;
 
   LoginController(){
     final dio = Dio();
@@ -61,6 +65,7 @@ class LoginController{
   Future<String?> loginToken() async{
     if (await isKakaoTalkInstalled()){
       try {
+        _isLoading.value = true;
         OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
         return token.accessToken;
       } catch (error) {
@@ -74,17 +79,20 @@ class LoginController{
           return token.accessToken;
         } catch (error) {
           print('카카오계정으로 로그인 실패 $error');
+          _isLoading.value = false;
           return null;
         }
       }
 
     } else {
       try {
+        _isLoading.value = true;
         OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
         print('카카오계정으로 로그인 성공');
         return token.accessToken;
       } catch (error) {
         print('카카오계정으로 로그인 실패 $error');
+        _isLoading.value = false;
         return null;
       }
     }
@@ -97,6 +105,7 @@ class LoginController{
       _spfManager.setFCMToken(fcmToken);
     }
     final result = await _lunchVoteService.postUserToken(SocialToken(socialToken: accessToken, fcmToken: fcmToken));
+    _isLoading.value = false;
     return result.data.accessToken;
   }
 }

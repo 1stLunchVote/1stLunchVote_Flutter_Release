@@ -6,23 +6,14 @@ import 'package:lunch_vote/styles.dart';
 import 'package:lunch_vote/view/screen/template/template_screen.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
 
-class TemplateListScreen extends StatelessWidget {
+class TemplateListScreen extends StatefulWidget {
   const TemplateListScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    return const _TemplateListScreen();
-  }
+  State<TemplateListScreen> createState() => TemplateListScreenState();
 }
 
-class _TemplateListScreen extends StatefulWidget {
-  const _TemplateListScreen({Key? key}) : super(key: key);
-
-  @override
-  State<_TemplateListScreen> createState() => _TemplateListScreenState();
-}
-
-class _TemplateListScreenState extends State<_TemplateListScreen> {
+class TemplateListScreenState extends State<TemplateListScreen> {
   final TemplateController _templateController = TemplateController();
   final List<AllTemplateInfo> _templateList = [];
   bool _isTemplateLoaded = false;
@@ -44,7 +35,9 @@ class _TemplateListScreenState extends State<_TemplateListScreen> {
   @override
   void initState() {
     super.initState();
-    refreshTemplateList();
+    _templateController.initController().then((value) {
+      refreshTemplateList();
+    });
   }
 
   @override
