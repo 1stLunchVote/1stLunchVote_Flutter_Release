@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
@@ -9,15 +11,32 @@ import '../view/widget/utils/shared_pref_manager.dart';
 
 class SecondVoteController extends GetxController{
   final dio = Dio();
+  late Timer _timer;
+
   late String groupId;
   late LunchVoteService _lunchVoteService;
   final SharedPrefManager _spfManager = SharedPrefManager();
 
   final RxString _selectedId = "".obs;
+  final RxInt _timeCount = 60.obs;
   String get selectedId => _selectedId.value;
+  int get timeCount => _timeCount.value;
 
   SecondVoteController(){
+    _timer = Timer.periodic(const Duration(milliseconds: 1000), (timer) {
+      if (_timeCount.value > 0){
+        _timeCount.value -= 1;
+      } else{
+        _timer.cancel();
+      }
+    });
     dio.options.headers["Content-Type"] = "application/json";
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
+    _timer?.cancel();
   }
 
   void setVotedId(String menuId){
