@@ -165,6 +165,7 @@ class _FirstVotePageState extends State<FirstVotePage> {
                         pressedCallback: () {
                           setState(() {
                             tipVisibility = false;
+                            _firstVoteController.setTimer(60);
                           });
                         },
                       ),

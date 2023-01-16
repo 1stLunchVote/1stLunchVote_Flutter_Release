@@ -19,9 +19,13 @@ class FirstVoteController extends GetxController{
   final SharedPrefManager _spfManager = SharedPrefManager();
 
   final RxString _selectedId = "".obs;
-  final RxInt _timeCount = 60.obs;
+  final RxInt _timeCount = 0.obs;
   String get selectedId => _selectedId.value;
   int get timeCount => _timeCount.value;
+
+  void setTimer(int timer){
+    _timeCount.value = timer;
+  }
 
   FirstVoteController(){
     _timer = Timer.periodic(const Duration(milliseconds: 1000), (timer) {
