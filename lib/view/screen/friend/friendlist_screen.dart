@@ -18,7 +18,7 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
   @override
   void initState() {
     super.initState();
-    FriendTile(name: '', profileImage: '');
+    const FriendTile(name: '', profileImage: '');
   }
 
   @override
@@ -78,9 +78,6 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                                   okOnPressed: () {
                                     friendsController.test();
                                     Navigator.pop(context);
-                                    setState(() {
-                                      FriendlistScreen();
-                                    });
                                     // TODO 서버로 친구 추가 요청 보내는 작업 처리해야 함!
                                   },
                                 );
@@ -90,26 +87,28 @@ class _FriendlistScreenState extends State<FriendlistScreen> {
                       ),
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 24,
                   ),
-                  Expanded(
-                      child: ListView.separated(
-                    itemCount: friendsController
-                        .friendList.length, // TODO 서버로부터 친구 수 만큼 받아와야 함!
-                    itemBuilder: (BuildContext context, int index) {
-                      return FriendTile(
-                          name: friendsController.friendList[index],
-                          profileImage:
-                              "assets/images/friend_profile_default.png");
-                      // TODO 서버로부터 이름이랑 이름이랑 사진 받아오기
-                    },
-                    separatorBuilder: (BuildContext context, int index) =>
-                        const Divider(
-                      height: 8.0,
-                      color: textLightHint,
-                    ),
-                  )),
+                  Obx(() =>
+                    Expanded(
+                        child: ListView.separated(
+                      itemCount: friendsController
+                          .friendList.length, // TODO 서버로부터 친구 수 만큼 받아와야 함!
+                      itemBuilder: (BuildContext context, int index) {
+                        return FriendTile(
+                            name: friendsController.friendList[index],
+                            profileImage:
+                                "assets/images/friend_profile_default.png");
+                        // TODO 서버로부터 이름이랑 이름이랑 사진 받아오기
+                      },
+                      separatorBuilder: (BuildContext context, int index) =>
+                          const Divider(
+                        height: 8.0,
+                        color: textLightHint,
+                      ),
+                    )),
+                  ),
                 ],
               ),
             ),
