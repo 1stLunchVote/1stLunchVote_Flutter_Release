@@ -1,19 +1,43 @@
+import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:lunch_vote/model/vote/first_vote.dart';
+import 'package:get/get.dart';
 import 'package:lunch_vote/model/template/all_template_info.dart';
 
 import '../model/vote/first_vote_result.dart';
 import '../repository/lunch_vote_service.dart';
 import '../view/widget/utils/shared_pref_manager.dart';
 
-class FirstVoteController{
+
+class FirstVoteController extends GetxController{
   final dio = Dio();
+  late Timer _timer;
+
+  late String groupId;
   late LunchVoteService _lunchVoteService;
   final SharedPrefManager _spfManager = SharedPrefManager();
 
+  final RxString _selectedId = "".obs;
+  final RxInt _timeCount = 60.obs;
+  String get selectedId => _selectedId.value;
+  int get timeCount => _timeCount.value;
+
   FirstVoteController(){
+    _timer = Timer.periodic(const Duration(milliseconds: 1000), (timer) {
+      if (_timeCount.value > 0){
+        _timeCount.value -= 1;
+      } else{
+        _timer.cancel();
+      }
+    });
     dio.options.headers["Content-Type"] = "application/json";
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
+    _timer?.cancel();
   }
 
   Future<String?> submitFirstVote(String groupId, List<String> likesMenu, List<String> dislikesMenu) async{
