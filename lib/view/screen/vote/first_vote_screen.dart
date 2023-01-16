@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:async';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
@@ -260,9 +258,9 @@ class _FirstVotePageState extends State<FirstVotePage> {
                               padding: EdgeInsets.symmetric(horizontal: 24.w),
                               child: TextFormField(
                                 decoration: const InputDecoration(
-                                  border: OutlineInputBorder(),
-                                  labelText: '메뉴 검색',
-                                  hintText: 'ex) 파스타'
+                                    border: OutlineInputBorder(),
+                                    labelText: '메뉴 검색',
+                                    hintText: 'ex) 파스타',
                                 ),
                                 onFieldSubmitted: (value) {
                                   context.read<FirstVoteNotifier>().searchMenu(_textController.text.toString());
@@ -275,8 +273,8 @@ class _FirstVotePageState extends State<FirstVotePage> {
                               child: DropdownButtonFormField(
                                 key: UniqueKey(),
                                 decoration: const InputDecoration(
-                                    border: OutlineInputBorder(),
-                                    labelText: '템플릿을 선택해주세요.',
+                                  border: OutlineInputBorder(),
+                                  labelText: '템플릿을 선택해주세요.',
                                 ),
                                 items: allTemplateList.map((value) {
                                   return DropdownMenuItem(
