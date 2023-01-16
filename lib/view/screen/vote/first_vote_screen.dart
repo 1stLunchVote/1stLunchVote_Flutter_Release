@@ -99,6 +99,8 @@ class _FirstVotePageState extends State<FirstVotePage> {
   }
 
   bool tipVisibility = true;
+  bool voteVisibility = false;
+  bool loadingVisibility = false;
 
   @override
   Widget build(BuildContext context) {
@@ -163,6 +165,8 @@ class _FirstVotePageState extends State<FirstVotePage> {
                         pressedCallback: () {
                           setState(() {
                             tipVisibility = false;
+                            voteVisibility = true;
+                            loadingVisibility = false;
                             _firstVoteController.setTimer(60);
                           });
                         },
@@ -173,7 +177,7 @@ class _FirstVotePageState extends State<FirstVotePage> {
                 ),
               ),
               Visibility(
-                visible: !tipVisibility,
+                visible: voteVisibility,
                 child: Center(
                   child: Column(
                     children: [
@@ -243,7 +247,7 @@ class _FirstVotePageState extends State<FirstVotePage> {
                                         color: Theme.of(context).brightness == Brightness.light ? textLightSecondary : textDarkSecondary)
                                     ),
                                   ],
-                                )
+                                ),
                               ],
                             )
                           ],
@@ -326,8 +330,112 @@ class _FirstVotePageState extends State<FirstVotePage> {
                 ),
               ),
               Visibility(
-                visible: context.watch<FirstVoteNotifier>().isLoading,
-                child: Container(
+                visible: loadingVisibility,
+                child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('다른 참가자 대기중...',
+                            style: Theme.of(context).textTheme.titleLarge),
+                        const SizedBox(
+                          height: 48,
+                        ),
+                        Obx(
+                              () => Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              CircularStepProgressIndicator(
+                                totalSteps: 60,
+                                currentStep: 60 - _firstVoteController.timeCount,
+                                stepSize: 8,
+                                selectedColor: Colors.transparent,
+                                unselectedColor: primary1,
+                                padding: 0,
+                                width: 88.w,
+                                height: 88.h,
+                                selectedStepSize: 8,
+                                roundedCap: (_, __) => true,
+                              ),
+                              Center(
+                                child: _firstVoteController.timeCount <= 10
+                                    ? Text('${_firstVoteController.timeCount}',
+                                    textScaleFactor: 1.0,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 30,
+                                        color: negative))
+                                    : Text('${_firstVoteController.timeCount}',
+                                    textScaleFactor: 1.0,
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w800,
+                                        fontSize: 30,
+                                        color: Theme.of(context).brightness ==
+                                            Brightness.light
+                                            ? textLightSecondary
+                                            : textDarkSecondary)),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 28),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 66.w),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              StepProgressIndicator(
+                                totalSteps: 6,
+                                currentStep: 2,
+                                padding: 6.w,
+                                roundedEdges: const Radius.circular(4),
+                                fallbackLength: 240.w,
+                                size: 12.h,
+                                selectedColor: primary1,
+                                unselectedColor:
+                                Theme.of(context).brightness == Brightness.light
+                                    ? textLightHint
+                                    : textDarkHint,
+                              ),
+                              const SizedBox(height: 4),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text("현재 ",
+                                      textScaleFactor: 1.0,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium
+                                          ?.copyWith(
+                                          color: Theme.of(context).brightness ==
+                                              Brightness.light
+                                              ? textLightSecondary
+                                              : textDarkSecondary)),
+                                  Text(
+                                    "2",
+                                    textScaleFactor: 1.0,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
+                                        ?.copyWith(color: primary1),
+                                  ),
+                                  Text("명이 투표를 완료했습니다! ",
+                                      textScaleFactor: 1.0,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium
+                                          ?.copyWith(
+                                          color: Theme.of(context).brightness ==
+                                              Brightness.light
+                                              ? textLightSecondary
+                                              : textDarkSecondary)),
+                                ],
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    )),
+                /*child: Container(
                   alignment: Alignment.center,
                   width: double.infinity,
                   height: double.infinity,
@@ -346,7 +454,7 @@ class _FirstVotePageState extends State<FirstVotePage> {
                       ),
                     ],
                   ),
-                ),
+                ),*/
               )
             ],
           ),
@@ -360,10 +468,13 @@ class _FirstVotePageState extends State<FirstVotePage> {
             disabledText: '선택 불가',
             notifyText: '최소 1가지의 아이템을 선택해야 저장할 수 있습니다.',
             pressedCallback: () async{
+              tipVisibility = false;
+              voteVisibility = false;
+              loadingVisibility = true;
               _firstVoteController.submitFirstVote(
                   widget.groupId,
                   context.read<FirstVoteNotifier>().getLikeMenu(),
-                  context.read<FirstVoteNotifier>().getDislikeMenu()
+                  context.read<FirstVoteNotifier>().getDislikeMenu(),
               );
               context.read<FirstVoteNotifier>().startLoading();
               var temp = await _voteStateController.fetchFirstVoteResult(widget.groupId);

@@ -53,6 +53,10 @@ class FirstVoteNotifier extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
+  void setLoading(bool isLoad){
+    _isLoading = !isLoad;
+  }
+
   bool get visibility {
     if (_isLoading) {
       return false;
