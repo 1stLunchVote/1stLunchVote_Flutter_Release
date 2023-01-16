@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'dart:async';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
@@ -20,6 +18,8 @@ import 'package:lunch_vote/view/widget/lunch_button.dart';
 import 'package:provider/provider.dart';
 import 'package:lunch_vote/model/menu/menu_info.dart';
 import 'package:lunch_vote/model/vote/first_vote_notifier.dart';
+import 'package:step_progress_indicator/step_progress_indicator.dart';
+import 'package:get/get.dart';
 
 class FirstVoteScreen extends StatelessWidget {
   final String groupId;
@@ -99,6 +99,7 @@ class _FirstVotePageState extends State<FirstVotePage> {
   }
 
   bool tipVisibility = true;
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -173,71 +174,150 @@ class _FirstVotePageState extends State<FirstVotePage> {
               Visibility(
                 visible: !tipVisibility,
                 child: Center(
-                  child: ListView(
+                  child: Column(
                     children: [
-                      const SizedBox(height: 24),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: TextFormField(
-                          decoration: const InputDecoration(
-                            border: OutlineInputBorder(),
-                            labelText: '메뉴 검색',
-                            hintText: 'ex) 파스타'
-                          ),
-                          onFieldSubmitted: (value) {
-                            context.read<FirstVoteNotifier>().searchMenu(_textController.text.toString());
-                          },
+                        padding: EdgeInsets.symmetric(horizontal:20.w),
+                        child: Row(
+                          children: [
+                            Obx(() =>
+                                Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    CircularStepProgressIndicator(
+                                      totalSteps: 60,
+                                      currentStep: 60 - _firstVoteController.timeCount,
+                                      stepSize: 8,
+                                      selectedColor: Colors.transparent,
+                                      unselectedColor: primary1,
+                                      padding: 0,
+                                      width: 88.w,
+                                      height: 88.h,
+                                      selectedStepSize: 8,
+                                      roundedCap: (_, __) => true,
+                                    ),
+                                    Center(
+                                      child: _firstVoteController.timeCount <= 10
+                                          ? Text('${_firstVoteController.timeCount}',
+                                          textScaleFactor: 1.0,
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.w800,
+                                              fontSize: 30,
+                                              color: negative))
+                                          : Text('${_firstVoteController.timeCount}',
+                                          textScaleFactor: 1.0,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w800,
+                                              fontSize: 30,
+                                              color: Theme.of(context).brightness ==
+                                                  Brightness.light
+                                                  ? textLightSecondary
+                                                  : textDarkSecondary)),
+                                    )
+                                  ],
+                                ),
+                            ),
+                            SizedBox(width: 28.w),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                StepProgressIndicator(
+                                  totalSteps: 6,
+                                  currentStep: 2,
+                                  padding: 6.w,
+                                  roundedEdges: const Radius.circular(4),
+                                  fallbackLength: 256.w,
+                                  size: 12.h,
+                                  selectedColor: primary1,
+                                  unselectedColor: Theme.of(context).brightness == Brightness.light ? textLightHint : textDarkHint,
+                                ),
+                                const SizedBox(height: 4),
+                                Row(
+                                  children: [
+                                    Text("현재 ", textScaleFactor: 1.0, style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                        color: Theme.of(context).brightness == Brightness.light ? textLightSecondary : textDarkSecondary)
+                                    ),
+                                    Text("2", textScaleFactor: 1.0, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: primary1),),
+                                    Text("명이 투표를 완료했습니다! ", textScaleFactor: 1.0, style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                        color: Theme.of(context).brightness == Brightness.light ? textLightSecondary : textDarkSecondary)
+                                    ),
+                                  ],
+                                )
+                              ],
+                            )
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 16),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: DropdownButtonFormField(
-                          key: UniqueKey(),
-                          decoration: const InputDecoration(
-                              border: OutlineInputBorder(),
-                              labelText: '템플릿을 선택해주세요.',
-                          ),
-                          items: allTemplateList.map((value) {
-                            return DropdownMenuItem(
-                              value: value.lunchTemplateId,
-                              child: Text(value.templateName),
-                            );
-                          }).toList(),
-                          onChanged: (value) {
-                            setState(() async {
-                              if (value == "") {
-                                context.read<FirstVoteNotifier>().resetTemplate();
-                              } else {
-                                var list = await _templateController.getOneTemplateInfo(value!);
-                                if (list != null) {
-                                  context.read<FirstVoteNotifier>().clearList();
-                                  for (int i = 0; i < list.length; i++) {
-                                    context.read<FirstVoteNotifier>().addListWithStatus(list[i]);
-                                  }
-                                }
-                              }
-                            });
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: GridView.builder(
-                          cacheExtent: 999999999999999,
-                          physics: const ScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: context.read<FirstVoteNotifier>().length,
-                          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            childAspectRatio: 9/10,
-                            mainAxisSpacing: 4,
-                            crossAxisSpacing: 4,
-                          ),
-                          itemBuilder: (BuildContext context, int index){
-                            return FirstVoteTile(menuIdx: index);
-                          },
+                      const SizedBox(height: 20,),
+                      Expanded(
+                        child: ListView(
+                          children: [
+                            const SizedBox(height: 24),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 24.w),
+                              child: TextFormField(
+                                decoration: const InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    labelText: '메뉴 검색',
+                                    hintText: 'ex) 파스타'
+                                ),
+                                onFieldSubmitted: (value) {
+                                  context.read<FirstVoteNotifier>().searchMenu(_textController.text.toString());
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 24),
+                              child: DropdownButtonFormField(
+                                key: UniqueKey(),
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  labelText: '템플릿을 선택해주세요.',
+                                ),
+                                items: allTemplateList.map((value) {
+                                  return DropdownMenuItem(
+                                    value: value.lunchTemplateId,
+                                    child: Text(value.templateName),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  setState(() async {
+                                    if (value == "") {
+                                      context.read<FirstVoteNotifier>().resetTemplate();
+                                    } else {
+                                      var list = await _templateController.getOneTemplateInfo(value!);
+                                      if (list != null) {
+                                        context.read<FirstVoteNotifier>().clearList();
+                                        for (int i = 0; i < list.length; i++) {
+                                          context.read<FirstVoteNotifier>().addListWithStatus(list[i]);
+                                        }
+                                      }
+                                    }
+                                  });
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 24),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 24),
+                              child: GridView.builder(
+                                cacheExtent: 999999999999999,
+                                physics: const ScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: context.read<FirstVoteNotifier>().length,
+                                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  childAspectRatio: 9/10,
+                                  mainAxisSpacing: 4,
+                                  crossAxisSpacing: 4,
+                                ),
+                                itemBuilder: (BuildContext context, int index){
+                                  return FirstVoteTile(menuIdx: index);
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
