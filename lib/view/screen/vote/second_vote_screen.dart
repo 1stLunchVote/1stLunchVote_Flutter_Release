@@ -34,8 +34,7 @@ class SecondVotePage extends StatefulWidget {
 }
 
 class _SecondVotePageState extends State<SecondVotePage> {
-  final _secondVoteController = Get.put(SecondVoteController());
-  // Todo : 닉네임 컨트롤러로 사용자 님의 투표 출력할 지 고민
+  late SecondVoteController _secondVoteController = SecondVoteController();
   final _nicknameController = Get.put(NicknameController());
   final _voteStateController = VoteStateController();
   late Future future;
@@ -49,6 +48,8 @@ class _SecondVotePageState extends State<SecondVotePage> {
   @override
   void initState() {
     super.initState();
+    Get.delete<SecondVoteController>();
+    _secondVoteController = Get.put(SecondVoteController());
     future = _secondVoteController.getMenuInfo(widget.groupId);
   }
 
@@ -168,7 +169,7 @@ class _SecondVotePageState extends State<SecondVotePage> {
                   child: CustomScrollView(
                     slivers: [
                       SliverFillRemaining(
-                        child: Column(
+                        child: ListView(
                           children: [
                             const SizedBox(
                               height: 30,
