@@ -1,11 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get/get.dart';
 
 import '../model/vote/final_result.dart';
 import '../repository/lunch_vote_service.dart';
 import '../view/widget/utils/shared_pref_manager.dart';
 
-class ResultController{
+class ResultController extends GetxController{
   final dio = Dio();
   late String groupId;
   late LunchVoteService _lunchVoteService;
