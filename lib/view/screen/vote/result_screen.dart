@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:lunch_vote/controller/result_controller.dart';
-import 'package:lunch_vote/model/vote/final_result.dart';
 import 'package:lunch_vote/styles.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
 import 'package:lunch_vote/view/widget/lunch_button.dart';
@@ -45,9 +43,15 @@ class _ResultScreenState extends State<ResultScreen> {
                    child: Column(
                      mainAxisAlignment: MainAxisAlignment.center,
                      children: [
-
-                     ],
-                   ),
+                      const CircularProgressIndicator(),
+                      const SizedBox(
+                        height: 18,
+                      ),
+                      Text("결과를 불러오는중입니다...",
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.titleLarge)
+                    ],
+                  ),
                  );
                } else {
                  return Column(
@@ -85,104 +89,6 @@ class _ResultScreenState extends State<ResultScreen> {
                }
              },
            ),
-           // child: Column(
-           //   children: [
-           //     Center(
-           //       child: FutureBuilder(
-           //           future: future,
-           //           builder: (context, snapshot) {
-           //             if (snapshot.data == null) {
-           //               return Center(
-           //                   child: Column(
-           //                     mainAxisAlignment: MainAxisAlignment.center,
-           //                     children: [
-           //                       const SizedBox(
-           //                         height: 100,
-           //                       ),
-           //                       const CircularProgressIndicator(),
-           //                       const SizedBox(
-           //                         height: 10,
-           //                       ),
-           //                       Text("결과를 불러오는중입니다.",
-           //                           textAlign: TextAlign.center,
-           //                           style: Theme.of(context)
-           //                               .textTheme
-           //                               .titleLarge
-           //                               ?.copyWith(
-           //                               color: Theme.of(context)
-           //                                   .colorScheme
-           //                                   .outline))
-           //                     ],
-           //                   ));
-           //             } else {
-           //               FinalResult res = snapshot.data;
-           //               SchedulerBinding.instance.addPostFrameCallback((_) {
-           //                 setState(() {
-           //                   _isLoading = true;
-           //                 });
-           //               });
-           //               return Column(
-           //                 mainAxisAlignment: MainAxisAlignment.center,
-           //                 children: [
-           //                   Text("투표 결과",
-           //                       style: Theme.of(context)
-           //                           .textTheme
-           //                           .displayMedium
-           //                           ?.copyWith(
-           //                           color: Theme.of(context)
-           //                               .colorScheme
-           //                               .onSurfaceVariant)),
-           //                   const SizedBox(
-           //                     height: 40,
-           //                   ),
-           //                   Container(
-           //                     width: 200,
-           //                     height: 200,
-           //                     decoration: BoxDecoration(
-           //                       image: DecorationImage(
-           //                           image: NetworkImage(res.image)),
-           //                     ),
-           //                   ),
-           //                   const SizedBox(
-           //                     height: 10,
-           //                   ),
-           //                   Text(res.menuName,
-           //                       style: Theme.of(context)
-           //                           .textTheme
-           //                           .headlineLarge
-           //                           ?.copyWith(
-           //                           color: Theme.of(context)
-           //                               .colorScheme
-           //                               .onSurfaceVariant))
-           //                 ],
-           //               );
-           //             }
-           //           }),
-           //     ),
-           //     Visibility(
-           //       visible: _isLoading,
-           //       child: Align(
-           //         alignment: Alignment.bottomCenter,
-           //         child: Padding(
-           //           padding: const EdgeInsets.only(bottom: 50),
-           //           child: ElevatedButton(
-           //             onPressed: () {
-           //               Navigator.of(context).popUntil((route) => route.isFirst);
-           //             },
-           //             child: Padding(
-           //               padding: const EdgeInsets.fromLTRB(12, 8, 12, 8),
-           //               child: Text("투표 종료",
-           //                   style: TextStyle(
-           //                       fontWeight: FontWeight.bold,
-           //                       fontSize: 14,
-           //                       color: Theme.of(context).colorScheme.error)),
-           //             ),
-           //           ),
-           //         ),
-           //       ),
-           //     )
-           //   ],
-           // ),
         ),
       ),
     );
