@@ -5,8 +5,9 @@ import 'package:get/get.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:dio/dio.dart';
 import 'package:lunch_vote/model/login/user_info.dart';
-import 'package:lunch_vote/repository/lunch_vote_service.dart';
-import 'package:lunch_vote/view/widget/utils/shared_pref_manager.dart';
+import 'package:lunch_vote/provider/lunch_vote_service.dart';
+
+import '../utils/shared_pref_manager.dart';
 
 class LoginController extends GetxController{
   final SharedPrefManager _spfManager = SharedPrefManager();

@@ -11,12 +11,14 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:lunch_vote/controller/notification_controller.dart';
+import 'package:lunch_vote/provider/lunch_vote_dio_provider.dart';
+import 'package:lunch_vote/routes/app_pages.dart';
 import 'package:lunch_vote/styles.dart';
+import 'package:lunch_vote/utils/shared_pref_manager.dart';
 import 'package:lunch_vote/view/screen/group/group_screen.dart';
 import 'package:lunch_vote/view/screen/home_screen.dart';
 import 'package:lunch_vote/view/screen/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:lunch_vote/view/widget/utils/shared_pref_manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
@@ -44,7 +46,11 @@ Future<void> main() async {
   await dotenv.load(fileName: 'assets/config/.env');
   // runApp() 호출 전 Flutter SDK 초기화
   String kakaoNativeAppKey = dotenv.get('kakao_native_app_key');
-  print(kakaoNativeAppKey);
+  String? token = await spfManager.getUserToken();
+  if(token != null){
+    LunchVoteDioProvider.setOptions(token);
+  }
+
   KakaoSdk.init(
     nativeAppKey: kakaoNativeAppKey
   );
@@ -184,29 +190,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  bool _autoLogin = false;
-  SharedPrefManager spfManager = SharedPrefManager();
-
-  @override
-  void initState() {
-    super.initState();
-    setAutoLogin();
-  }
-
-  void setAutoLogin() async {
-    var token = await spfManager.getUserToken();
-    if (token == null) {
-      setState(() {
-        FlutterNativeSplash.remove();
-      });
-    } else {
-      print('User Token : $token');
-      setState(() {
-        _autoLogin = true;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     initializeNotification();
@@ -215,6 +198,7 @@ class _MyAppState extends State<MyApp> {
         title: "제 1회 점심메뉴 총선거",
         theme: lightColorTheme,
         darkTheme: darkColorTheme,
-        home: _autoLogin == true ? const HomeScreen() : const LoginScreen());
+        getPages: AppPages.pages,
+        initialRoute: LunchVoteDioProvider.dio == null ? Routes.login : Routes.home);
   }
 }
