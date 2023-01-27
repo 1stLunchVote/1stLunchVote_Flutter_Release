@@ -3,10 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:lunch_vote/provider/lunch_vote_dio_provider.dart';
 import 'package:lunch_vote/styles.dart';
 import 'package:lunch_vote/view/screen/home_screen.dart';
 import 'package:lunch_vote/controller/login_controller.dart';
-import 'package:lunch_vote/view/widget/utils/shared_pref_manager.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+
+import '../../routes/app_pages.dart';
+import '../../utils/shared_pref_manager.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -26,6 +30,10 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _pwdVisible = false;
 
 
+  @override
+  void initState() {
+    FlutterNativeSplash.remove();
+  }
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, designSize: const Size(412, 812));
@@ -131,8 +139,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     _loginController.postUserToken(value).then((token) {
                                       if (token != null) {
                                         spfManager.setUserToken(token);
+                                        LunchVoteDioProvider.setOptions(token);
                                         print('User Token : $token');
-                                        navigateToHome();
+                                        Get.offNamed(Routes.home);
                                       }
                                     }).onError((error, stackTrace) {
 
@@ -171,13 +180,6 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
       )
-    );
-  }
-
-  void navigateToHome() {
-    Navigator.of(context).pop();
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => const HomeScreen())
     );
   }
 }

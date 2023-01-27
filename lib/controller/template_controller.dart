@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 import 'package:lunch_vote/model/menu/menu_info.dart';
 import 'package:lunch_vote/model/template/template_info.dart';
 import 'package:lunch_vote/model/template/all_template_info.dart';
-import 'package:lunch_vote/repository/lunch_vote_service.dart';
-import 'package:lunch_vote/view/widget/utils/shared_pref_manager.dart';
+import 'package:lunch_vote/provider/lunch_vote_service.dart';
+import 'package:lunch_vote/utils/shared_pref_manager.dart';
 
 class TemplateController extends GetxController {
   final dio = Dio();

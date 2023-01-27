@@ -3,10 +3,10 @@ import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:lunch_vote/model/vote/second_vote.dart';
+import 'package:lunch_vote/utils/shared_pref_manager.dart';
 
 import '../model/vote/first_vote_result.dart';
-import '../repository/lunch_vote_service.dart';
-import '../view/widget/utils/shared_pref_manager.dart';
+import '../provider/lunch_vote_service.dart';
 
 class SecondVoteController extends GetxController{
   final dio = Dio();

@@ -1,27 +1,18 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:lunch_vote/provider/api/lunch_vote_api.dart';
-import 'package:lunch_vote/utils/shared_pref_manager.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:lunch_vote/provider/lunch_vote_dio_provider.dart';
+import 'package:lunch_vote/provider/lunch_vote_service.dart';
 
-class LunchVoteService{
-  final SharedPrefManager _spfManager = SharedPrefManager();
-  late LunchVoteApi _lunchVoteApi;
-  LunchVoteApi get service => _lunchVoteApi;
+class LunchVoteServiceProvider{
+  static LunchVoteService? instance;
+  // final storage = const FlutterSecureStorage();
 
-  // Singleton
-  static final LunchVoteService instance = LunchVoteService._internal();
-
-  factory LunchVoteService() => instance;
-
-  LunchVoteService._internal(){
-    // 처음 인스턴스를 만들어 실행하는 코드
-    final Dio dio = Dio();
-    _spfManager.getUserToken().then((value) {
-      dio.options.headers["Content-Type"] = "application/json";
-      dio.options.headers["Authorization"] = value;
-      dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
-      _lunchVoteApi = LunchVoteApi(dio, baseUrl: dotenv.get('BASE_URL'));
-      }
-    );
+  static LunchVoteService getInstance() {
+    if (instance == null){
+      Dio dio = LunchVoteDioProvider.getInstance();
+      instance = LunchVoteService(dio, baseUrl: dotenv.get('BASE_URL'));
+    }
+    return instance!;
   }
 }

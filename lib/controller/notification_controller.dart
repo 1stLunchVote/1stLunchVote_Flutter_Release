@@ -2,8 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 
-import '../repository/lunch_vote_service.dart';
-import '../view/widget/utils/shared_pref_manager.dart';
+import '../provider/lunch_vote_service.dart';
+import '../utils/shared_pref_manager.dart';
 
 class NotificationController extends GetxController{
   final dio = Dio();

@@ -1,8 +1,8 @@
 import 'package:flutter/services.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:lunch_vote/repository/lunch_vote_service.dart';
-import 'package:lunch_vote/view/widget/utils/shared_pref_manager.dart';
+import 'package:lunch_vote/provider/lunch_vote_service.dart';
+import 'package:lunch_vote/utils/shared_pref_manager.dart';
 
 import '../model/menu/menu_info.dart';
 
