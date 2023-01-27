@@ -141,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         spfManager.setUserToken(token);
                                         LunchVoteDioProvider.setOptions(token);
                                         print('User Token : $token');
-                                        Get.offNamed(Routes.home);
+                                        Get.offAllNamed(Routes.home);
                                       }
                                     }).onError((error, stackTrace) {
 

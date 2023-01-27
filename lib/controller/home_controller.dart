@@ -22,7 +22,7 @@ class HomeController extends GetxController{
   }
 
   joinGroup(String groupId){
-    // Todo : pushNamed로 바꾸기
+    // Todo : toNamed로 바꾸기
     repository.joinGroup(groupId).then((value) =>
         Get.to(() => GroupScreen(isLeader: false, groupId: groupId))
     );

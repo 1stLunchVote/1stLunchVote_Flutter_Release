@@ -12,6 +12,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:lunch_vote/controller/group_controller.dart';
 import 'package:lunch_vote/controller/home_controller.dart';
 import 'package:lunch_vote/controller/nickname_controller.dart';
+import 'package:lunch_vote/routes/app_pages.dart';
 import 'package:lunch_vote/styles.dart';
 import 'package:lunch_vote/view/screen/friend/friendlist_screen.dart';
 import 'package:lunch_vote/view/screen/group/group_screen.dart';
@@ -39,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: SafeArea(
           child: GetX<HomeController>(
             initState: (state) {
-              Get.find<HomeController>().getNickname();
+              state.controller?.getNickname();
             },
             builder: (controller) {
               return Padding(
@@ -165,7 +166,6 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           Column(
                             children: [
-                              // Todo : 제원이가 만들면 바꿀게 임시로 쓴다~
                               FloatingActionButton(onPressed: () {
                                 Get.to(const FriendlistScreen());
                               },
@@ -188,10 +188,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           Column(
                             children: [
                               FloatingActionButton(onPressed: () {
-                                Navigator.of(context).push(
-                                    MaterialPageRoute(builder: (
-                                        context) => const ProfileScreen()));
-                              },
+                                Get.toNamed(Routes.profile);
+                                },
                                 heroTag: null,
                                 backgroundColor: secondary1,
                                 child: Icon(Icons.settings, color: Theme

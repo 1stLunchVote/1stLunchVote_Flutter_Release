@@ -8,7 +8,8 @@ class HomeBinding extends Bindings{
   @override
   void dependencies() {
     Get.put(HomeController(
-        repository: HomeRepository(lunchVoteService: LunchVoteServiceProvider.getInstance()),
+        repository: HomeRepository(
+            lunchVoteService: LunchVoteServiceProvider.getInstance()),
         nicknameController: Get.put(NicknameController())
       )
     );
