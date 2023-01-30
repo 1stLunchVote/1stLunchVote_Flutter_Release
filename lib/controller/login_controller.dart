@@ -1,112 +1,70 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
-import 'package:dio/dio.dart';
-import 'package:lunch_vote/model/login/user_info.dart';
-import 'package:lunch_vote/provider/lunch_vote_service.dart';
+import 'package:lunch_vote/model/login/login_state.dart';
+import 'package:lunch_vote/provider/lunch_vote_dio_provider.dart';
+import 'package:lunch_vote/repository/login_repository.dart';
+import 'package:lunch_vote/utils/shared_pref_manager.dart';
 
-import '../utils/shared_pref_manager.dart';
+import '../routes/app_pages.dart';
 
 class LoginController extends GetxController{
-  final SharedPrefManager _spfManager = SharedPrefManager();
-  late LunchVoteService _lunchVoteService;
+  final LoginRepository repository;
+  LoginController({required this.repository});
 
-  final RxBool _isLoading = false.obs;
-  bool get isLoading => _isLoading.value;
+  final Rx<LoginState> _loginState = LoginState().obs;
+  LoginState get loginState => _loginState.value;
 
-  LoginController(){
-    final dio = Dio();
-    dio.options.headers["Content-Type"] = "application/json";
-    dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
-    _lunchVoteService = LunchVoteService(dio, baseUrl: dotenv.get('BASE_URL'));
+  final RxBool _pwdVisible = false.obs;
+  bool get pwdVisible => _pwdVisible.value;
+
+  changePwdVisible(){
+    _pwdVisible.value = !_pwdVisible.value;
   }
 
-
-  Future<bool> login() async{
-    if (await isKakaoTalkInstalled()) {
-      try {
-        await UserApi.instance.loginWithKakaoTalk();
-        return true;
-      } catch (error) {
-        if (error is PlatformException && error.code == 'CANCELED') {
-          return false;
-        }
-        // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인
-        try {
-          await UserApi.instance.loginWithKakaoAccount();
-          print('카카오계정으로 로그인 성공');
-          return true;
-        } catch (error) {
-          print('카카오계정으로 로그인 실패 $error');
-          return false;
+  kakaoLogin(){
+    _loginState.value = LoginLoading();
+    repository.login().then((value) {
+        // value가 null이 아닌 경우 서버로 로그인
+        if (value != null){
+          postUserToken(value);
+        } else {
+          _loginState.value = LoginInitial();
         }
       }
-    } else{
-      try {
-        await UserApi.instance.loginWithKakaoAccount();
-        return true;
-      } catch (error) {
-        print('카카오계정으로 로그인 실패 $error');
-        return false;
-      }
-    }
+    );
   }
 
-  Future<bool> logout() async{
-    try{
-      await UserApi.instance.unlink();
-      return true;
-    }catch (error){
-      return false;
-    }
-  }
-
-  Future<String?> loginToken() async{
-    if (await isKakaoTalkInstalled()){
-      try {
-        _isLoading.value = true;
-        OAuthToken token = await UserApi.instance.loginWithKakaoTalk();
-        return token.accessToken;
-      } catch (error) {
-        if (error is PlatformException && error.code == 'CANCELED') {
-          return null;
-        }
-        // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인
-        try {
-          OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
-          print('카카오계정으로 로그인 성공');
-          return token.accessToken;
-        } catch (error) {
-          print('카카오계정으로 로그인 실패 $error');
-          _isLoading.value = false;
-          return null;
-        }
-      }
-
-    } else {
-      try {
-        _isLoading.value = true;
-        OAuthToken token = await UserApi.instance.loginWithKakaoAccount();
-        print('카카오계정으로 로그인 성공');
-        return token.accessToken;
-      } catch (error) {
-        print('카카오계정으로 로그인 실패 $error');
-        _isLoading.value = false;
-        return null;
-      }
-    }
-  }
-
-  Future<String?> postUserToken(String accessToken) async{
-    String? fcmToken = await _spfManager.getFCMToken();
+  postUserToken(String accessToken) async{
+    SharedPrefManager spfManager = Get.find<SharedPrefManager>();
+    String? fcmToken = await spfManager.getFCMToken();
     if (fcmToken == null){
       fcmToken = await FirebaseMessaging.instance.getToken();
-      _spfManager.setFCMToken(fcmToken);
+      spfManager.setFCMToken(fcmToken);
     }
-    final result = await _lunchVoteService.postUserToken(SocialToken(socialToken: accessToken, fcmToken: fcmToken));
-    _isLoading.value = false;
-    return result.data.accessToken;
+    // 로그인 오류 날 시 카카오 언링크 후
+    repository.createUser(accessToken, fcmToken!).then((value) {
+      if (value.success){
+        _loginState.value = LoginSuccess();
+        LunchVoteDioProvider.setOptions(value.data.accessToken);
+        // 유저 토큰 세팅
+        spfManager.setUserToken(value.data.accessToken);
+        // 홈화면으로 이동
+        Get.offAllNamed(Routes.home);
+      } else {
+        // 로그인 에러
+        repository.unlink();
+        _loginState.value = LoginError(value.message);
+      }
+    }, onError: (e){
+      repository.unlink();
+      _loginState.value = LoginError(e.message);
+
+      ScaffoldMessenger.of(Get.context!).showSnackBar(
+        const SnackBar(content: Text("로그인에 실패하였습니다. 다시 로그인해주세요."))
+      );
+    });
   }
 }
