@@ -14,7 +14,7 @@ class LoginController extends GetxController{
   final LoginRepository repository;
   LoginController({required this.repository});
 
-  final Rx<LoginState> _loginState = LoginState().obs;
+  final Rx<LoginState> _loginState = LoginInitial().obs;
   LoginState get loginState => _loginState.value;
 
   final RxBool _pwdVisible = false.obs;
