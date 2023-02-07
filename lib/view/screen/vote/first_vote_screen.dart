@@ -21,6 +21,8 @@ import 'package:lunch_vote/model/vote/first_vote_notifier.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:get/get.dart';
 
+import '../../../routes/app_pages.dart';
+
 class FirstVoteScreen extends StatelessWidget {
   final String groupId;
 
@@ -372,17 +374,11 @@ class _FirstVotePageState extends State<FirstVotePage> {
                   var temp = await _voteStateController.fetchFirstVoteResult(widget.groupId);
                   if (temp == true){
                     _timer?.cancel();
-                    Navigator.of(context).pop();
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => SecondVoteScreen(groupId: widget.groupId))
-                    );
+                    Get.offNamed(Routes.secondVote, arguments: widget.groupId);
                   }
                 });
               } else{
-                Navigator.of(context).pop();
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => SecondVoteScreen(groupId: widget.groupId))
-                );
+                Get.offNamed(Routes.secondVote, arguments: widget.groupId);
               }
             },
           ),

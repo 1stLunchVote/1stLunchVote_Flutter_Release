@@ -1,36 +1,19 @@
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
-import 'package:lunch_vote/controller/group_controller.dart';
 import 'package:lunch_vote/controller/home_controller.dart';
-import 'package:lunch_vote/controller/nickname_controller.dart';
 import 'package:lunch_vote/routes/app_pages.dart';
 import 'package:lunch_vote/styles.dart';
 import 'package:lunch_vote/view/screen/friend/friendlist_screen.dart';
 import 'package:lunch_vote/view/screen/group/group_screen.dart';
-import 'package:lunch_vote/model/group_id_notifier.dart';
-import 'package:lunch_vote/view/screen/profile_screen.dart';
 import 'package:lunch_vote/view/screen/template/template_list_screen.dart';
 
-
-import '../../firebase_options.dart';
-
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context, designSize: const Size(412, 812));

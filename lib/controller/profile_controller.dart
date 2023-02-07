@@ -56,8 +56,10 @@ class ProfileController extends GetxController{
 
   Future<void> logout() async{
     Get.find<SharedPrefManager>().clearUserToken();
+    ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(
+        content: Text(
+            '로그아웃 되었습니다.')));
     Get.offAllNamed(Routes.login);
-
   }
 
   void setNicknameChange(bool change){
