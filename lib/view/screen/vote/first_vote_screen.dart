@@ -50,7 +50,7 @@ class FirstVotePage extends StatefulWidget {
 }
 
 class _FirstVotePageState extends State<FirstVotePage> {
-  final _menuController = MenuController();
+  final _menuController = LunchMenuController();
   final _firstVoteController = FirstVoteController();
   final _templateController = TemplateController();
   final _voteStateController = VoteStateController();

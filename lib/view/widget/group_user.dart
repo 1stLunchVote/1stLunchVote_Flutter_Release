@@ -79,7 +79,7 @@ class _GroupUserState extends State<GroupUser> {
                                 return null;
                               },
                               okOnPressed: () async {
-                                var message = await widget.groupController.inviteUser(widget.groupController.groupId, email);
+                                var message = await widget.groupController.inviteUser(widget.groupController.groupInfo.groupId, email);
                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
                                 Navigator.pop(context);
                               },
