@@ -11,11 +11,6 @@ import '../utils/shared_pref_manager.dart';
 
 class GroupController extends GetxController {
   final GroupRepository repository;
-
-  final dio = Dio();
-  late LunchVoteService _lunchVoteService;
-  final SharedPrefManager _spfManager = SharedPrefManager();
-
   GroupController({required this.repository});
 
   final Rx<GroupInfo> _groupInfo = GroupInfo(groupId: '', members: []).obs;
@@ -28,16 +23,18 @@ class GroupController extends GetxController {
   final _allReady = false.obs;
   bool get isAllReady => _allReady.value;
 
-  createGroup() {
+  createGroup() async {
     repository.createGroup().then((res) {
       _groupInfo.value = res.data;
     });
+    return _groupInfo.value;
   }
 
-  getGroupInfo(String groupId) {
-    repository.getGroupInfo(groupId).then((res) {
+  getGroupInfo() async {
+    repository.getGroupInfo(_groupInfo.value.groupId).then((res) {
       _groupInfo.value = res.data;
     });
+    return _groupInfo.value;
   }
 
   inviteUser(String groupId, String email) {
@@ -46,10 +43,11 @@ class GroupController extends GetxController {
     });
   }
 
-  getMyProfile(){
+  getMyProfile() async {
     repository.getMyProfile().then((res) {
       _myProfileInfo.value = MemberInfo(email: res.data.email, nickname: res.data.nickname, profileImage: res.data.profileImage,);
     });
+    return _myProfileInfo.value;
   }
 
   withdrawalUser(String groupId){

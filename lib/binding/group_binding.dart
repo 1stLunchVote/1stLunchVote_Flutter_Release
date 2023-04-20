@@ -7,9 +7,9 @@ class GroupBinding extends Bindings {
   @override
   void dependencies() {
     Get.put(GroupController(
-        repository: GroupRepository(
-          lunchVoteService: LunchVoteServiceProvider.getInstance(),
-        ),
+      repository: GroupRepository(
+        lunchVoteService: LunchVoteServiceProvider.getInstance(),
+      ),
     ));
   }
 }
