@@ -1,32 +1,26 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:lunch_vote/styles.dart';
-import 'package:provider/provider.dart';
 
-import '../../controller/second_vote_controller.dart';
-
-class SecondVoteTile extends StatefulWidget {
+class SecondVoteTile extends StatelessWidget {
   String foodName = '';
   String? imgUrl;
   int index;
   String menuId;
-  SecondVoteController controller;
+  Function(String menuId) onVote;
+  Function() clearVote;
+  Function(String menuId) isVoted;
 
   SecondVoteTile({super.key,
     required this.foodName,
     required this.imgUrl,
     required this.index,
     required this.menuId,
-    required this.controller
+    required this.onVote,
+    required this.clearVote,
+    required this.isVoted
   });
 
-  @override
-  State<SecondVoteTile> createState() => _SecondVoteTileState();
-}
-
-class _SecondVoteTileState extends State<SecondVoteTile> {
-  bool isVoted = false;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -39,14 +33,11 @@ class _SecondVoteTileState extends State<SecondVoteTile> {
         IntrinsicHeight(
           child: InkWell(
             onTap: (){
-              setState(() {
-                if (!isVoted) {
-                  widget.controller.setVotedId(widget.menuId);
-                } else {
-                  widget.controller.clearVotedId();
-                }
-                isVoted = !isVoted;
-              });
+              if (!isVoted(menuId)){
+                onVote(menuId);
+              } else {
+                clearVote();
+              }
             },
             child: Row(
               children: [
@@ -56,11 +47,11 @@ class _SecondVoteTileState extends State<SecondVoteTile> {
                   color: Theme.of(context).brightness == Brightness.light ? textLightSecondary : textDarkSecondary,
                 ),
                 Expanded(
-                  flex: 8,
-                  child: widget.imgUrl != null ? CachedNetworkImage(
-                    imageUrl: widget.imgUrl!,
-                    placeholder: (context, url) => Image.asset("assets/images/default_food.png"),
-                  ) : Image.network(widget.imgUrl!)
+                    flex: 8,
+                    child: imgUrl != null ? CachedNetworkImage(
+                      imageUrl: imgUrl!,
+                      placeholder: (context, url) => Image.asset("assets/images/default_food.png"),
+                    ) : Image.network(imgUrl!)
                 ),
                 VerticalDivider(
                   thickness: 1,
@@ -72,11 +63,11 @@ class _SecondVoteTileState extends State<SecondVoteTile> {
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: Text(
-                      widget.foodName,
+                      foodName,
                       style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onSurface
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.onSurface
                       ),
                     ),
                   ),
@@ -90,10 +81,9 @@ class _SecondVoteTileState extends State<SecondVoteTile> {
                     flex: 8,
                     child: Padding(
                       padding: const EdgeInsets.all(5.0),
-                      child: Obx(() => Visibility(
-                          visible: widget.controller.selectedId == widget.menuId,
-                          child: Image.asset("assets/images/lunch_vote_splash.png"),
-                        ),
+                      child: Visibility(
+                        visible: isVoted(menuId),
+                        child: Image.asset("assets/images/lunch_vote_splash.png"),
                       ),
                     )
                 ),
