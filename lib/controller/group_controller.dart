@@ -17,6 +17,8 @@ class GroupController extends GetxController {
   GroupInfo get groupInfo => _groupInfo.value;
   final Rx<MemberInfo> _myProfileInfo = MemberInfo(email: '', nickname: '', profileImage: '').obs;
   MemberInfo get myProfileInfo => _myProfileInfo.value;
+  final Rx<bool> _isGroupCreated = false.obs;
+  bool get isGroupCreated => _isGroupCreated.value;
 
   final _members = [].obs;
   List get members => _members;
@@ -27,7 +29,8 @@ class GroupController extends GetxController {
     repository.createGroup().then((res) {
       _groupInfo.value = res.data;
     });
-    return _groupInfo.value;
+    _isGroupCreated.value = true;
+    return _groupInfo.value.groupId;
   }
 
   getGroupInfo() async {
@@ -37,10 +40,9 @@ class GroupController extends GetxController {
     return _groupInfo.value;
   }
 
-  inviteUser(String groupId, String email) {
-    repository.inviteUser(groupId, email).then((res) {
-      return res.message;
-    });
+  inviteUser(String email) async {
+    var res = await repository.inviteUser(_groupInfo.value.groupId, email);
+    return res.message;
   }
 
   getMyProfile() async {
@@ -50,10 +52,9 @@ class GroupController extends GetxController {
     return _myProfileInfo.value;
   }
 
-  withdrawalUser(String groupId){
-    repository.withdrawalUser(groupId).then((res) {
-      return res.message;
-    });
+  withdrawalUser() async {
+    var res = await repository.withdrawalUser(_groupInfo.value.groupId);
+    return res.message;
   }
 
   setGroupId(String groupId) {

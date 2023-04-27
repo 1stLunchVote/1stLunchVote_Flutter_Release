@@ -23,8 +23,6 @@ class GroupScreen extends StatefulWidget {
 }
 
 class GroupScreenState extends State<GroupScreen> {
-  bool isGroupCreated = false;
-
   // 3초 타이머
   Timer? _timer;
 
@@ -54,8 +52,6 @@ class GroupScreenState extends State<GroupScreen> {
                   ));
                 }
                 setState(() {
-                  print("끝났어!");
-                  isGroupCreated = true;
                   state.controller?.checkReady();
                 });
               });
@@ -73,10 +69,7 @@ class GroupScreenState extends State<GroupScreen> {
                 ));
               }
             }
-            setState(() {
-              print("끝났다니까!");
-              isGroupCreated = true;
-            });
+            setState(() {});
           });
         }
 
@@ -100,7 +93,7 @@ class GroupScreenState extends State<GroupScreen> {
               cancelText: "아니오",
             ).showDialog();
             if (res == true){
-              var message = await controller.withdrawalUser(controller.groupInfo.groupId);
+              var message = await controller.withdrawalUser();
               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
               Navigator.of(context).popUntil((route) => route.isFirst);
             }
@@ -122,7 +115,7 @@ class GroupScreenState extends State<GroupScreen> {
                   cancelText: "아니오",
                 ).showDialog();
                 if (res == true){
-                  var message = await controller.withdrawalUser(controller.groupInfo.groupId);
+                  var message = await controller.withdrawalUser();
                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
                   Navigator.of(context).popUntil((route) => route.isFirst);
                 }
@@ -132,15 +125,14 @@ class GroupScreenState extends State<GroupScreen> {
             body: SafeArea(
               child: Stack(
                 children: [
-                  Text("${controller.isAllReady}"),
                   Visibility(
-                    visible: !isGroupCreated,
+                    visible: !controller.isGroupCreated,
                     child: const Center(
                       child: CircularProgressIndicator(),
                     ),
                   ),
                   Visibility(
-                    visible: isGroupCreated,
+                    visible: controller.isGroupCreated,
                     child: Center(
                       child: Column(
                         children: [
