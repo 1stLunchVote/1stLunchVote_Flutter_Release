@@ -1,13 +1,6 @@
-import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:lunch_vote/model/group/group_info.dart';
-import 'package:lunch_vote/model/group/user_manage.dart';
-import 'package:lunch_vote/provider/lunch_vote_service.dart';
 import 'package:lunch_vote/repository/group_repository.dart';
-import 'package:lunch_vote/repository/home_repository.dart';
-
-import '../utils/shared_pref_manager.dart';
 
 class GroupController extends GetxController {
   final GroupRepository repository;
