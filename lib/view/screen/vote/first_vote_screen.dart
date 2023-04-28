@@ -52,9 +52,9 @@ class FirstVotePage extends StatefulWidget {
 }
 
 class _FirstVotePageState extends State<FirstVotePage> {
-  final _menuController = MenuController();
+  final _menuController = LunchMenuController();
   final _firstVoteController = FirstVoteController();
-  final _templateController = TemplateController();
+  //final _templateController = TemplateController();
   final _voteStateController = VoteStateController();
   final _textController = TextEditingController();
   final _groupController = GroupController();
@@ -82,16 +82,16 @@ class _FirstVotePageState extends State<FirstVotePage> {
       });
     });
 
-    _templateController.getAllTemplateInfo().then((value) {
-      setState(() {
-        isAllTemplateLoaded = true;
-        if (value != null) {
-          for (int i = 0; i<value.length; i++) {
-            allTemplateList.add(value[i]);
-          }
-        }
-      });
-    });
+    // _templateController.getAllTemplateInfo().then((value) {
+    //   setState(() {
+    //     isAllTemplateLoaded = true;
+    //     if (value != null) {
+    //       for (int i = 0; i<value.length; i++) {
+    //         allTemplateList.add(value[i]);
+    //       }
+    //     }
+    //   });
+    // });
   }
 
   @override
@@ -288,13 +288,13 @@ class _FirstVotePageState extends State<FirstVotePage> {
                                     if (value == "") {
                                       context.read<FirstVoteNotifier>().resetTemplate();
                                     } else {
-                                      var list = await _templateController.getOneTemplateInfo(value!);
-                                      if (list != null) {
-                                        context.read<FirstVoteNotifier>().clearList();
-                                        for (int i = 0; i < list.length; i++) {
-                                          context.read<FirstVoteNotifier>().addListWithStatus(list[i]);
-                                        }
-                                      }
+                                      // var list = await _templateController.getOneTemplateInfo(value!);
+                                      // if (list != null) {
+                                      //   context.read<FirstVoteNotifier>().clearList();
+                                      //   for (int i = 0; i < list.length; i++) {
+                                      //     context.read<FirstVoteNotifier>().addListWithStatus(list[i]);
+                                      //   }
+                                      // }
                                     }
                                   });
                                 },

@@ -7,6 +7,7 @@ abstract class Routes{
   static const secondVote = "/secondVote";
   static const result = "/result";
   static const profile = "/profile";
+  static const templateList = "/templateList";
   static const template = "/template";
   static const friends = "/friends";
 }

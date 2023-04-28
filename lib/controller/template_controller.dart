@@ -6,77 +6,114 @@ import 'package:lunch_vote/model/menu/menu_info.dart';
 import 'package:lunch_vote/model/template/template_info.dart';
 import 'package:lunch_vote/model/template/all_template_info.dart';
 import 'package:lunch_vote/provider/lunch_vote_service.dart';
+import 'package:lunch_vote/repository/template_repository.dart';
 import 'package:lunch_vote/utils/shared_pref_manager.dart';
 
 class TemplateController extends GetxController {
-  final dio = Dio();
-  late LunchVoteService _lunchVoteService;
-  final SharedPrefManager _spfManager = SharedPrefManager();
+  final TemplateRepository repository;
 
-  TemplateController() {
-    dio.options.headers["Content-Type"] = "application/json";
-  }
+  TemplateController({required this.repository});
 
-  Future<void> initController() async {
-    dio.options.headers["Authorization"] = await _spfManager.getUserToken();
-    dio.interceptors.add(LogInterceptor(responseBody: true, requestBody: true));
-    _lunchVoteService = LunchVoteService(dio, baseUrl: dotenv.get('BASE_URL'));
-  }
+  final Rx<bool> _isListLoaded = false.obs;
+  bool get isListLoaded => _isListLoaded.value;
 
   Future<List<MenuInfo>?> getMenuInfo() async{
-    var res = await _lunchVoteService.getMenuInfo();
+    var res = await repository.getMenuInfo();
     if (res.success){
       return res.data;
+    } else {
+      return null;
     }
-    return null;
   }
 
   Future<String?> createTemplate(TemplateInfo templateInfo) async{
-    var res = await _lunchVoteService.createTemplate(templateInfo);
+    var res = await repository.createTemplate(templateInfo);
     if (res.success){
       return res.message;
+    } else {
+      return null;
     }
-    return null;
   }
 
   Future<String?> modifyTemplate(String lunchTemplateId, TemplateInfo templateInfo) async{
-    var res = await _lunchVoteService.modifyTemplate(lunchTemplateId, templateInfo);
+    var res = await repository.modifyTemplate(lunchTemplateId, templateInfo);
     if (res.success){
       return res.message;
+    } else {
+      return null;
     }
-    return null;
   }
 
   Future<String?> deleteTemplate(String lunchTemplateId) async{
-    var res = await _lunchVoteService.deleteTemplate(lunchTemplateId);
+    var res = await repository.deleteTemplate(lunchTemplateId);
     if (res.success){
       return res.message;
+    } else {
+      return null;
     }
-    return null;
   }
 
   Future<List<AllTemplateInfo>?> getAllTemplateInfo ()async{
-    var res = await _lunchVoteService.getAllTemplateInfo();
+    var res = await repository.getAllTemplateInfo();
+    _isListLoaded.value = true;
     if (res.success){
       return res.data.lunchTemplates;
+    } else {
+      return null;
     }
-    return null;
   }
 
   Future<List<Menu>?> getOneTemplateInfo(String lunchTemplateId) async {
-    var res = await _lunchVoteService.getOneTemplateInfo(lunchTemplateId);
+    var res = await repository.getOneTemplateInfo(lunchTemplateId);
     if (res.success){
       return res.data.menu;
+    } else {
+      return null;
     }
-    return null;
   }
 
-  final _templateId = "".obs;
-  final _templateName = "".obs;
-  final _menus = [].obs;
-  final _visibility = false.obs;
+  final Rx<String> _templateId = "".obs;
+  String get templateId => _templateId.value;
+  final Rx<String> _templateName = "".obs;
+  String get templateName => _templateName.value;
+  final Rx<bool> _visibility = false.obs;
+  bool get visibility => _visibility.value;
 
-  void updateVisibility() {
+  final RxList<MenuStatus> _menus = List<MenuStatus>.empty().obs;
+  int get length => _menus.length;
+
+  String getName(int menuIdx) => _menus[menuIdx].menuInfo.menuName;
+  String getImg(int menuIdx) => _menus[menuIdx].menuInfo.image;
+  double getWidth(int menuIdx) => (_menus[menuIdx].status == 0) ? 1.0 : 2.0;
+  Color getColor(int menuIdx) {
+    if (_menus[menuIdx].status == 0) {
+      return Colors.black;
+    } else if (_menus[menuIdx].status == 1) {
+      return Colors.green;
+    } else {
+      return Colors.red;
+    }
+  }
+  List<String> getLikeMenu() {
+    List<String> res = [];
+    for (int i = 0; i < _menus.length; i++) {
+      if (_menus[i].status == 1) {
+        res.add(_menus[i].menuInfo.menuId);
+      }
+    }
+    return res;
+  }
+  List<String> getDislikeMenu() {
+    List<String> res = [];
+    for (int i = 0; i < _menus.length; i++) {
+      if (_menus[i].status == 2) {
+        res.add(_menus[i].menuInfo.menuId);
+      }
+    }
+    return res;
+  }
+
+  updateVisibility() {
     for (int i = 0; i < _menus.length; i++) {
       if (_menus[i].status != 0) {
         _visibility.value = true;
@@ -86,20 +123,20 @@ class TemplateController extends GetxController {
     _visibility.value = false;
   }
 
-  void setTemplateId(String id) {
+  setTemplateId(String id) {
     _templateId.value = id;
   }
 
-  void setTemplateName(String name) {
+  setTemplateName(String name) {
     _templateName.value = name;
   }
 
-  void addList(MenuInfo menuInfo) {
+  addList(MenuInfo menuInfo) {
     _menus.add(MenuStatus(menuInfo: menuInfo, status: 0,));
     updateVisibility();
   }
 
-  void addListWithStatus(Menu menu) {
+  addListWithStatus(Menu menu) {
     int status = -1;
     if (menu.likesAndDislikes == "NORMAL") {
       status = 0;
@@ -116,52 +153,14 @@ class TemplateController extends GetxController {
     updateVisibility();
   }
 
-  void clearList() {
+  clearList() {
     _menus.clear();
     updateVisibility();
   }
 
-  void updateStatus(int menuIdx) {
+  updateStatus(int menuIdx) {
     _menus[menuIdx].status = (_menus[menuIdx].status + 1) % 3;
     updateVisibility();
-  }
-
-  String get templateId => _templateId.value;
-  String get templateName => _templateName.value;
-  int get length => _menus.length;
-  bool get visibility => _visibility.value;
-
-  String getName(int menuIdx) => _menus[menuIdx].menuInfo.menuName;
-  String getImg(int menuIdx) => _menus[menuIdx].menuInfo.image;
-  double getWidth(int menuIdx) => (_menus[menuIdx].status == 0) ? 1.0 : 2.0;
-  Color getColor(int menuIdx) {
-    if (_menus[menuIdx].status == 0) {
-      return Colors.black;
-    } else if (_menus[menuIdx].status == 1) {
-      return Colors.green;
-    } else {
-      return Colors.red;
-    }
-  }
-
-  List<String> getLikeMenu() {
-    List<String> res = [];
-    for (int i = 0; i < _menus.length; i++) {
-      if (_menus[i].status == 1) {
-        res.add(_menus[i].menuInfo.menuId);
-      }
-    }
-    return res;
-  }
-
-  List<String> getDislikeMenu() {
-    List<String> res = [];
-    for (int i = 0; i < _menus.length; i++) {
-      if (_menus[i].status == 2) {
-        res.add(_menus[i].menuInfo.menuId);
-      }
-    }
-    return res;
   }
 }
 

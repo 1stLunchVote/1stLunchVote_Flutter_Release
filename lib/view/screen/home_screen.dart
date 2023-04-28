@@ -127,9 +127,7 @@ class HomeScreen extends StatelessWidget {
                             children: [
                               FloatingActionButton(
                                 onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (
-                                          context) => const TemplateListScreen()));
+                                  Get.toNamed(Routes.templateList);
                                 },
                                 backgroundColor: primary1,
                                 heroTag: null,
