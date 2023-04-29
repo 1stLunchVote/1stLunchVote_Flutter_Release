@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:lunch_vote/controller/nickname_controller.dart';
 import 'package:lunch_vote/controller/profile_controller.dart';
 import 'package:lunch_vote/styles.dart';
-import 'package:lunch_vote/view/screen/login_screen.dart';
+import 'package:lunch_vote/view/screen/login/login_screen.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
 import 'package:lunch_vote/view/widget/awesome_dialog.dart';
 import 'package:lunch_vote/view/widget/custom_clip_path.dart';

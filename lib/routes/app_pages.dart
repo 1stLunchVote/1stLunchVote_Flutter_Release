@@ -4,7 +4,7 @@ import 'package:lunch_vote/binding/login_binding.dart';
 import 'package:lunch_vote/binding/profile_binding.dart';
 import 'package:lunch_vote/binding/second_vote_binding.dart';
 import 'package:lunch_vote/view/screen/home_screen.dart';
-import 'package:lunch_vote/view/screen/login_screen.dart';
+import 'package:lunch_vote/view/screen/login/login_screen.dart';
 import 'package:lunch_vote/view/screen/profile_screen.dart';
 import 'package:lunch_vote/view/screen/vote/result_screen.dart';
 import 'package:lunch_vote/view/screen/vote/second_vote_screen.dart';

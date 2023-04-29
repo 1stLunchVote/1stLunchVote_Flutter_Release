@@ -6,7 +6,6 @@ import 'package:flutter/services.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:lunch_vote/controller/nickname_controller.dart';
 import 'package:lunch_vote/model/profile/profile_info.dart';
 import 'package:lunch_vote/provider/lunch_vote_service.dart';

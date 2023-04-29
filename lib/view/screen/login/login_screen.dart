@@ -3,10 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
 import 'package:lunch_vote/controller/login_controller.dart';
-import 'package:lunch_vote/model/login/login_state.dart';
 import 'package:lunch_vote/styles.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:lunch_vote/view/widget/awesome_dialog.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -122,15 +120,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             'assets/images/login_divider_light.png'
                               : 'assets/images/login_divider_dark.png', fit: BoxFit.fill,),
                           const SizedBox(height: 20),
+                          // 구글 로그인으로 변경
                           MaterialButton(
                               padding: const EdgeInsets.all(0),
                               minWidth: 0,
                               onPressed: () {
-                                if (controller.loginState is !LoginLoading){
-                                  controller.kakaoLogin();
-                                }
+                                controller.googleLogin();
                               },
-                              child: Image.asset('assets/images/bg_kakao_login.png', fit: BoxFit.fill,)
+                              child: Image.asset('assets/images/bg_google_login.png', fit: BoxFit.fill,)
                           ),
                           const SizedBox(height: 20),
                           MaterialButton(onPressed: (){},
@@ -145,14 +142,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               Visibility(
-                visible: controller.loginState is LoginLoading,
+                visible: controller.loginLoading,
                 child: Container(
                   width: double.infinity,
                   height: double.infinity,
                   color: Colors.grey.withOpacity(0.5),
                   alignment: Alignment.center,
                   child: const Center(
-                    child: CircularProgressIndicator(),
+                    child: CircularProgressIndicator(color: primary1),
                   ),
                 ),
               ),

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -17,11 +18,10 @@ import 'package:lunch_vote/styles.dart';
 import 'package:lunch_vote/utils/shared_pref_manager.dart';
 import 'package:lunch_vote/view/screen/group/group_screen.dart';
 import 'package:lunch_vote/view/screen/home_screen.dart';
-import 'package:lunch_vote/view/screen/login_screen.dart';
+import 'package:lunch_vote/view/screen/login/login_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'firebase_options.dart';
-import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
 
 late AndroidNotificationChannel channel;
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -35,32 +35,28 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 Future<void> main() async {
+
   // 웹 환경에서 카카오 로그인을 정상적으로 완료하려면 runApp() 호출 전 아래 메서드 호출 필요
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   // 세로모드 고정
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   // await initializeNotification();
-  await dotenv.load(fileName: 'assets/config/.env');
   // runApp() 호출 전 Flutter SDK 초기화
-  String kakaoNativeAppKey = dotenv.get('kakao_native_app_key');
   String? token = await spfManager.getUserToken();
   if(token != null){
     LunchVoteDioProvider.setOptions(token);
   }
 
-  KakaoSdk.init(
-    nativeAppKey: kakaoNativeAppKey
-  );
   runApp(const MyApp());
 }
 
 Future initializeNotification() async{
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
 
   final FirebaseMessaging messaging = FirebaseMessaging.instance;
   print('FCM Token : ${await messaging.getToken()}');
@@ -193,12 +189,13 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     initializeNotification();
+    final firebaseAuth = FirebaseAuth.instance;
     return GetMaterialApp(
         debugShowCheckedModeBanner: false,
         title: "제 1회 점심메뉴 총선거",
         theme: lightColorTheme,
         darkTheme: darkColorTheme,
         getPages: AppPages.pages,
-        initialRoute: LunchVoteDioProvider.dio == null ? Routes.login : Routes.home);
+        initialRoute: firebaseAuth.currentUser == null ? Routes.login : Routes.home);
   }
 }

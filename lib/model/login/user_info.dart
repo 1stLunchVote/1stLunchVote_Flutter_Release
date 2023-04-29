@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 
 part 'user_info.g.dart';
 

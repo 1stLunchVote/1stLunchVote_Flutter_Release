@@ -13,7 +13,7 @@ import 'package:lunch_vote/view/screen/vote/second_vote_screen.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
 import 'package:lunch_vote/view/widget/awesome_dialog.dart';
 import 'package:lunch_vote/view/widget/first_vote_tile.dart';
-import 'package:lunch_vote/controller/menu_controller.dart';
+import 'package:lunch_vote/controller/menu_controller.dart' as menu;
 import 'package:lunch_vote/view/widget/lunch_button.dart';
 import 'package:provider/provider.dart';
 import 'package:lunch_vote/model/menu/menu_info.dart';
@@ -52,7 +52,7 @@ class FirstVotePage extends StatefulWidget {
 }
 
 class _FirstVotePageState extends State<FirstVotePage> {
-  final _menuController = MenuController();
+  final _menuController = menu.MenuController();
   final _firstVoteController = FirstVoteController();
   final _templateController = TemplateController();
   final _voteStateController = VoteStateController();
