@@ -104,15 +104,14 @@ class TemplateListScreenState extends State<TemplateListScreen> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 IconButton(
-                                  onPressed: (){
-                                    // Navigator.of(context).push(
-                                    //   MaterialPageRoute(
-                                    //     builder: (context) => TemplateScreen(
-                                    //       templateId: _templateList[index - 1].lunchTemplateId,
-                                    //       templateName: _templateList[index - 1].templateName,
-                                    //     ),
-                                    //   ),
-                                    // );
+                                  onPressed: () {
+                                    Get.toNamed(
+                                      Routes.template,
+                                      arguments: {
+                                        'templateId': _templateList[index - 1].lunchTemplateId,
+                                        'templateName': _templateList[index - 1].templateName,
+                                      }
+                                    );
                                   },
                                   icon: Icon(
                                     Icons.mode_edit_outlined,

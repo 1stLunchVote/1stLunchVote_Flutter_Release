@@ -22,6 +22,6 @@ class AppPages{
     GetPage(name: Routes.secondVote, page: () => const SecondVoteScreen(), binding: SecondVoteBinding()),
     GetPage(name: Routes.result, page: ()=> const ResultScreen(groupId: "63e2020dafdd6d981a88f547")),
     GetPage(name: Routes.templateList, page: () => const TemplateListScreen(), binding: TemplateBinding()),
-    // GetPage(name: Routes.template, page: () => TemplateScreen(), binding: TemplateBinding()),
+    GetPage(name: Routes.template, page: () => TemplateScreen(templateId, templateName), binding: TemplateBinding()),
   ];
 }
