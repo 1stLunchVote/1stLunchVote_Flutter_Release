@@ -18,7 +18,7 @@ class AppPages{
     GetPage(name: Routes.home, page: () => const HomeScreen(), binding: HomeBinding()),
     // Todo : ToNamed 사용시 인자 붙이도록 변경해주세요! (ex. GroupScreen, FirstVoteScreen)
     GetPage(name: Routes.profile, page: () => const ProfileScreen(), binding: ProfileBinding()),
-    GetPage(name: Routes.group, page: () => const GroupScreen(isLeader: true), binding: GroupBinding()),
+    GetPage(name: Routes.group, page: () => GroupScreen(), binding: GroupBinding()),
     GetPage(name: Routes.secondVote, page: () => const SecondVoteScreen(), binding: SecondVoteBinding()),
     GetPage(name: Routes.result, page: ()=> const ResultScreen(groupId: "63e2020dafdd6d981a88f547"))
   ];

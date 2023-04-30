@@ -33,7 +33,7 @@ class _GroupUserState extends State<GroupUser> {
         SizedBox(
           width: 100.w,
           height: 100.w,
-          child: Obx(() => Stack(
+          child: Stack(
             children: [
               (widget.groupController.members.length < widget.userIdx + 1) ?
               CircleAvatar(
@@ -99,7 +99,7 @@ class _GroupUserState extends State<GroupUser> {
                 ),
               ),
             ],
-          )),
+          ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 4.0),

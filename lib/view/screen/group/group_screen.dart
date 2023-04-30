@@ -11,15 +11,16 @@ import 'package:lunch_vote/view/widget/group_user.dart';
 import 'package:lunch_vote/view/widget/lunch_button.dart';
 
 class GroupScreen extends StatefulWidget {
-  const GroupScreen({Key? key, required this.isLeader, this.groupId}) : super(key: key);
-  final bool isLeader;
-  final String? groupId;
+  final String? groupId = Get.arguments?.get['groupId'];
+
+  GroupScreen({ super.key });
 
   @override
   State<GroupScreen> createState() => GroupScreenState();
 }
 
 class GroupScreenState extends State<GroupScreen> {
+  late final bool isLeader;
   // 3초 타이머
   Timer? _timer;
 
@@ -33,50 +34,31 @@ class GroupScreenState extends State<GroupScreen> {
   Widget build(BuildContext context) {
     return GetX<GroupController>(
       initState: (state) {
-        if (widget.isLeader) {
-          state.controller?.createGroup().then((value) {
-            if (value == null) {
+        isLeader = widget.groupId == null;
+        if (isLeader) {
+          state.controller?.createGroup().then((success) {
+            if (success) {
+              state.controller?.checkReady();
+            } else {
               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 content: Text('방 생성에 오류가 발생했습니다.'),));
-            } else {
-              state.controller?.setGroupId(value);
-              state.controller?.getMyProfile().then((value) {
-                if (value != null) {
-                  state.controller?.add(MemberInfo(
-                    email: value.email,
-                    nickname: value.nickname,
-                    profileImage: value.profileImage,
-                  ));
-                }
-                setState(() {
-                  state.controller?.checkReady();
-                });
-              });
             }
           });
         } else {
-          state.controller?.setGroupId(widget.groupId ?? "");
-          state.controller?.getGroupInfo().then((value){
-            if (value != null) {
-              for (int i = 0; i < value.members.length; i++) {
-                state.controller?.add(MemberInfo(
-                  email: value.members[i].email,
-                  nickname: value.members[i].nickname,
-                  profileImage: value.members[i].profileImage,
-                ));
-              }
+          state.controller?.joinGroup(widget.groupId ?? "").then((success) {
+            if (success) {
+              state.controller?.checkReady();
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text('방 생성에 오류가 발생했습니다.'),));
             }
-            setState(() {});
           });
         }
 
         _timer = Timer.periodic(const Duration(milliseconds: 3000), (timer) async {
-          state.controller?.getGroupInfo().then((value){
-            if (value != null) {
-              state.controller?.set(value.members);
-            }
+          state.controller?.getGroupInfo().then((_) {
+            state.controller?.checkReady();
           });
-          state.controller?.checkReady();
         });
       },
       builder: (controller) {
@@ -146,22 +128,22 @@ class GroupScreenState extends State<GroupScreen> {
                                   crossAxisCount: 2,
                                 ),
                                 itemBuilder: (BuildContext context, int index) {
-                                  return Obx(() => GroupUser(
+                                  return GroupUser(
                                     userIdx: index,
                                     isLeader: index == 0,
-                                    leaderAuth: widget.isLeader,
+                                    leaderAuth: isLeader,
                                     isReady: (controller.members.length < index + 1) ?
                                     false :
                                     controller.members[index].isReady,
                                     groupController: controller,
-                                  ));
+                                  );
                                 },
                               ),
                             ),
                           ),
                           const Expanded(flex: 1, child: SizedBox(),),
-                          widget.isLeader ?
-                          Obx(() => LunchButton(
+                          isLeader ?
+                          LunchButton(
                             context: context,
                             isEnabled: controller.isAllReady,
                             enabledText: "투표 시작하기",
@@ -178,7 +160,7 @@ class GroupScreenState extends State<GroupScreen> {
                               );
                             },
                             notifyText: "모든 참가자가 준비완료 상태여야 투표를 시작할 수 있습니다.",
-                          )) :
+                          ) :
                           LunchButton(
                             context: context,
                             isEnabled: true,

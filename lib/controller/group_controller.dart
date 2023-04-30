@@ -12,77 +12,75 @@ class GroupController extends GetxController {
   MemberInfo get myProfileInfo => _myProfileInfo.value;
   final Rx<bool> _isGroupCreated = false.obs;
   bool get isGroupCreated => _isGroupCreated.value;
+  final Rx<bool> _allReady = false.obs;
+  bool get isAllReady => _allReady.value;
 
   final _members = [].obs;
   List get members => _members;
-  final _allReady = false.obs;
-  bool get isAllReady => _allReady.value;
 
+  // 방장이 새로 그룹을 생성하는 메서드
   createGroup() async {
-    repository.createGroup().then((res) {
-      _groupInfo.value = res.data;
-    });
+    try {
+      var group = await repository.createGroup();
+      _groupInfo.value = group.data;
+
+      var myProfile = await repository.getMyProfile();
+      _myProfileInfo.value = MemberInfo(email: myProfile.data.email, nickname: myProfile.data.nickname, profileImage: myProfile.data.profileImage);
+      _members.add(Member(isReady: true, memberInfo: myProfileInfo));
+    } catch (e) {
+      return false;
+    }
     _isGroupCreated.value = true;
-    return _groupInfo.value.groupId;
+    return true;
   }
 
+  // 이미 있는 그룹에 참여하는 메서드
+  joinGroup(String groupId) async {
+    try {
+      var group = await repository.getGroupInfo(groupId);
+      _groupInfo.value = group.data;
+
+      for (var member in groupInfo.members) {
+        _members.add(Member(isReady: members.isEmpty, memberInfo: member));
+      }
+    } catch (e) {
+      return false;
+    }
+    _isGroupCreated.value = true;
+    return true;
+  }
+
+  // 주기적으로 그룹 정보를 받아오는 메서드
   getGroupInfo() async {
-    repository.getGroupInfo(_groupInfo.value.groupId).then((res) {
-      _groupInfo.value = res.data;
-    });
-    return _groupInfo.value;
+    try {
+      var group = await repository.getGroupInfo(groupInfo.groupId);
+      _groupInfo.value = group.data;
+
+      _members.clear();
+      for (var member in groupInfo.members) {
+        _members.add(Member(isReady: members.isEmpty, memberInfo: member));
+      }
+    } catch (e) {
+      return false;
+    }
+    return true;
   }
 
+  // 새로운 유저를 초대하는 메서드
   inviteUser(String email) async {
     var res = await repository.inviteUser(_groupInfo.value.groupId, email);
     return res.message;
   }
 
-  getMyProfile() async {
-    repository.getMyProfile().then((res) {
-      _myProfileInfo.value = MemberInfo(email: res.data.email, nickname: res.data.nickname, profileImage: res.data.profileImage,);
-    });
-    return _myProfileInfo.value;
-  }
-
+  // 방을 나가는 메서드
   withdrawalUser() async {
     var res = await repository.withdrawalUser(_groupInfo.value.groupId);
     return res.message;
   }
 
-  setGroupId(String groupId) {
-    _groupInfo.value = GroupInfo(groupId: groupId, members: _groupInfo.value.members);
-  }
-
-  add(MemberInfo member) {
-    _members.add(Member(isReady: _members.isEmpty, memberInfo: member));
-  }
-
-  // TODO: 사용자 정보 받을 때 준비 완료 여부도 받기
-  set(List<MemberInfo> member) {
-    _members.clear();
-    for (int i = 0; i < member.length; i++) {
-      _members.add(Member(isReady: _members.isEmpty, memberInfo: member[i]));
-    }
-  }
-
-  remove(int memberIdx) {
-    _members.removeAt(memberIdx);
-  }
-
-  changeMemberIsReady(int memberIdx) {
-    _members[memberIdx].isReady = !_members[memberIdx].isReady;
-    checkReady();
-  }
-
+  // 멤버가 전부 좋아요를 눌렀는지 확인하는 메서드
   checkReady() {
-    int cnt = 0;
-    for (int i = 0; i < _members.length; i++) {
-      if (!_members[i].isReady) {
-        cnt++;
-      }
-    }
-    _allReady.value = cnt == 0;
+    _allReady.value = _members.every((member) => member.isReady);
   }
 }
 
