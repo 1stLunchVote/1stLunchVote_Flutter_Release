@@ -1,4 +1,5 @@
 
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:lunch_vote/repository/login_repository.dart';
 
@@ -17,19 +18,10 @@ class LoginController extends GetxController{
   final RxString _showToast = "".obs;
   String get showToast => _showToast.value;
 
+  final formKey = GlobalKey<FormState>();
+  final emailController = TextEditingController();
+  final pwdController = TextEditingController();
 
-  // kakaoLogin(){
-  //   _loginState.value = LoginLoading();
-  //   repository.login().then((value) {
-  //       // value가 null이 아닌 경우 서버로 로그인
-  //       if (value != null){
-  //         postUserToken(value);
-  //       } else {
-  //         _loginState.value = LoginInitial();
-  //       }
-  //     }
-  //   );
-  // }
 
   changePwdVisible(){
     _pwdVisible.value = !_pwdVisible.value;
@@ -39,11 +31,22 @@ class LoginController extends GetxController{
   googleLogin(){
     _loginLoading.value = true;
     repository.signInWithGoogle().then((value) {
-      Get.offAllNamed(Routes.home);
+      createUser(value.user?.uid, value.user?.email, value.user?.displayName, value.user?.photoURL);
     }, onError: (e){
       _loginLoading.value = false;
       print(e.message);
       _showToast.value = e.message!;
+    });
+  }
+
+  createUser(String? uid, String? email, String? name, String? imageUrl){
+    repository.createUser(uid, name, email, imageUrl).then((value) {
+      Get.offNamed(Routes.home);
+      print("로그인 성공");
+    }, onError: (e){
+      _loginLoading.value = false;
+      print(e.message);
+      _showToast.value = "회원가입에 실패했습니다.";
     });
   }
 
