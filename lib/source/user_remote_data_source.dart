@@ -1,10 +1,10 @@
 import 'package:firebase_database/firebase_database.dart';
 
-class LoginRemoteDataSource{
-  LoginRemoteDataSource._privateConstructor();
-  static final LoginRemoteDataSource instance = LoginRemoteDataSource._privateConstructor();
+class UserRemoteDataSource {
+  UserRemoteDataSource._privateConstructor();
+  static final UserRemoteDataSource instance = UserRemoteDataSource._privateConstructor();
 
-  factory LoginRemoteDataSource() {
+  factory UserRemoteDataSource() {
     return instance;
   }
 
@@ -23,5 +23,9 @@ class LoginRemoteDataSource{
         "imageUrl" : imageUrl
       });
     }
+  }
+
+  Stream<DatabaseEvent> getUserNickname(String? uid){
+    return _db.ref("users/$uid/name").onValue;
   }
 }

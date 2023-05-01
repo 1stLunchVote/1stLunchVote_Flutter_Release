@@ -1,15 +1,15 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import '../source/login_remote_data_source.dart';
+import '../source/user_remote_data_source.dart';
 
 
 class LoginRepository{
-  final FirebaseAuth _firebaseAuth;
-  final LoginRemoteDataSource _loginRemoteDataSource;
+  final UserRemoteDataSource _userRemoteDataSource;
 
-  LoginRepository(this._firebaseAuth, this._loginRemoteDataSource);
+  LoginRepository(this._userRemoteDataSource);
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<UserCredential> signInWithGoogle() async {
     // Trigger the authentication flow
@@ -25,10 +25,10 @@ class LoginRepository{
     );
 
     // Once signed in, return the UserCredential
-    return _firebaseAuth.signInWithCredential(credential);
+    return _auth.signInWithCredential(credential);
   }
 
   Future<void> createUser(String? uid, String? name, String? email, String? imageUrl) async{
-    return _loginRemoteDataSource.createUser(uid, name, email, imageUrl);
+    return _userRemoteDataSource.createUser(uid, name, email, imageUrl);
   }
 }
