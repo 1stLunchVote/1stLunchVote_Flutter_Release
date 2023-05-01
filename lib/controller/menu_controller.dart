@@ -6,12 +6,12 @@ import 'package:lunch_vote/utils/shared_pref_manager.dart';
 
 import '../model/menu/menu_info.dart';
 
-class MenuController{
+class LunchMenuController{
   final dio = Dio();
   late LunchVoteService _lunchVoteService;
   final SharedPrefManager _spfManager = SharedPrefManager();
 
-  MenuController() {
+  LunchMenuController() {
     dio.options.headers["Content-Type"] = "application/json";
   }
 

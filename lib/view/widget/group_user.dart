@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -35,7 +33,7 @@ class _GroupUserState extends State<GroupUser> {
         SizedBox(
           width: 100.w,
           height: 100.w,
-          child: Obx(() => Stack(
+          child: Stack(
             children: [
               (widget.groupController.members.length < widget.userIdx + 1) ?
               CircleAvatar(
@@ -79,7 +77,7 @@ class _GroupUserState extends State<GroupUser> {
                                 return null;
                               },
                               okOnPressed: () async {
-                                var message = await widget.groupController.inviteUser(widget.groupController.groupId, email);
+                                var message = await widget.groupController.inviteUser(email);
                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
                                 Navigator.pop(context);
                               },
@@ -101,7 +99,7 @@ class _GroupUserState extends State<GroupUser> {
                 ),
               ),
             ],
-          )),
+          ),
         ),
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 4.0),

@@ -85,10 +85,7 @@ class HomeScreen extends StatelessWidget {
                         FloatingActionButton.large(
                           backgroundColor: primary1,
                           onPressed: () {
-                            Navigator.of(context).push(
-                                MaterialPageRoute(builder: (context) =>
-                                    GroupScreen(isLeader: true, groupId: ""))
-                            );
+                            Get.toNamed(Routes.group);
                           },
                           child: Icon(Icons.add, color: Theme
                               .of(context)

@@ -94,7 +94,7 @@ Future initializeNotification() async{
     print("response groupId : $groupId");
     if(groupId != null){
       notificationController.joinGroup(groupId).then((value) {
-        Get.to(() => GroupScreen(isLeader: false, groupId: groupId));
+        Get.to(() => GroupScreen(), arguments: {'groupId': groupId});
         spfManager.clearGroupId();
       }
       );
@@ -175,7 +175,7 @@ void _handleMessage(RemoteMessage message) async{
     var groupId = message.data['groupId'];
     notificationController.joinGroup(groupId).then((value) {
       if (value != null){
-        Get.to(() => GroupScreen(isLeader: false, groupId: groupId));
+        Get.to(() => GroupScreen(), arguments: {'groupId': groupId});
         spfManager.clearGroupId();
       }
     });

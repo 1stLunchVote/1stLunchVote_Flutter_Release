@@ -52,12 +52,11 @@ class FirstVotePage extends StatefulWidget {
 }
 
 class _FirstVotePageState extends State<FirstVotePage> {
-  final _menuController = MenuController();
+  final _menuController = LunchMenuController();
   final _firstVoteController = FirstVoteController();
   final _templateController = TemplateController();
   final _voteStateController = VoteStateController();
   final _textController = TextEditingController();
-  final _groupController = GroupController();
   String searchedMenu = '';
   late Future future;
   late Future afterSearch;
@@ -113,11 +112,12 @@ class _FirstVotePageState extends State<FirstVotePage> {
           okText: "예",
           cancelText: "아니오",
         ).showDialog();
-        if (res == true){
-          var message = await _groupController.withdrawalUser(widget.groupId);
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
-          Navigator.of(context).popUntil((route) => route.isFirst);
-        }
+        // TODO: 주 controller에 방 나가기 메서드(withdrawalUser) 추가하기
+        // if (res == true){
+        //   var message = await _groupController.withdrawalUser(widget.groupId);
+        //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+        //   Navigator.of(context).popUntil((route) => route.isFirst);
+        // }
         return res;
       },
       child: Scaffold(
