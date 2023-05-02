@@ -1,60 +1,57 @@
-import 'dart:ffi';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
-import 'package:lunch_vote/controller/nickname_controller.dart';
-import 'package:lunch_vote/model/profile/profile_info.dart';
-import 'package:lunch_vote/provider/lunch_vote_service.dart';
 import 'package:lunch_vote/repository/profile_repository.dart';
-import 'package:lunch_vote/utils/shared_pref_manager.dart';
 
 import '../routes/app_pages.dart';
 import '../view/widget/awesome_dialog.dart';
 
 class ProfileController extends GetxController{
   final ProfileRepository repository;
-  final NicknameController nicknameController;
-  String get nickname => nicknameController.nickname;
+  ProfileController(this.repository);
 
-  ProfileController({required this.repository, required this.nicknameController});
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  String get uid => _auth.currentUser?.uid ?? "";
 
-  final _profileData = Rx<ProfileInfo?>(null);
-  ProfileInfo? get profileData => _profileData.value;
+  final RxString _nickname = "".obs;
+  String get nickname => _nickname.value;
+
+  final RxString _imageUrl = "".obs;
+  String get imageUrl => _imageUrl.value;
 
   final RxBool _nicknameChange = false.obs;
   bool get nicknameChange => _nicknameChange.value;
 
-  changeNickname(String nickname) {
-    repository.patchNickname(nickname).then((value) {
-        if (value.success){
-          nicknameController.setNickname(value.data.nickname!);
-        }
-        String complete = value.success ? '성공' : '실패';
-        if (Get.context != null){
-          ScaffoldMessenger.of(Get.context!).showSnackBar(SnackBar(
-              content: Text(
-                  '닉네임 변경에 $complete 하였습니다.')));
-        }
-      }
-    );
-    setNicknameChange(false);
 
-  }
-
-  getProfileInfo() {
-    repository.getProfileInfo().then((value) {
-      if (value.success){
-        _profileData.value = value.data;
-      }
+  getUserInfo(){
+    repository.getUserInfo(uid).listen((value) {
+      _nickname.value = value.nickname;
+      _imageUrl.value = value.profileImage ?? "";
     });
   }
 
+  changeNickname(String nickname) {
+    repository.updateUserNickname(uid, nickname).then((value) {
+      if (Get.context != null) {
+        ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(
+            content: Text(
+                '닉네임 변경에 성공 하였습니다.')));
+      }
+    });
+    setNicknameChange(false);
+  }
+  // getProfileInfo() {
+  //   repository.getProfileInfo().then((value) {
+  //     if (value.success){
+  //       _profileData.value = value.data;
+  //     }
+  //   });
+  // }
+
   Future<void> logout() async{
-    Get.find<SharedPrefManager>().clearUserToken();
+    // Get.find<SharedPrefManager>().clearUserToken();
     ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(
         content: Text(
             '로그아웃 되었습니다.')));

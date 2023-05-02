@@ -40,7 +40,7 @@ class LoginController extends GetxController{
   }
 
   createUser(String? uid, String? email, String? name, String? imageUrl){
-    repository.createUser(uid, name, email, imageUrl).then((value) {
+    repository.createUser(uid ?? "", name, email, imageUrl).then((value) {
       Get.offNamed(Routes.home);
       print("로그인 성공");
     }, onError: (e){

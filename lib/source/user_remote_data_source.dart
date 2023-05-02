@@ -15,17 +15,26 @@ class UserRemoteDataSource {
     return snapshot.exists;
   }
 
-  Future<void> createUser(String? uid, String? name, String? email, String? imageUrl) async{
-    if (uid != null && !await getUserExists(uid)){
+  Future<void> createUser(String uid, String? name, String? email, String? imageUrl) async{
+    if (await getUserExists(uid)){
       return _db.ref("users/$uid").set({
-        "name" : name,
+        "nickname" : name,
         "email" : email,
-        "imageUrl" : imageUrl
+        "profileImage" : imageUrl
       });
     }
   }
 
-  Stream<DatabaseEvent> getUserNickname(String? uid){
-    return _db.ref("users/$uid/name").onValue;
+  Stream<DatabaseEvent> getUserNickname(String uid){
+    return _db.ref("users/$uid/nickname").onValue;
+  }
+
+  Future<void> updateUserNickname(String uid, String nickname) async{
+    return _db.ref("users/$uid/nickname").set(nickname);
+  }
+
+
+  Stream<DatabaseEvent> getUserInfo(String uid){
+    return _db.ref("users/$uid").onValue;
   }
 }

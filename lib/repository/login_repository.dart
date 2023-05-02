@@ -28,7 +28,7 @@ class LoginRepository{
     return _auth.signInWithCredential(credential);
   }
 
-  Future<void> createUser(String? uid, String? name, String? email, String? imageUrl) async{
+  Future<void> createUser(String uid, String? name, String? email, String? imageUrl) async{
     return _userRemoteDataSource.createUser(uid, name, email, imageUrl);
   }
 }

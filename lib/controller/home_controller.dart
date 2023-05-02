@@ -7,12 +7,13 @@ class HomeController extends GetxController{
   HomeController(this._repository);
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  String get uid => _auth.currentUser?.uid ?? "";
 
   final RxString _nickname = "".obs;
   String get nickname => _nickname.value;
 
   getNickname(){
-    _repository.getUserNickName(_auth.currentUser?.uid).listen((event) {
+    _repository.getUserNickName(uid).listen((event) {
       _nickname.value = event;
       print("name : ${event}, length : ${event.length}");
     }, onError: (e) {

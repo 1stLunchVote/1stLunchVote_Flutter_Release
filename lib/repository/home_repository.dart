@@ -12,7 +12,7 @@ class HomeRepository{
   // Future<GroupJoinResponse> joinGroup(String groupId){
   //   return lunchVoteService.joinGroup(groupId);
   // }
-  Stream<String> getUserNickName(String? uid) async*{
+  Stream<String> getUserNickName(String uid) async*{
     await for (var event in _userRemoteDataSource.getUserNickname(uid)){
       yield event.snapshot.value.toString();
     }

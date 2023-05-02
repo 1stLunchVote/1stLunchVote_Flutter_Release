@@ -1,14 +1,8 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:lunch_vote/controller/nickname_controller.dart';
 import 'package:lunch_vote/controller/profile_controller.dart';
 import 'package:lunch_vote/styles.dart';
-import 'package:lunch_vote/view/screen/login/login_screen.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
-import 'package:lunch_vote/view/widget/awesome_dialog.dart';
-import 'package:lunch_vote/view/widget/custom_clip_path.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -40,10 +34,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: SafeArea(
           child: GetX<ProfileController>(
             initState: (state){
-              state.controller?.getProfileInfo();
+              state.controller?.getUserInfo();
             },
             builder: (controller) {
-              return controller.profileData == null
+              return controller.nickname.isEmpty
                   ? const Center(child: CircularProgressIndicator())
                   : Stack(
                     children: [
@@ -60,7 +54,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               CircleAvatar(
                                 backgroundColor: Colors.transparent,
                                 backgroundImage: NetworkImage(
-                                    controller.profileData?.profileImage ?? ""),
+                                    controller.imageUrl),
                                 radius: 100,
                               ),
                             ]),

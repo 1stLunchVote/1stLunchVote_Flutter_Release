@@ -1,16 +1,27 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
 import '../model/profile/profile_info.dart';
-import '../provider/lunch_vote_service.dart';
+import '../source/user_remote_data_source.dart';
 
 class ProfileRepository{
-  final LunchVoteService lunchVoteService;
+  final UserRemoteDataSource _userRemoteDataSource;
+  ProfileRepository(this._userRemoteDataSource);
 
-  ProfileRepository({required this.lunchVoteService});
+  // Future<NicknameResponse> patchNickname(String nickname){
+  //   return lunchVoteService.patchNickname(Nickname(nickname: nickname));
+  // }
+  //
+  // Future<ProfileInfoResponse> getProfileInfo(){
+  //   return lunchVoteService.getProfileInfo();
+  // }
 
-  Future<NicknameResponse> patchNickname(String nickname){
-    return lunchVoteService.patchNickname(Nickname(nickname: nickname));
+  Stream<ProfileInfo> getUserInfo(String uid) async*{
+    await for (var event in _userRemoteDataSource.getUserInfo(uid)){
+      yield ProfileInfo.fromJson(Map<String, dynamic>.from(event.snapshot.value as dynamic));
+    }
   }
 
-  Future<ProfileInfoResponse> getProfileInfo(){
-    return lunchVoteService.getProfileInfo();
+  Future<void> updateUserNickname(String uid, String nickname) async{
+    return _userRemoteDataSource.updateUserNickname(uid, nickname);
   }
 }
