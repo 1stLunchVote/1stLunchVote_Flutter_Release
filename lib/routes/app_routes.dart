@@ -9,4 +9,5 @@ abstract class Routes{
   static const profile = "/profile";
   static const template = "/template";
   static const friends = "/friends";
+  static const group = "/group";
 }

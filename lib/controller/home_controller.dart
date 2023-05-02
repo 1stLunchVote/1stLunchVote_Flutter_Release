@@ -19,6 +19,13 @@ class HomeController extends GetxController{
       _nickname.value = "회원";
     });
   }
+
+  // joinGroup(String groupId){
+  //   // Todo : toNamed로 바꾸기
+  //   repository.joinGroup(groupId).then((value) =>
+  //       Get.to(() => GroupScreen(), arguments: {'groupId': groupId})
+  //   );
+  // }
   // getNickname(){
   //   repository.getNickname().then((value) {
   //       nicknameController.setNickname(value.data.nickname);
@@ -26,12 +33,4 @@ class HomeController extends GetxController{
   //     }, onError: (e) => FlutterNativeSplash.remove()
   //   );
   // }
-  //
-  // joinGroup(String groupId){
-  //   // Todo : toNamed로 바꾸기
-  //   repository.joinGroup(groupId).then((value) =>
-  //       Get.to(() => GroupScreen(isLeader: false, groupId: groupId))
-  //   );
-  // }
-
 }
