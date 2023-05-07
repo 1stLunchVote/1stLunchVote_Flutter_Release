@@ -8,8 +8,8 @@ import '../routes/app_pages.dart';
 import '../view/widget/awesome_dialog.dart';
 
 class ProfileController extends GetxController{
-  final ProfileRepository repository;
-  ProfileController(this.repository);
+  final ProfileRepository _repository;
+  ProfileController(this._repository);
 
   final RxString _nickname = "".obs;
   String get nickname => _nickname.value;
@@ -20,23 +20,43 @@ class ProfileController extends GetxController{
   final RxBool _nicknameChange = false.obs;
   bool get nicknameChange => _nicknameChange.value;
 
+  final TextEditingController nickNameController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+
 
   getUserInfo(){
-    repository.getUserInfo().listen((value) {
+    _repository.getUserInfo().listen((value) {
       _nickname.value = value.nickname;
       _imageUrl.value = value.profileImage ?? "";
     });
   }
 
-  changeNickname(String nickname) {
-    repository.updateUserNickname(nickname).then((value) {
+  onClickComplete(){
+    if (nicknameChange){
+      // 닉네임 변경
+      if (formKey.currentState!.validate()){
+        formKey.currentState!.save();
+        changeNickname();
+      }
+    } else {
+      // 로그아웃
+      _showDialog(Get.context!).then((value) {
+        if(value) {
+          logout();
+        }
+      });
+    }
+  }
+
+  changeNickname() {
+    _repository.updateUserNickname(nickNameController.text).then((value) {
       if (Get.context != null) {
         ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(
             content: Text(
                 '닉네임 변경에 성공 하였습니다.')));
       }
     });
-    setNicknameChange(false);
+    setNicknameChange();
   }
   // getProfileInfo() {
   //   repository.getProfileInfo().then((value) {
@@ -47,7 +67,7 @@ class ProfileController extends GetxController{
   // }
 
   logout() async{
-    repository.logout().then((value) {
+    _repository.logout().then((value) {
       ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(
           content: Text(
               '로그아웃 되었습니다.')));
@@ -55,11 +75,11 @@ class ProfileController extends GetxController{
     });
   }
 
-  setNicknameChange(bool change){
-    _nicknameChange.value = change;
+  setNicknameChange(){
+    _nicknameChange.value = !_nicknameChange.value;
   }
 
-  Future<bool> showDialog(BuildContext context) async{
+  Future<bool> _showDialog(BuildContext context) async{
     var res = await LunchAwesomeDialog(
       context: context,
       title: "로그아웃",
