@@ -33,7 +33,6 @@ class UserRemoteDataSource {
     return _db.ref("users/$uid/nickname").set(nickname);
   }
 
-
   Stream<DatabaseEvent> getUserInfo(String uid){
     return _db.ref("users/$uid").onValue;
   }

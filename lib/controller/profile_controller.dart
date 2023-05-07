@@ -1,5 +1,4 @@
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,9 +11,6 @@ class ProfileController extends GetxController{
   final ProfileRepository repository;
   ProfileController(this.repository);
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  String get uid => _auth.currentUser?.uid ?? "";
-
   final RxString _nickname = "".obs;
   String get nickname => _nickname.value;
 
@@ -26,14 +22,14 @@ class ProfileController extends GetxController{
 
 
   getUserInfo(){
-    repository.getUserInfo(uid).listen((value) {
+    repository.getUserInfo().listen((value) {
       _nickname.value = value.nickname;
       _imageUrl.value = value.profileImage ?? "";
     });
   }
 
   changeNickname(String nickname) {
-    repository.updateUserNickname(uid, nickname).then((value) {
+    repository.updateUserNickname(nickname).then((value) {
       if (Get.context != null) {
         ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(
             content: Text(
@@ -50,22 +46,23 @@ class ProfileController extends GetxController{
   //   });
   // }
 
-  Future<void> logout() async{
-    // Get.find<SharedPrefManager>().clearUserToken();
-    ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(
-        content: Text(
-            '로그아웃 되었습니다.')));
-    Get.offAllNamed(Routes.login);
+  logout() async{
+    repository.logout().then((value) {
+      ScaffoldMessenger.of(Get.context!).showSnackBar(const SnackBar(
+          content: Text(
+              '로그아웃 되었습니다.')));
+      Get.offAllNamed(Routes.login);
+    });
   }
 
-  void setNicknameChange(bool change){
+  setNicknameChange(bool change){
     _nicknameChange.value = change;
   }
 
   Future<bool> showDialog(BuildContext context) async{
     var res = await LunchAwesomeDialog(
       context: context,
-      title: "방 나가기",
+      title: "로그아웃",
       body: "정말로 로그아웃 하시겠습니까?",
       okText: '예',
       cancelText: '아니오',
