@@ -13,7 +13,6 @@ import 'package:lunch_vote/view/screen/vote/second_vote_screen.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
 import 'package:lunch_vote/view/widget/awesome_dialog.dart';
 import 'package:lunch_vote/view/widget/first_vote_tile.dart';
-import 'package:lunch_vote/controller/menu_controller.dart';
 import 'package:lunch_vote/view/widget/lunch_button.dart';
 import 'package:provider/provider.dart';
 import 'package:lunch_vote/model/menu/menu_info.dart';
@@ -21,6 +20,7 @@ import 'package:lunch_vote/model/vote/first_vote_notifier.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:get/get.dart';
 
+import '../../../controller/menu_controller.dart';
 import '../../../routes/app_pages.dart';
 
 class FirstVoteScreen extends StatelessWidget {

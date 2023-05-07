@@ -1,17 +1,20 @@
-import 'package:lunch_vote/model/group/group_join_response.dart';
-import 'package:lunch_vote/model/profile/profile_info.dart';
-import 'package:lunch_vote/provider/lunch_vote_service.dart';
+import '../source/user_remote_data_source.dart';
 
 class HomeRepository{
-  final LunchVoteService lunchVoteService;
+  final UserRemoteDataSource _userRemoteDataSource;
 
-  HomeRepository({required this.lunchVoteService});
+  HomeRepository(this._userRemoteDataSource);
 
-  Future<ProfileInfoResponse> getNickname(){
-    return lunchVoteService.getProfileInfo();
-  }
-
-  Future<GroupJoinResponse> joinGroup(String groupId){
-    return lunchVoteService.joinGroup(groupId);
+  // Future<ProfileInfoResponse> getNickname(){
+  //   return lunchVoteService.getProfileInfo();
+  // }
+  //
+  // Future<GroupJoinResponse> joinGroup(String groupId){
+  //   return lunchVoteService.joinGroup(groupId);
+  // }
+  Stream<String> getUserNickName(String uid) async*{
+    await for (var event in _userRemoteDataSource.getUserNickname(uid)){
+      yield event.snapshot.value.toString();
+    }
   }
 }

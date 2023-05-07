@@ -1,26 +1,11 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:lunch_vote/controller/nickname_controller.dart';
 import 'package:lunch_vote/controller/profile_controller.dart';
 import 'package:lunch_vote/styles.dart';
-import 'package:lunch_vote/view/screen/login_screen.dart';
 import 'package:lunch_vote/view/widget/appbar_widget.dart';
-import 'package:lunch_vote/view/widget/awesome_dialog.dart';
-import 'package:lunch_vote/view/widget/custom_clip_path.dart';
 
-class ProfileScreen extends StatefulWidget {
+class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
-
-  @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
-}
-
-class _ProfileScreenState extends State<ProfileScreen> {
-  final TextEditingController _nickNameEditingController = TextEditingController();
-
-  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -35,17 +20,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
         },
       ),
       resizeToAvoidBottomInset: false,
-      body: Form(
-        key: _formKey,
-        child: SafeArea(
-          child: GetX<ProfileController>(
-            initState: (state){
-              state.controller?.getProfileInfo();
-            },
-            builder: (controller) {
-              return controller.profileData == null
-                  ? const Center(child: CircularProgressIndicator())
-                  : Stack(
+      body: SafeArea(
+        child: GetX<ProfileController>(
+          initState: (state){
+            state.controller?.getUserInfo();
+          },
+          builder: (controller) {
+            return controller.nickname.isEmpty
+                ? const Center(child: CircularProgressIndicator())
+                : Form(
+                  key: controller.formKey,
+                  child: Stack(
                     children: [
                     Center(
                       child: Column(
@@ -60,7 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               CircleAvatar(
                                 backgroundColor: Colors.transparent,
                                 backgroundImage: NetworkImage(
-                                    controller.profileData?.profileImage ?? ""),
+                                    controller.imageUrl),
                                 radius: 100,
                               ),
                             ]),
@@ -69,127 +54,120 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             height: 20,
                           ),
                           Text("${controller.nickname} 님",
-                              style:
-                              Theme
-                                  .of(context)
-                                  .textTheme
-                                  .titleLarge),
-                          Visibility(
-                            visible: !controller.nicknameChange,
-                            child: TextButton(
-                                onPressed: () {
-                                  controller.setNicknameChange(true);
-                                },
-                                child: Text(
-                                  '닉네임 수정',
-                                  style: Theme
-                                      .of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(
-                                    decoration:
-                                    TextDecoration.underline,
-                                    color: Theme
-                                        .of(context)
-                                        .hintColor,
-                                  ),
-                                )),
+                              style: Theme.of(context).textTheme.titleLarge
                           ),
-                          Visibility(
-                              visible: controller.nicknameChange,
-                              child: Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    20, 20, 20, 0),
-                                child: TextFormField(
-                                  controller: _nickNameEditingController,
-                                  decoration: InputDecoration(
-                                      labelText: '닉네임 변경',
-                                      suffixIcon: IconButton(
-                                          onPressed: () {
-                                            if (_nickNameEditingController
-                                                .text.isEmpty) {
-                                              controller.setNicknameChange(false);
-                                            } else {
-                                              _nickNameEditingController
-                                                  .text = '';
-                                            }
-                                          },
-                                          icon: const Icon(Icons.close))),
-                                  validator: (value) {
-                                    if (value == null || value.isEmpty) {
-                                      return '닉네임을 입력해주세요.';
-                                    } else if (value.length < 2 ||
-                                        value.length > 8) {
-                                      return '닉네임 길이를 2~8로 해주세요.';
-                                    }
-                                    return null;
-                                  },
-                                ),
-                              ))
-                        ],
+                          NicknameChangeField(
+                              nicknameChange: controller.nicknameChange,
+                              controller: controller.nickNameController,
+                              onChangeEditing: () {
+                                controller.setNicknameChange();
+                              },
+                            )
+                          ],
                       ),
                     ),
-                    Visibility(
-                      visible: controller.nicknameChange,
-                      child: Align(
-                        alignment: FractionalOffset.bottomCenter,
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 90),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                _formKey.currentState!.save();
-                                controller.changeNickname(
-                                    _nickNameEditingController.text);
-                              }
-                            },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: primary1,
-                                padding: const EdgeInsets.fromLTRB(
-                                    24, 10, 24, 10)),
-                            child: Text(
-                              '설정 완료',
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .button
-                                  ?.copyWith(color: Colors.white),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Visibility(
-                      visible: !controller.nicknameChange,
-                      child: Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Padding(
-                            padding: const EdgeInsets.only(bottom: 90),
-                            child: ElevatedButton(
-                                onPressed: () async {
-                                  bool res = await controller.showDialog(context);
-                                  if (res) {
-                                    controller.logout();
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: primary1,
-                                    padding: const EdgeInsets.fromLTRB(
-                                        24, 10, 24, 10)),
-                                child: Text("로그아웃",
-                                    style: Theme
-                                        .of(context)
-                                        .textTheme
-                                        .button
-                                        ?.copyWith(color: Colors.white)))),
-                      ),
-                    )
-                  ],
-              );
-            }
+                      NicknameChangeButton(
+                        nicknameChange: controller.nicknameChange,
+                        onClickBtn: () {
+                          controller.onClickComplete();
+                        },
+                      )
+                    ],
+              ),
+            );
+          }
+        ),
+      ),
+    );
+  }
+}
+
+class NicknameChangeField extends StatelessWidget {
+  final bool nicknameChange;
+  final TextEditingController controller;
+  final VoidCallback onChangeEditing;
+
+  const NicknameChangeField({Key? key,
+      required this.nicknameChange,
+      required this.controller,
+      required this.onChangeEditing
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return nicknameChange ?
+    // 닉네임 변경중
+    Padding(
+      padding: const EdgeInsets.fromLTRB(
+          20, 20, 20, 0),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+            labelText: '닉네임 변경',
+            suffixIcon: IconButton(
+                onPressed: () {
+                  if (controller.text.isEmpty) {
+                    onChangeEditing();
+                  } else {
+                    controller.text = '';
+                  }
+                },
+                icon: const Icon(Icons.close))),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return '닉네임을 입력해주세요.';
+          } else if (value.length < 2 ||
+              value.length > 8) {
+            return '닉네임 길이를 2~8로 해주세요.';
+          }
+          return null;
+        },
+      ),
+    ) : TextButton(
+        onPressed: onChangeEditing,
+        child: Text(
+          '닉네임 수정',
+          style: Theme
+              .of(context)
+              .textTheme
+              .bodyMedium
+              ?.copyWith(
+            decoration:
+            TextDecoration.underline,
+            color: Theme
+                .of(context)
+                .hintColor,
+          ),
+        )
+    );
+  }
+}
+
+class NicknameChangeButton extends StatelessWidget {
+  final bool nicknameChange;
+  final VoidCallback onClickBtn;
+  const NicknameChangeButton({Key? key, required this.nicknameChange, required this.onClickBtn}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: FractionalOffset.bottomCenter,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 90),
+        child: ElevatedButton(
+          onPressed: onClickBtn,
+          style: ElevatedButton.styleFrom(
+              backgroundColor: primary1,
+              padding: const EdgeInsets.fromLTRB(
+                  24, 10, 24, 10)),
+          child: Text(
+            nicknameChange ? '설정 완료' : '로그아웃',
+            style: Theme.of(context).textTheme.button
+                ?.copyWith(color: Colors.white),
           ),
         ),
       ),
     );
   }
 }
+
